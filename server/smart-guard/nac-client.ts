@@ -12,6 +12,7 @@ import {
   type NacMode,
 } from "@/shared/contracts/nac-contract";
 import { nacBaseUrl, nacHeaders, nacMode } from "./nac-env";
+import { findNokiaMockProfile } from "./nokia-mock";
 import {
   simulateDeviceSwapCheck,
   simulateDeviceSwapDate,
@@ -23,6 +24,12 @@ import {
 
 function e164(phone: string) {
   return normalizeMobile(phone) || phone;
+}
+
+/** Official Nokia NaC simulator MSISDNs must stay on local profiles even when NAC_API_KEY is set. */
+export function nacEffectiveMode(phone: string): NacMode {
+  if (findNokiaMockProfile(e164(phone))) return "simulator";
+  return nacMode();
 }
 
 async function livePost<T>(path: string, body: unknown): Promise<T> {
@@ -48,7 +55,7 @@ function trace(
 }
 
 export async function nacCheckSimSwap(phone: string, email: string, maxAgeHours: number) {
-  const mode = nacMode();
+  const mode = nacEffectiveMode(phone);
   const request = { phoneNumber: e164(phone), maxAge: maxAgeHours };
   const endpoint = "/sim-swap/v1/check";
   const response =
@@ -59,7 +66,7 @@ export async function nacCheckSimSwap(phone: string, email: string, maxAgeHours:
 }
 
 export async function nacRetrieveSimSwapDate(phone: string, email: string) {
-  const mode = nacMode();
+  const mode = nacEffectiveMode(phone);
   const request = { phoneNumber: e164(phone) };
   const endpoint = "/sim-swap/v1/retrieve-date";
   const response =
@@ -70,7 +77,7 @@ export async function nacRetrieveSimSwapDate(phone: string, email: string) {
 }
 
 export async function nacCheckDeviceSwap(phone: string, email: string, maxAgeHours: number) {
-  const mode = nacMode();
+  const mode = nacEffectiveMode(phone);
   const request = { phoneNumber: e164(phone), maxAge: maxAgeHours };
   const endpoint = "/device-swap/v1/check";
   const response =
@@ -81,7 +88,7 @@ export async function nacCheckDeviceSwap(phone: string, email: string, maxAgeHou
 }
 
 export async function nacRetrieveDeviceSwapDate(phone: string, email: string) {
-  const mode = nacMode();
+  const mode = nacEffectiveMode(phone);
   const request = { phoneNumber: e164(phone) };
   const endpoint = "/device-swap/v1/retrieve-date";
   const response =
@@ -92,7 +99,7 @@ export async function nacRetrieveDeviceSwapDate(phone: string, email: string) {
 }
 
 export async function nacVerifyNumber(phone: string, email: string) {
-  const mode = nacMode();
+  const mode = nacEffectiveMode(phone);
   const request = { phoneNumber: e164(phone) };
   const endpoint = "/number-verification/v1/verify";
   const response =
@@ -107,7 +114,7 @@ export async function nacVerifyLocation(
   email: string,
   store: { lat: number; lng: number },
 ) {
-  const mode = nacMode();
+  const mode = nacEffectiveMode(phone);
   const request = {
     device: { phoneNumber: e164(phone) },
     area: {
