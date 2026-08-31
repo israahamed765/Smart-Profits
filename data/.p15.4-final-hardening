@@ -1,0 +1,65 @@
+{
+  "evaluatedAt": "2026-08-29T14:58:33.525Z",
+  "go": "GO",
+  "reasons": [
+    "Post-delete counts, orphans, schema, probe rollback, and plans all match."
+  ],
+  "postgresMutated": false,
+  "rowsDeleted": 0,
+  "foreignKeysAdded": 0,
+  "uniqueConstraintsAdded": 0,
+  "migration002": false,
+  "finalAuditStarted": false,
+  "p16_started": false,
+  "evidence": {
+    "counts": {
+      "merchants": 205,
+      "workspaces": 3,
+      "track_events": 181,
+      "guard_decisions": 115
+    },
+    "workspaceOrphans": 0,
+    "guardOrphans": 0,
+    "eventOrphans": 0,
+    "workspaceEmails": [
+      "pitch.demo.1786709548@smartprofits.dev",
+      "pitch.demo.1786709716@smartprofits.dev",
+      "tsraathmd@gmail.com"
+    ],
+    "foreignKeyCount": 0,
+    "extraUnique": [],
+    "appliedMigrations": [
+      "001_current_schema.sql"
+    ],
+    "indexNames": [
+      "guard_decisions_decision_created_idx",
+      "guard_decisions_email_created_idx",
+      "guard_decisions_pkey",
+      "merchants_pkey",
+      "schema_migrations_pkey",
+      "track_events_at_idx",
+      "track_events_pkey",
+      "workspaces_pkey"
+    ],
+    "unfilteredNode": "Seq Scan",
+    "unfilteredCost": 35.26,
+    "byEmailNode": "Index Scan",
+    "merchantByEmailNode": "Index Scan",
+    "createIndexNow": false,
+    "probePresentBefore": false,
+    "probeWriteVisible": true,
+    "probeRolledBack": true,
+    "countsAfterProbe": {
+      "merchants": 205,
+      "workspaces": 3,
+      "track_events": 181,
+      "guard_decisions": 115
+    },
+    "probeHitsAfter": {
+      "merchants": 0,
+      "workspaces": 0,
+      "track_events": 0,
+      "guard_decisions": 0
+    }
+  }
+}

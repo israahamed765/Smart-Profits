@@ -1,0 +1,26 @@
+{
+  "verifiedAt": "2026-08-28T13:32:44.720Z",
+  "reason": "P14.21 post-cutover verification",
+  "freezeLifted": true,
+  "archiveDeleted": false,
+  "jsonRecreated": false,
+  "probeRemoved": true,
+  "newEventId": "d8909ee3-1cf0-453e-987c-4f5b517ac0cd",
+  "historicalEventIds": {
+    "sampled": 50,
+    "sha256": 50,
+    "uuid": 0
+  },
+  "countsBefore": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 139,
+    "guard_decisions": 163
+  },
+  "countsAfter": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 139,
+    "guard_decisions": 163
+  }
+}

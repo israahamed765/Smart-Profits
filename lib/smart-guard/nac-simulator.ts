@@ -1,6 +1,5 @@
-export {
-  mockLocationVerify as simulateLocationVerify,
-  mockNumberVerify as simulateNumberVerify,
-  mockSimSwapCheck as simulateSimSwapCheck,
-  mockSimSwapDate as simulateSimSwapDate,
-} from "./nokia-mock";
+/**
+ * P4: implementation moved to `@/server/smart-guard/nac-simulator`.
+ * Intentionally not a compatibility re-export.
+ */
+export {};

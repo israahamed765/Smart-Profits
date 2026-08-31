@@ -1,0 +1,21 @@
+{
+  "deletedAt": "2026-08-28T18:34:11.581Z",
+  "reason": "P14.23 delete JSON archive",
+  "archiveDeleted": true,
+  "postgresMutated": false,
+  "nacDemoUntouched": true,
+  "catalogJsonAbsent": true,
+  "archivedAt": "2026-08-26T19:58:01.517Z",
+  "archiveCounts": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 139,
+    "guard_decisions": 153
+  },
+  "pgCounts": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 139,
+    "guard_decisions": 163
+  }
+}

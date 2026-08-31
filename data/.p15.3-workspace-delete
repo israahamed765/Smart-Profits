@@ -1,0 +1,50 @@
+{
+  "executedAt": "2026-08-29T14:45:29.180Z",
+  "go": "GO",
+  "postgresMutated": true,
+  "rowsDeleted": 2,
+  "rolledBack": false,
+  "reason": "Deleted 2 P12.2 fixture workspaces. Merchants, track_events, and guard_decisions unchanged.",
+  "foreignKeysAdded": 0,
+  "uniqueConstraintsAdded": 0,
+  "migration002": false,
+  "p15_4_started": false,
+  "merchantsDeleted": 0,
+  "trackEventsDeleted": 0,
+  "guardsDeleted": 0,
+  "before": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 181,
+    "guard_decisions": 115
+  },
+  "after": {
+    "merchants": 205,
+    "workspaces": 3,
+    "track_events": 181,
+    "guard_decisions": 115
+  },
+  "emails": [
+    "p12.2-alice@test.com",
+    "p12.2-bob@test.com"
+  ],
+  "deletedEmails": [
+    "p12.2-alice@test.com",
+    "p12.2-bob@test.com"
+  ],
+  "remainingTargets": 0,
+  "targets": [
+    {
+      "email": "p12.2-alice@test.com",
+      "ownerEmail": "p12.2-alice@test.com",
+      "files": 1,
+      "updatedAt": "2026-08-26T18:57:27.493Z"
+    },
+    {
+      "email": "p12.2-bob@test.com",
+      "ownerEmail": "p12.2-bob@test.com",
+      "files": 1,
+      "updatedAt": "2026-08-26T18:57:27.493Z"
+    }
+  ]
+}

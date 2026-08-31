@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
-import { Providers } from "@/components/providers";
+import { Providers } from "@/frontend/components/providers";
 import "./globals.css";
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
@@ -34,11 +34,11 @@ try {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ar" dir="rtl" className={`${ibmPlexArabic.variable} ${ibmPlex.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="ar" dir="rtl" className={`${ibmPlexArabic.variable} ${ibmPlex.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>
-      <body className="min-h-full bg-background font-sans text-foreground">
+      <body className="min-h-full overflow-x-clip bg-background font-sans text-foreground">
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -1,0 +1,31 @@
+{
+  "auditedAt": "2026-08-28T19:01:49.476Z",
+  "reason": "P15.1 production PostgreSQL audit",
+  "postgresMutated": false,
+  "schemaChanged": false,
+  "counts": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 181,
+    "guard_decisions": 167
+  },
+  "findingIds": [
+    "no-foreign-keys",
+    "no-sequences",
+    "count-drift",
+    "workspaceOrphans",
+    "guardOrphans",
+    "event-empty-email",
+    "event-id-split",
+    "seq-scan-merchants",
+    "seq-scan-events-despite-at-idx",
+    "seq-scan-guards-all",
+    "rmw-merchants",
+    "merchant-no-pk-lookup",
+    "workspace-last-write-wins",
+    "events-cap",
+    "event-uuid-insert",
+    "guard-insert-no-conflict",
+    "pool-poison"
+  ]
+}

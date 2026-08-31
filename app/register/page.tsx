@@ -4,18 +4,21 @@ import { Lock, Mail, Phone, Store, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AuthShell } from "@/components/auth/auth-shell";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useAuth } from "@/context/auth-context";
-import { useAppearance } from "@/context/appearance";
-import { normalizeMobile } from "@/lib/phone";
+import { AuthShell } from "@/frontend/components/auth/auth-shell";
+import { Button } from "@/frontend/components/ui/button";
+import { Input } from "@/frontend/components/ui/input";
+import { Label } from "@/frontend/components/ui/label";
+import { useAuth } from "@/frontend/context/auth-context";
+import { useAppearance } from "@/frontend/context/appearance";
+import { useSmartGuard } from "@/frontend/context/smart-guard-context";
+import { GuardBlockedError } from "@/frontend/lib/smart-guard/client";
+import { normalizeMobile } from "@/frontend/lib/phone";
 import { toast } from "sonner";
 
 export default function RegisterPage() {
   const router = useRouter();
   const { register } = useAuth();
+  const { surfaceVerdict } = useSmartGuard();
   const { t } = useAppearance();
   const [accepted, setAccepted] = useState(false);
 
@@ -43,6 +46,10 @@ export default function RegisterPage() {
         router.push("/dashboard");
       })
       .catch((error: unknown) => {
+        if (error instanceof GuardBlockedError) {
+          surfaceVerdict(error.verdict, { email, phone });
+          return;
+        }
         toast.error(error instanceof Error && error.message === "phone-taken" ? t("auth.phone.taken") : t("auth.needFields"));
       });
   }

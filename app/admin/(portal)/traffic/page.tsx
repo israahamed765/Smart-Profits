@@ -2,19 +2,19 @@
 
 import { AlertTriangle, Eye, Globe, MousePointerClick, Stethoscope } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { AdminHeader } from "@/components/admin/admin-header";
-import { AdminKpi } from "@/components/admin/admin-kpi";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAdminPortal } from "@/context/admin-portal";
-import { useAppearance } from "@/context/appearance";
-import { formatCount } from "@/lib/admin/money";
+import { AdminHeader } from "@/frontend/components/admin/admin-header";
+import { AdminKpi } from "@/frontend/components/admin/admin-kpi";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { useAdminPortal } from "@/frontend/context/admin-portal";
+import { useAppearance } from "@/frontend/context/appearance";
+import { formatCount } from "@/frontend/lib/admin/money";
 
 export default function AdminTrafficPage() {
   const { snapshot, ready } = useAdminPortal();
   const { t } = useAppearance();
 
   if (!ready || !snapshot) {
-    return <p className="p-6 text-sm text-muted">{t("admin.traffic.title")}...</p>;
+    return <p className="page-pad text-sm text-muted">{t("admin.traffic.title")}...</p>;
   }
 
   const maxCountry = Math.max(...snapshot.countries.map((row) => row.visitors), 1);
@@ -22,7 +22,7 @@ export default function AdminTrafficPage() {
   return (
     <>
       <AdminHeader title={t("admin.traffic.title")} subtitle={t("admin.traffic.subtitle")} />
-      <div className="space-y-5 p-6">
+      <div className="page-pad">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <AdminKpi title="الزوار الفريدون" value={formatCount(snapshot.uniqueVisitors)} hint="حسابات ظهرت في أحداث الفترة" icon={Eye} />
           <AdminKpi title="المشاهدات" value={formatCount(snapshot.pageViews)} hint="عدد الأحداث الحقيقية" icon={Globe} />
@@ -30,7 +30,7 @@ export default function AdminTrafficPage() {
           <AdminKpi title="أخطاء رفع Excel" value={formatCount(snapshot.uploadErrors)} hint="ملفات فشل تنظيفها" icon={AlertTriangle} />
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle>مصادر النشاط داخل المنصة</CardTitle>

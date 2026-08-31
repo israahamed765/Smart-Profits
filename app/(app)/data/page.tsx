@@ -2,16 +2,16 @@
 
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FileDropzone } from "@/components/dashboard/file-dropzone";
-import { FileStudyReport } from "@/components/analysis/file-study-report";
-import { ProductSalesTable } from "@/components/analysis/product-sales-table";
-import { FileArchiveCards } from "@/components/layout/file-archive";
-import { AppHeader } from "@/components/layout/app-header";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { SectionTabs } from "@/components/ui/section-tabs";
-import { useAnalysis } from "@/context/analysis-context";
-import { useAppearance } from "@/context/appearance";
+import { FileDropzone } from "@/frontend/components/dashboard/file-dropzone";
+import { FileStudyReport } from "@/frontend/components/analysis/file-study-report";
+import { ProductSalesTable } from "@/frontend/components/analysis/product-sales-table";
+import { FileArchiveCards } from "@/frontend/components/layout/file-archive";
+import { AppHeader } from "@/frontend/components/layout/app-header";
+import { Button } from "@/frontend/components/ui/button";
+import { Card } from "@/frontend/components/ui/card";
+import { SectionTabs } from "@/frontend/components/ui/section-tabs";
+import { useAnalysis } from "@/frontend/context/analysis-context";
+import { useAppearance } from "@/frontend/context/appearance";
 import { SAMPLE_CSV_TEMPLATE, SAMPLE_CSV_TEMPLATE_EN } from "@/lib/sample-data";
 
 function DataPageInner() {
@@ -47,7 +47,7 @@ function DataPageInner() {
   return (
     <>
       <AppHeader title={t("data.title")} subtitle={t("data.subtitle")} />
-      <div className="space-y-5 p-6">
+      <div className="page-pad">
         <SectionTabs tabs={tabs} value={tab} onChange={setTab} />
 
         {tab === "upload" ? (
@@ -91,7 +91,7 @@ function DataPageInner() {
 
 function DataFallback() {
   const { t } = useAppearance();
-  return <p className="p-6 text-sm text-muted">{t("data.loading")}</p>;
+  return <p className="page-pad text-sm text-muted">{t("data.loading")}</p>;
 }
 
 export default function DataPage() {

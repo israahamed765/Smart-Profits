@@ -1,0 +1,1444 @@
+{
+  "evaluatedAt": "2026-08-29T14:23:57.535Z",
+  "postgresMutated": false,
+  "rowsDeleted": 0,
+  "foreignKeysAdded": 0,
+  "uniqueConstraintsAdded": 0,
+  "migration002": false,
+  "p15_4_started": false,
+  "counts": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 181,
+    "guard_decisions": 167
+  },
+  "workspaces": [
+    {
+      "email": "p12.2-alice@test.com",
+      "workspaceRows": 1,
+      "updatedAt": "2026-08-26T18:57:27.493Z",
+      "savedAt": "2026-08-26T15:37:44.724Z",
+      "ownerEmail": "p12.2-alice@test.com",
+      "files": 1,
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "guardRows": 0,
+      "otherRefs": [],
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.2 fixture leftover: one workspace row, no merchant, no track_events, no guard_decisions. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p12.2-bob@test.com",
+      "workspaceRows": 1,
+      "updatedAt": "2026-08-26T18:57:27.493Z",
+      "savedAt": "2026-08-26T15:37:44.894Z",
+      "ownerEmail": "p12.2-bob@test.com",
+      "files": 1,
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "guardRows": 0,
+      "otherRefs": [],
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.2 fixture leftover: one workspace row, no merchant, no track_events, no guard_decisions. Still requires an explicit delete GO."
+    }
+  ],
+  "guards": [
+    {
+      "email": "p125-1787503761999-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:49:22.513Z",
+      "lastAt": "2026-08-23T16:49:22.668Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503764583-31@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:49:24.788Z",
+      "lastAt": "2026-08-23T16:49:24.845Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503864865-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:51:05.127Z",
+      "lastAt": "2026-08-23T16:51:05.205Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503866929-31@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:51:07.397Z",
+      "lastAt": "2026-08-23T16:51:07.563Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503922657-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:52:02.727Z",
+      "lastAt": "2026-08-23T16:52:02.734Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503923072-31@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:52:03.149Z",
+      "lastAt": "2026-08-23T16:52:03.176Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503972517-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:52:52.618Z",
+      "lastAt": "2026-08-23T16:52:52.634Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503973191-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:52:53.281Z",
+      "lastAt": "2026-08-23T16:52:53.312Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787504014687-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:53:35.008Z",
+      "lastAt": "2026-08-23T16:53:35.182Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787504017449-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:53:37.748Z",
+      "lastAt": "2026-08-23T16:53:37.894Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787504632808-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T17:03:53.099Z",
+      "lastAt": "2026-08-23T17:03:53.166Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787504635189-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T17:03:55.494Z",
+      "lastAt": "2026-08-23T17:03:55.555Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787505207774-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T17:13:28.021Z",
+      "lastAt": "2026-08-23T17:13:28.174Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787505209480-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T17:13:29.756Z",
+      "lastAt": "2026-08-23T17:13:30.093Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787505875593-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T17:24:36.120Z",
+      "lastAt": "2026-08-23T17:24:36.191Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787505877778-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T17:24:37.999Z",
+      "lastAt": "2026-08-23T17:24:38.064Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787652981139-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T10:16:21.326Z",
+      "lastAt": "2026-08-25T10:16:21.404Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787652982835-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T10:16:23.031Z",
+      "lastAt": "2026-08-25T10:16:23.154Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787653795737-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T10:29:56.000Z",
+      "lastAt": "2026-08-25T10:29:56.048Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787653797040-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T10:29:57.390Z",
+      "lastAt": "2026-08-25T10:29:57.508Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787653851931-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T10:30:52.127Z",
+      "lastAt": "2026-08-25T10:30:52.177Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787653853168-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T10:30:53.398Z",
+      "lastAt": "2026-08-25T10:30:53.545Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787655080712-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T10:51:20.924Z",
+      "lastAt": "2026-08-25T10:51:21.021Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787655082324-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T10:51:22.711Z",
+      "lastAt": "2026-08-25T10:51:22.857Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787656235907-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T11:10:36.134Z",
+      "lastAt": "2026-08-25T11:10:36.278Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787656238113-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T11:10:38.674Z",
+      "lastAt": "2026-08-25T11:10:39.046Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787656715860-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T11:18:36.597Z",
+      "lastAt": "2026-08-25T11:18:36.713Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787656721697-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T11:18:42.673Z",
+      "lastAt": "2026-08-25T11:18:42.845Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787658033571-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T11:40:33.904Z",
+      "lastAt": "2026-08-25T11:40:33.999Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787658035963-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-25T11:40:36.655Z",
+      "lastAt": "2026-08-25T11:40:36.975Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787746171819-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:09:32.802Z",
+      "lastAt": "2026-08-26T12:09:33.115Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787746175801-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:09:36.218Z",
+      "lastAt": "2026-08-26T12:09:36.554Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787746653564-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:17:34.119Z",
+      "lastAt": "2026-08-26T12:17:34.537Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787746657271-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:17:37.747Z",
+      "lastAt": "2026-08-26T12:17:38.053Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787747369379-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:29:29.972Z",
+      "lastAt": "2026-08-26T12:29:30.100Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787747372737-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:29:33.153Z",
+      "lastAt": "2026-08-26T12:29:33.475Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787747442052-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:30:42.434Z",
+      "lastAt": "2026-08-26T12:30:42.575Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787747444398-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:30:44.779Z",
+      "lastAt": "2026-08-26T12:30:44.928Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787747642211-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:34:02.554Z",
+      "lastAt": "2026-08-26T12:34:02.622Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787747645262-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:34:06.172Z",
+      "lastAt": "2026-08-26T12:34:06.712Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787748679855-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:51:20.095Z",
+      "lastAt": "2026-08-26T12:51:20.146Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787748681039-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T12:51:21.451Z",
+      "lastAt": "2026-08-26T12:51:21.594Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787749345231-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T13:02:25.718Z",
+      "lastAt": "2026-08-26T13:02:25.892Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787749347932-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T13:02:28.323Z",
+      "lastAt": "2026-08-26T13:02:28.713Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787749979031-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T13:12:59.345Z",
+      "lastAt": "2026-08-26T13:12:59.440Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787749982093-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T13:13:02.397Z",
+      "lastAt": "2026-08-26T13:13:02.578Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787751100286-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T13:31:40.698Z",
+      "lastAt": "2026-08-26T13:31:40.806Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787751102501-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T13:31:42.949Z",
+      "lastAt": "2026-08-26T13:31:43.190Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787753701172-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:15:02.175Z",
+      "lastAt": "2026-08-26T14:15:03.026Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787753705765-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:15:08.131Z",
+      "lastAt": "2026-08-26T14:15:08.473Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787754421975-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:27:02.300Z",
+      "lastAt": "2026-08-26T14:27:02.552Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787754424498-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:27:05.669Z",
+      "lastAt": "2026-08-26T14:27:06.741Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787755211736-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:40:11.969Z",
+      "lastAt": "2026-08-26T14:40:12.009Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787755213391-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:40:13.880Z",
+      "lastAt": "2026-08-26T14:40:14.175Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787755297191-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:41:37.396Z",
+      "lastAt": "2026-08-26T14:41:37.472Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787755298242-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:41:38.640Z",
+      "lastAt": "2026-08-26T14:41:38.701Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787756382841-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:59:43.356Z",
+      "lastAt": "2026-08-26T14:59:43.492Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787756385876-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T14:59:47.243Z",
+      "lastAt": "2026-08-26T14:59:47.425Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787758182676-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T15:29:43.257Z",
+      "lastAt": "2026-08-26T15:29:43.410Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787758184953-32@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T15:29:45.593Z",
+      "lastAt": "2026-08-26T15:29:45.674Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787758665126-2@test.com",
+      "n": 2,
+      "firstAt": "2026-08-26T15:37:45.635Z",
+      "lastAt": "2026-08-26T15:37:45.692Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 2 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-live-1787504190433@test.com",
+      "n": 2,
+      "firstAt": "2026-08-23T16:56:30.797Z",
+      "lastAt": "2026-08-23T16:56:30.846Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503763904-19@test.com",
+      "n": 1,
+      "firstAt": "2026-08-23T16:49:24.160Z",
+      "lastAt": "2026-08-23T16:49:24.160Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503866045-19@test.com",
+      "n": 1,
+      "firstAt": "2026-08-23T16:51:06.312Z",
+      "lastAt": "2026-08-23T16:51:06.312Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503922923-19@test.com",
+      "n": 1,
+      "firstAt": "2026-08-23T16:52:02.983Z",
+      "lastAt": "2026-08-23T16:52:02.983Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787503972930-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-23T16:52:53.021Z",
+      "lastAt": "2026-08-23T16:52:53.021Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787504016799-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-23T16:53:37.025Z",
+      "lastAt": "2026-08-23T16:53:37.025Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787504634283-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-23T17:03:54.560Z",
+      "lastAt": "2026-08-23T17:03:54.560Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787505208819-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-23T17:13:28.994Z",
+      "lastAt": "2026-08-23T17:13:28.994Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787505877021-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-23T17:24:37.190Z",
+      "lastAt": "2026-08-23T17:24:37.190Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787652982389-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-25T10:16:22.583Z",
+      "lastAt": "2026-08-25T10:16:22.583Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787653796560-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-25T10:29:56.690Z",
+      "lastAt": "2026-08-25T10:29:56.690Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787653852727-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-25T10:30:52.893Z",
+      "lastAt": "2026-08-25T10:30:52.893Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787655081734-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-25T10:51:21.991Z",
+      "lastAt": "2026-08-25T10:51:21.991Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787656237314-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-25T11:10:37.505Z",
+      "lastAt": "2026-08-25T11:10:37.505Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787656719495-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-25T11:18:40.079Z",
+      "lastAt": "2026-08-25T11:18:40.079Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787658035002-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-25T11:40:35.270Z",
+      "lastAt": "2026-08-25T11:40:35.270Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787746174415-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T12:09:34.833Z",
+      "lastAt": "2026-08-26T12:09:34.833Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787746655978-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T12:17:36.361Z",
+      "lastAt": "2026-08-26T12:17:36.361Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787747371587-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T12:29:31.885Z",
+      "lastAt": "2026-08-26T12:29:31.885Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787747443697-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T12:30:43.959Z",
+      "lastAt": "2026-08-26T12:30:43.959Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787747644095-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T12:34:04.656Z",
+      "lastAt": "2026-08-26T12:34:04.656Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787748680617-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T12:51:20.754Z",
+      "lastAt": "2026-08-26T12:51:20.754Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787749347000-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T13:02:27.240Z",
+      "lastAt": "2026-08-26T13:02:27.240Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787749981293-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T13:13:01.573Z",
+      "lastAt": "2026-08-26T13:13:01.573Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": true,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "BLOCKED",
+      "reason": "A merchants.email row exists. Deleting these guard rows would drop audit history for a live account."
+    },
+    {
+      "email": "p125-1787751101717-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T13:31:41.969Z",
+      "lastAt": "2026-08-26T13:31:41.969Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787753704394-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T14:15:05.151Z",
+      "lastAt": "2026-08-26T14:15:05.151Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787754423483-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T14:27:03.718Z",
+      "lastAt": "2026-08-26T14:27:03.718Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787755212783-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T14:40:12.980Z",
+      "lastAt": "2026-08-26T14:40:12.980Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787755298008-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T14:41:38.091Z",
+      "lastAt": "2026-08-26T14:41:38.091Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787756385137-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T14:59:45.339Z",
+      "lastAt": "2026-08-26T14:59:45.339Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787758184342-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T15:29:44.601Z",
+      "lastAt": "2026-08-26T15:29:44.601Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    },
+    {
+      "email": "p125-1787758666720-20@test.com",
+      "n": 1,
+      "firstAt": "2026-08-26T15:37:46.885Z",
+      "lastAt": "2026-08-26T15:37:46.885Z",
+      "decisions": [
+        "allow"
+      ],
+      "hasMerchant": false,
+      "trackEvents": 0,
+      "harness": true,
+      "verdict": "SAFE TO DELETE",
+      "reason": "P12.5/P125 harness leftover: 1 guard_decisions, no merchant, no track_events. Still requires an explicit delete GO."
+    }
+  ],
+  "guardSummary": {
+    "emails": 93,
+    "rows": 155,
+    "withMerchant": 60,
+    "noMerchantEmails": 33,
+    "noMerchantRows": 52,
+    "verdict": "BLOCKED",
+    "reason": "60 of 93 p125-* emails now match a merchant (103 rows). A blanket delete is blocked. The 33 emails / 52 rows with no merchant still look like harness leftovers (SAFE TO DELETE only with a targeted GO)."
+  },
+  "phones": {
+    "merchantCount": 205,
+    "nullCount": 2,
+    "emptyCount": 2,
+    "invalidCount": 0,
+    "rawDuplicateGroups": 1,
+    "normalizedDuplicateGroups": 0,
+    "uniqueValidE164": 201,
+    "anomalies": [
+      {
+        "kind": "null",
+        "phone": null,
+        "normalized": null,
+        "emails": [
+          "pitch.demo.1786709548@smartprofits.dev",
+          "pitch.demo.1786709716@smartprofits.dev"
+        ]
+      },
+      {
+        "kind": "empty",
+        "phone": "",
+        "normalized": null,
+        "emails": [
+          "p124-admin-patch@test.com",
+          "p124-live-patch@test.com"
+        ]
+      },
+      {
+        "kind": "raw-duplicate",
+        "phone": "",
+        "normalized": null,
+        "emails": [
+          "p124-admin-patch@test.com",
+          "p124-live-patch@test.com"
+        ]
+      }
+    ],
+    "verdict": "BLOCKED",
+    "reason": "Two or more merchants share the same payload->>'phone' text. UNIQUE(phone) would fail."
+  },
+  "indexCreatedAt": {
+    "verdict": "BLOCKED",
+    "reason": "P15.3 EXPLAIN at 167 rows was Seq Scan cost 35.26. An unused created_at DESC index is not proven useful. No 002."
+  },
+  "workspaceCas": {
+    "verdict": "BLOCKED",
+    "reason": "Compare-and-swap needs expectedSavedAt and HTTP 409 — that changes POST /api/workspace. Plan only."
+  },
+  "items": [
+    {
+      "id": "delete-p12.2-workspaces",
+      "title": "Delete p12.2-alice / p12.2-bob workspaces",
+      "verdict": "SAFE TO DELETE",
+      "detail": "p12.2-alice@test.com: SAFE TO DELETE; p12.2-bob@test.com: SAFE TO DELETE"
+    },
+    {
+      "id": "delete-p125-guards",
+      "title": "Delete p125-* guard_decisions",
+      "verdict": "BLOCKED",
+      "detail": "60 of 93 p125-* emails now match a merchant (103 rows). A blanket delete is blocked. The 33 emails / 52 rows with no merchant still look like harness leftovers (SAFE TO DELETE only with a targeted GO)."
+    },
+    {
+      "id": "unique-phone",
+      "title": "UNIQUE (merchants.payload->>'phone')",
+      "verdict": "BLOCKED",
+      "detail": "Two or more merchants share the same payload->>'phone' text. UNIQUE(phone) would fail."
+    },
+    {
+      "id": "fk-any",
+      "title": "Add any FK",
+      "verdict": "BLOCKED",
+      "detail": "Orphans remain. Decision Gate does not add FK. Needs a separate delete GO first, or an FK that allows unmatched emails."
+    },
+    {
+      "id": "index-created-at",
+      "title": "guard_decisions(created_at DESC) via 002",
+      "verdict": "BLOCKED",
+      "detail": "P15.3 EXPLAIN at 167 rows was Seq Scan cost 35.26. An unused created_at DESC index is not proven useful. No 002."
+    },
+    {
+      "id": "workspace-cas",
+      "title": "Workspace compare-and-swap",
+      "verdict": "BLOCKED",
+      "detail": "Compare-and-swap needs expectedSavedAt and HTTP 409 — that changes POST /api/workspace. Plan only."
+    }
+  ]
+}

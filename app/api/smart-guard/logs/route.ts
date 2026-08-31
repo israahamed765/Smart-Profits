@@ -1,14 +1,6 @@
-import { NextResponse } from "next/server";
-import { listGuardDecisions } from "@/lib/server/guard-log";
+import { maybeProxyToBackend } from "@/server/http/proxy-to-backend";
+import { GET as getGuardLogs } from "@/backend/src/http/guard-logs";
 
-export async function GET(request: Request) {
-  try {
-    const url = new URL(request.url);
-    const email = url.searchParams.get("email") || "";
-    const limit = Number(url.searchParams.get("limit") || 40);
-    const result = await listGuardDecisions({ email: email || undefined, limit });
-    return NextResponse.json(result);
-  } catch {
-    return NextResponse.json({ error: "Could not read Smart Guard logs." }, { status: 500 });
-  }
+export function GET(request: Request) {
+  return maybeProxyToBackend(request, getGuardLogs);
 }

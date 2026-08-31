@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "preserve"
+  },
+  "include": ["./**/*.ts", "../server/**/*.ts", "../shared/**/*.ts", "../lib/financial-engine/**/*.ts"],
+  "exclude": ["node_modules"]
+}

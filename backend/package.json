@@ -1,0 +1,10 @@
+{
+  "name": "smart-profit-backend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "npx --yes tsx --tsconfig ../tsconfig.json --env-file=../.env src/index.ts",
+    "typecheck": "npx tsc --noEmit -p tsconfig.json"
+  }
+}

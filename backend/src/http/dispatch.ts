@@ -1,0 +1,73 @@
+import { GET as getWorkspace } from "./workspace-get";
+import { POST as postWorkspace } from "./workspace-post";
+import { POST as postTrack } from "./track-post";
+import { POST as postAnalyze } from "./analyze-post";
+import { POST as postLogin } from "./auth-login";
+import { GET as getMe } from "./auth-me";
+import { POST as postLogout } from "./auth-logout";
+import { POST as postRegister } from "./auth-register";
+import { GET as getProfile, POST as postProfile } from "./auth-profile";
+import { POST as postForgot } from "./auth-forgot";
+import { POST as postReset } from "./auth-reset";
+import { POST as postAdminLogin } from "./admin-login";
+import { GET as getAdminMe } from "./admin-me";
+import { POST as postAdminLogout } from "./admin-logout";
+import { GET as getAdminSnapshot } from "./admin-snapshot";
+import { POST as postAdminUsers } from "./admin-users";
+import { POST as postGuardEvaluate } from "./guard-evaluate";
+import { GET as getGuardLogs } from "./guard-logs";
+import { GET as getGuardDemo, POST as postGuardDemo } from "./guard-demo";
+import { POST as postGuardStepUpSend } from "./guard-stepup-send";
+import { POST as postGuardStepUpVerify } from "./guard-stepup-verify";
+import { GET as getNacCatalog } from "./nac-catalog";
+import { POST as postNacMockGate } from "./nac-mock-gate";
+import { POST as postNacSimSwapCheck } from "./nac-sim-swap-check";
+import { POST as postNacSimSwapDate } from "./nac-sim-swap-date";
+import { POST as postNacDeviceSwapCheck } from "./nac-device-swap-check";
+import { POST as postNacDeviceSwapDate } from "./nac-device-swap-date";
+import { POST as postNacNumberVerify } from "./nac-number-verify";
+import { POST as postNacLocationVerify } from "./nac-location-verify";
+import { POST as postReportsExport } from "./reports-export-post";
+
+export async function dispatchProductRequest(request: Request): Promise<Response | null> {
+  const url = new URL(request.url);
+  const path = url.pathname;
+  const method = (request.method || "GET").toUpperCase();
+
+  if (method === "GET" && path === "/health") {
+    return Response.json({ ok: true });
+  }
+  if (method === "GET" && path === "/api/workspace") return getWorkspace(request);
+  if (method === "POST" && path === "/api/workspace") return postWorkspace(request);
+  if (method === "POST" && path === "/api/track") return postTrack(request);
+  if (method === "POST" && path === "/api/analyze") return postAnalyze(request);
+  if (method === "POST" && path === "/api/reports/export") return postReportsExport(request);
+  if (method === "POST" && path === "/api/auth/login") return postLogin(request);
+  if (method === "GET" && path === "/api/auth/me") return getMe(request);
+  if (method === "POST" && path === "/api/auth/logout") return postLogout(request);
+  if (method === "POST" && path === "/api/auth/register") return postRegister(request);
+  if (method === "GET" && path === "/api/auth/profile") return getProfile(request);
+  if (method === "POST" && path === "/api/auth/profile") return postProfile(request);
+  if (method === "POST" && path === "/api/auth/forgot-password") return postForgot(request);
+  if (method === "POST" && path === "/api/auth/reset-password") return postReset(request);
+  if (method === "POST" && path === "/api/admin/login") return postAdminLogin(request);
+  if (method === "GET" && path === "/api/admin/me") return getAdminMe(request);
+  if (method === "POST" && path === "/api/admin/logout") return postAdminLogout(request);
+  if (method === "GET" && path === "/api/admin/snapshot") return getAdminSnapshot(request);
+  if (method === "POST" && path === "/api/admin/users") return postAdminUsers(request);
+  if (method === "POST" && path === "/api/smart-guard/evaluate") return postGuardEvaluate(request);
+  if (method === "GET" && path === "/api/smart-guard/logs") return getGuardLogs(request);
+  if (method === "GET" && path === "/api/smart-guard/demo") return getGuardDemo(request);
+  if (method === "POST" && path === "/api/smart-guard/demo") return postGuardDemo(request);
+  if (method === "POST" && path === "/api/smart-guard/step-up/send") return postGuardStepUpSend(request);
+  if (method === "POST" && path === "/api/smart-guard/step-up/verify") return postGuardStepUpVerify(request);
+  if (method === "GET" && path === "/api/nac") return getNacCatalog(request);
+  if (method === "POST" && path === "/api/nac/mock/gate") return postNacMockGate(request);
+  if (method === "POST" && path === "/api/nac/sim-swap/v1/check") return postNacSimSwapCheck(request);
+  if (method === "POST" && path === "/api/nac/sim-swap/v1/retrieve-date") return postNacSimSwapDate(request);
+  if (method === "POST" && path === "/api/nac/device-swap/v1/check") return postNacDeviceSwapCheck(request);
+  if (method === "POST" && path === "/api/nac/device-swap/v1/retrieve-date") return postNacDeviceSwapDate(request);
+  if (method === "POST" && path === "/api/nac/number-verification/v1/verify") return postNacNumberVerify(request);
+  if (method === "POST" && path === "/api/nac/location-verification/v1/verify") return postNacLocationVerify(request);
+  return null;
+}

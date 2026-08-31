@@ -1,0 +1,308 @@
+{
+  "orphans": {
+    "classifiedAt": "2026-08-28T20:09:58.103Z",
+    "postgresMutated": false,
+    "rowsDeleted": 0,
+    "workspaceOrphans": [
+      {
+        "email": "p12.2-alice@test.com",
+        "class": "p12.2-workspace-fixture",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "P12.2 API-contract test leftover. Workspace row exists; no merchants.email match."
+      },
+      {
+        "email": "p12.2-bob@test.com",
+        "class": "p12.2-workspace-fixture",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "P12.2 API-contract test leftover. Workspace row exists; no merchants.email match."
+      }
+    ],
+    "guardOrphans": [
+      {
+        "email": "p125-1787652982835-32@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787655080712-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787655082324-32@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787656721697-32@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787658033571-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787658035963-32@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787747442052-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787747444398-32@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787747645262-32@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787751100286-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787751102501-32@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787753701172-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787753705765-32@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787754421975-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787755211736-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787755297191-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787756382841-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787758182676-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787758665126-2@test.com",
+        "n": 2,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787652982389-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787655081734-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787656719495-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787658035002-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787747443697-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787747644095-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787751101717-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787753704394-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787754423483-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787755212783-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787755298008-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787756385137-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787758184342-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      },
+      {
+        "email": "p125-1787758666720-20@test.com",
+        "n": 1,
+        "class": "p125-guard-harness",
+        "disposition": "keep-until-explicit-delete-go",
+        "origin": "Guard/NAC harness emails (p125-<epoch>-<variant>@test.com). No merchants.email match."
+      }
+    ],
+    "unknownCount": 0,
+    "guardIndex": {
+      "unfilteredNode": "Seq Scan",
+      "byEmailNode": "Index Scan",
+      "createIndexNow": false,
+      "reason": "Unfiltered listing is Seq Scan at 167 rows. guard_decisions_email_created_idx already covers the merchant path (Index Scan). A created_at DESC index would help admin listing at larger scale. P15.2 does not add a migration."
+    }
+  },
+  "gate": {
+    "evaluatedAt": "2026-08-28T20:09:58.108Z",
+    "postgresMutated": false,
+    "rowsDeleted": 0,
+    "foreignKeysAdded": 0,
+    "uniqueConstraintsAdded": 0,
+    "items": [
+      {
+        "id": "fk-workspaces-email",
+        "proposed": "workspaces.email → merchants.email",
+        "blockedByRows": 2,
+        "blockedByEmails": 2,
+        "class": "p12.2-workspace-fixture",
+        "needs": "Explicit delete GO for p12.2-alice@test.com and p12.2-bob@test.com, or an FK that allows unmatched emails. Do not add in P15.3.",
+        "addNow": false
+      },
+      {
+        "id": "fk-guard-email",
+        "proposed": "guard_decisions.email → merchants.email",
+        "blockedByRows": 52,
+        "blockedByEmails": 33,
+        "class": "p125-guard-harness",
+        "needs": "Explicit delete GO for 52 p125-*@test.com guard rows (33 emails), or an FK that allows unmatched emails. Do not add in P15.3.",
+        "addNow": false
+      },
+      {
+        "id": "unique-phone",
+        "proposed": "UNIQUE (merchants.payload->>'phone')",
+        "blockedByRows": 0,
+        "blockedByEmails": 0,
+        "class": "none-known",
+        "needs": "P15.1 found 0 duplicate phones, but adding UNIQUE still needs a separate GO. Do not add in P15.3.",
+        "addNow": false
+      }
+    ],
+    "workspaceCas": {
+      "applyNow": false,
+      "reason": "saveWorkspace overwrites the whole JSONB payload. Compare-and-swap on updated_at or payload.savedAt would require the client to send an expected version, which changes the POST /api/workspace contract. P15.3 does not apply it.",
+      "wouldNeed": [
+        "Client sends expectedSavedAt or expectedUpdatedAt",
+        "UPDATE … WHERE updated_at = $expected (or payload->>'savedAt') returning rowCount",
+        "409 when rowCount is 0 — new API error shape"
+      ]
+    },
+    "unknownOrphans": 0,
+    "go": "wait-for-fk-go"
+  }
+}

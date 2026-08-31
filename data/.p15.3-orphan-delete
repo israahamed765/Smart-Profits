@@ -1,0 +1,431 @@
+{
+  "executedAt": "2026-08-29T14:37:46.043Z",
+  "go": "GO",
+  "postgresMutated": true,
+  "rowsDeleted": 52,
+  "rolledBack": false,
+  "reason": "Deleted 52 P15.2 orphan guard_decisions across 33 emails. Merchant-backed p125 rows unchanged.",
+  "foreignKeysAdded": 0,
+  "uniqueConstraintsAdded": 0,
+  "migration002": false,
+  "p15_4_started": false,
+  "workspacesDeleted": 0,
+  "merchantsDeleted": 0,
+  "trackEventsDeleted": 0,
+  "before": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 181,
+    "guard_decisions": 167
+  },
+  "after": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 181,
+    "guard_decisions": 115
+  },
+  "classifiedEmails": [
+    "p125-1787652982389-20@test.com",
+    "p125-1787652982835-32@test.com",
+    "p125-1787655080712-2@test.com",
+    "p125-1787655081734-20@test.com",
+    "p125-1787655082324-32@test.com",
+    "p125-1787656719495-20@test.com",
+    "p125-1787656721697-32@test.com",
+    "p125-1787658033571-2@test.com",
+    "p125-1787658035002-20@test.com",
+    "p125-1787658035963-32@test.com",
+    "p125-1787747442052-2@test.com",
+    "p125-1787747443697-20@test.com",
+    "p125-1787747444398-32@test.com",
+    "p125-1787747644095-20@test.com",
+    "p125-1787747645262-32@test.com",
+    "p125-1787751100286-2@test.com",
+    "p125-1787751101717-20@test.com",
+    "p125-1787751102501-32@test.com",
+    "p125-1787753701172-2@test.com",
+    "p125-1787753704394-20@test.com",
+    "p125-1787753705765-32@test.com",
+    "p125-1787754421975-2@test.com",
+    "p125-1787754423483-20@test.com",
+    "p125-1787755211736-2@test.com",
+    "p125-1787755212783-20@test.com",
+    "p125-1787755297191-2@test.com",
+    "p125-1787755298008-20@test.com",
+    "p125-1787756382841-2@test.com",
+    "p125-1787756385137-20@test.com",
+    "p125-1787758182676-2@test.com",
+    "p125-1787758184342-20@test.com",
+    "p125-1787758665126-2@test.com",
+    "p125-1787758666720-20@test.com"
+  ],
+  "targetIds": [
+    "15fab23b-2d55-45b3-94b0-f1b5061cd252",
+    "77a7ff5d-4536-43f4-81aa-ca6c9cb5b150",
+    "e527150f-d4da-40e8-9caa-4416a16cb8f9",
+    "417d627b-bbbb-43f4-a8b5-1410a1779f1e",
+    "46ce7253-b000-4b53-b695-fa5a55f45954",
+    "32543ec4-f70d-43c1-bc77-c30e773da3c8",
+    "5a230e8b-aa1f-4e48-817f-df9734cf5870",
+    "aababf55-eab1-4342-a00d-a63caf0130c5",
+    "eb4451ab-059f-4561-be70-1cb5d073df87",
+    "a208ae5c-e568-470b-80cf-a609ea7604b3",
+    "a3430476-4ead-4c6d-8776-6350886d51a9",
+    "2691e3a5-e6eb-4a2a-ac63-6bc90bb6ac25",
+    "cde5df04-b591-4325-a023-55bc08c5d295",
+    "5a288249-4883-4a91-9ae6-a84a5c27c298",
+    "16b4af97-5c4f-4c2a-998a-9114cc9dfc4b",
+    "f12b2db2-bca8-42df-be37-b54b57a35518",
+    "486f2c8a-d285-4e2c-85e6-1dc3adc4ed18",
+    "850a2266-0b2e-450c-97c6-7b2c0bcd8230",
+    "8868c1ed-4033-4fea-950a-f95a37dfad4d",
+    "00678065-b6dc-454e-bb29-4bf3dc43fb8a",
+    "3b6326df-87c0-4154-a960-8006b107b0e0",
+    "7b404187-85a3-4fb2-908c-b8256e930bbc",
+    "259a0dde-2c1b-4679-b469-b685e6f1b148",
+    "3b4aa34f-f8b0-4d47-bdbe-88b30007ae0e",
+    "64b1db0c-1452-4b4b-8338-6b51aa793cae",
+    "da3900a1-79c2-4f67-8488-8ff42115cc53",
+    "5ee77df4-c5a2-4238-9956-681069433a57",
+    "7079c97f-02a4-49d0-b52c-f5b4008e0d5f",
+    "95b8a4b1-4d0a-46cf-98b3-cdb6229bc79c",
+    "522b02cd-2e05-43a7-a3a8-8944b7e34c6d",
+    "c20aac63-c5a1-4aa7-893d-63d6794e6cdc",
+    "9c955d72-cc4d-4551-a2b0-3c978d953401",
+    "12f31264-7f21-4109-b1b0-59cfc3292919",
+    "f73ebf8b-8ee4-4b4e-9d3b-73e673c01e1f",
+    "bdde4069-f3cf-4cad-8c46-952dd9fdef2e",
+    "ef297a94-3d55-43de-8e4c-9ecfce2bbe37",
+    "69fb0da0-1eb7-4309-ad8b-a87e26bb47c7",
+    "22e76541-e6a2-4953-a36b-a879080db8ad",
+    "de7853ec-f3a4-411d-94e1-017b693dcf3f",
+    "a93c2a8a-a5fd-494c-9cc1-f4e4a185c312",
+    "36f8596c-b882-411f-810c-9fd329d21169",
+    "c5cca67f-5371-4fb9-9142-f986c82e2b47",
+    "f1f8dc20-4085-4b5c-aa42-e847ac50a747",
+    "4f94c35d-f32d-47e3-b941-b3c37db9c4eb",
+    "efca260e-d810-4c38-9475-75483c622551",
+    "c63bc56a-286e-46b2-9711-098edb60900f",
+    "1503f6a6-b447-4120-a816-fa89837fa8fd",
+    "763c8ed6-acee-459d-ad45-fa04e9d2cad1",
+    "16b1eb77-2e13-4bff-bf50-9d931cc98ac4",
+    "022c5dea-9c23-4d9b-8588-268f1fcf653e",
+    "db5d772c-98d2-42c9-96d5-bef1e2f178eb",
+    "6ca76ff2-bf38-4048-afdd-23dd66bad678"
+  ],
+  "deletedIds": [
+    "ef297a94-3d55-43de-8e4c-9ecfce2bbe37",
+    "bdde4069-f3cf-4cad-8c46-952dd9fdef2e",
+    "417d627b-bbbb-43f4-a8b5-1410a1779f1e",
+    "46ce7253-b000-4b53-b695-fa5a55f45954",
+    "36f8596c-b882-411f-810c-9fd329d21169",
+    "c5cca67f-5371-4fb9-9142-f986c82e2b47",
+    "5a230e8b-aa1f-4e48-817f-df9734cf5870",
+    "aababf55-eab1-4342-a00d-a63caf0130c5",
+    "de7853ec-f3a4-411d-94e1-017b693dcf3f",
+    "22e76541-e6a2-4953-a36b-a879080db8ad",
+    "3b6326df-87c0-4154-a960-8006b107b0e0",
+    "00678065-b6dc-454e-bb29-4bf3dc43fb8a",
+    "da3900a1-79c2-4f67-8488-8ff42115cc53",
+    "64b1db0c-1452-4b4b-8338-6b51aa793cae",
+    "15fab23b-2d55-45b3-94b0-f1b5061cd252",
+    "69fb0da0-1eb7-4309-ad8b-a87e26bb47c7",
+    "6ca76ff2-bf38-4048-afdd-23dd66bad678",
+    "95b8a4b1-4d0a-46cf-98b3-cdb6229bc79c",
+    "7079c97f-02a4-49d0-b52c-f5b4008e0d5f",
+    "9c955d72-cc4d-4551-a2b0-3c978d953401",
+    "16b4af97-5c4f-4c2a-998a-9114cc9dfc4b",
+    "f12b2db2-bca8-42df-be37-b54b57a35518",
+    "763c8ed6-acee-459d-ad45-fa04e9d2cad1",
+    "1503f6a6-b447-4120-a816-fa89837fa8fd",
+    "16b1eb77-2e13-4bff-bf50-9d931cc98ac4",
+    "77a7ff5d-4536-43f4-81aa-ca6c9cb5b150",
+    "e527150f-d4da-40e8-9caa-4416a16cb8f9",
+    "eb4451ab-059f-4561-be70-1cb5d073df87",
+    "12f31264-7f21-4109-b1b0-59cfc3292919",
+    "f73ebf8b-8ee4-4b4e-9d3b-73e673c01e1f",
+    "7b404187-85a3-4fb2-908c-b8256e930bbc",
+    "c63bc56a-286e-46b2-9711-098edb60900f",
+    "8868c1ed-4033-4fea-950a-f95a37dfad4d",
+    "3b4aa34f-f8b0-4d47-bdbe-88b30007ae0e",
+    "259a0dde-2c1b-4679-b469-b685e6f1b148",
+    "c20aac63-c5a1-4aa7-893d-63d6794e6cdc",
+    "522b02cd-2e05-43a7-a3a8-8944b7e34c6d",
+    "486f2c8a-d285-4e2c-85e6-1dc3adc4ed18",
+    "850a2266-0b2e-450c-97c6-7b2c0bcd8230",
+    "f1f8dc20-4085-4b5c-aa42-e847ac50a747",
+    "32543ec4-f70d-43c1-bc77-c30e773da3c8",
+    "4f94c35d-f32d-47e3-b941-b3c37db9c4eb",
+    "efca260e-d810-4c38-9475-75483c622551",
+    "5a288249-4883-4a91-9ae6-a84a5c27c298",
+    "cde5df04-b591-4325-a023-55bc08c5d295",
+    "2691e3a5-e6eb-4a2a-ac63-6bc90bb6ac25",
+    "a93c2a8a-a5fd-494c-9cc1-f4e4a185c312",
+    "db5d772c-98d2-42c9-96d5-bef1e2f178eb",
+    "022c5dea-9c23-4d9b-8588-268f1fcf653e",
+    "a3430476-4ead-4c6d-8776-6350886d51a9",
+    "a208ae5c-e568-470b-80cf-a609ea7604b3",
+    "5ee77df4-c5a2-4238-9956-681069433a57"
+  ],
+  "deletedByEmail": [
+    {
+      "email": "p125-1787652982389-20@test.com",
+      "n": 1,
+      "ids": [
+        "15fab23b-2d55-45b3-94b0-f1b5061cd252"
+      ]
+    },
+    {
+      "email": "p125-1787652982835-32@test.com",
+      "n": 2,
+      "ids": [
+        "77a7ff5d-4536-43f4-81aa-ca6c9cb5b150",
+        "e527150f-d4da-40e8-9caa-4416a16cb8f9"
+      ]
+    },
+    {
+      "email": "p125-1787655080712-2@test.com",
+      "n": 2,
+      "ids": [
+        "417d627b-bbbb-43f4-a8b5-1410a1779f1e",
+        "46ce7253-b000-4b53-b695-fa5a55f45954"
+      ]
+    },
+    {
+      "email": "p125-1787655081734-20@test.com",
+      "n": 1,
+      "ids": [
+        "32543ec4-f70d-43c1-bc77-c30e773da3c8"
+      ]
+    },
+    {
+      "email": "p125-1787655082324-32@test.com",
+      "n": 2,
+      "ids": [
+        "5a230e8b-aa1f-4e48-817f-df9734cf5870",
+        "aababf55-eab1-4342-a00d-a63caf0130c5"
+      ]
+    },
+    {
+      "email": "p125-1787656719495-20@test.com",
+      "n": 1,
+      "ids": [
+        "eb4451ab-059f-4561-be70-1cb5d073df87"
+      ]
+    },
+    {
+      "email": "p125-1787656721697-32@test.com",
+      "n": 2,
+      "ids": [
+        "a208ae5c-e568-470b-80cf-a609ea7604b3",
+        "a3430476-4ead-4c6d-8776-6350886d51a9"
+      ]
+    },
+    {
+      "email": "p125-1787658033571-2@test.com",
+      "n": 2,
+      "ids": [
+        "2691e3a5-e6eb-4a2a-ac63-6bc90bb6ac25",
+        "cde5df04-b591-4325-a023-55bc08c5d295"
+      ]
+    },
+    {
+      "email": "p125-1787658035002-20@test.com",
+      "n": 1,
+      "ids": [
+        "5a288249-4883-4a91-9ae6-a84a5c27c298"
+      ]
+    },
+    {
+      "email": "p125-1787658035963-32@test.com",
+      "n": 2,
+      "ids": [
+        "16b4af97-5c4f-4c2a-998a-9114cc9dfc4b",
+        "f12b2db2-bca8-42df-be37-b54b57a35518"
+      ]
+    },
+    {
+      "email": "p125-1787747442052-2@test.com",
+      "n": 2,
+      "ids": [
+        "486f2c8a-d285-4e2c-85e6-1dc3adc4ed18",
+        "850a2266-0b2e-450c-97c6-7b2c0bcd8230"
+      ]
+    },
+    {
+      "email": "p125-1787747443697-20@test.com",
+      "n": 1,
+      "ids": [
+        "8868c1ed-4033-4fea-950a-f95a37dfad4d"
+      ]
+    },
+    {
+      "email": "p125-1787747444398-32@test.com",
+      "n": 2,
+      "ids": [
+        "00678065-b6dc-454e-bb29-4bf3dc43fb8a",
+        "3b6326df-87c0-4154-a960-8006b107b0e0"
+      ]
+    },
+    {
+      "email": "p125-1787747644095-20@test.com",
+      "n": 1,
+      "ids": [
+        "7b404187-85a3-4fb2-908c-b8256e930bbc"
+      ]
+    },
+    {
+      "email": "p125-1787747645262-32@test.com",
+      "n": 2,
+      "ids": [
+        "259a0dde-2c1b-4679-b469-b685e6f1b148",
+        "3b4aa34f-f8b0-4d47-bdbe-88b30007ae0e"
+      ]
+    },
+    {
+      "email": "p125-1787751100286-2@test.com",
+      "n": 2,
+      "ids": [
+        "64b1db0c-1452-4b4b-8338-6b51aa793cae",
+        "da3900a1-79c2-4f67-8488-8ff42115cc53"
+      ]
+    },
+    {
+      "email": "p125-1787751101717-20@test.com",
+      "n": 1,
+      "ids": [
+        "5ee77df4-c5a2-4238-9956-681069433a57"
+      ]
+    },
+    {
+      "email": "p125-1787751102501-32@test.com",
+      "n": 2,
+      "ids": [
+        "7079c97f-02a4-49d0-b52c-f5b4008e0d5f",
+        "95b8a4b1-4d0a-46cf-98b3-cdb6229bc79c"
+      ]
+    },
+    {
+      "email": "p125-1787753701172-2@test.com",
+      "n": 2,
+      "ids": [
+        "522b02cd-2e05-43a7-a3a8-8944b7e34c6d",
+        "c20aac63-c5a1-4aa7-893d-63d6794e6cdc"
+      ]
+    },
+    {
+      "email": "p125-1787753704394-20@test.com",
+      "n": 1,
+      "ids": [
+        "9c955d72-cc4d-4551-a2b0-3c978d953401"
+      ]
+    },
+    {
+      "email": "p125-1787753705765-32@test.com",
+      "n": 2,
+      "ids": [
+        "12f31264-7f21-4109-b1b0-59cfc3292919",
+        "f73ebf8b-8ee4-4b4e-9d3b-73e673c01e1f"
+      ]
+    },
+    {
+      "email": "p125-1787754421975-2@test.com",
+      "n": 2,
+      "ids": [
+        "bdde4069-f3cf-4cad-8c46-952dd9fdef2e",
+        "ef297a94-3d55-43de-8e4c-9ecfce2bbe37"
+      ]
+    },
+    {
+      "email": "p125-1787754423483-20@test.com",
+      "n": 1,
+      "ids": [
+        "69fb0da0-1eb7-4309-ad8b-a87e26bb47c7"
+      ]
+    },
+    {
+      "email": "p125-1787755211736-2@test.com",
+      "n": 2,
+      "ids": [
+        "22e76541-e6a2-4953-a36b-a879080db8ad",
+        "de7853ec-f3a4-411d-94e1-017b693dcf3f"
+      ]
+    },
+    {
+      "email": "p125-1787755212783-20@test.com",
+      "n": 1,
+      "ids": [
+        "a93c2a8a-a5fd-494c-9cc1-f4e4a185c312"
+      ]
+    },
+    {
+      "email": "p125-1787755297191-2@test.com",
+      "n": 2,
+      "ids": [
+        "36f8596c-b882-411f-810c-9fd329d21169",
+        "c5cca67f-5371-4fb9-9142-f986c82e2b47"
+      ]
+    },
+    {
+      "email": "p125-1787755298008-20@test.com",
+      "n": 1,
+      "ids": [
+        "f1f8dc20-4085-4b5c-aa42-e847ac50a747"
+      ]
+    },
+    {
+      "email": "p125-1787756382841-2@test.com",
+      "n": 2,
+      "ids": [
+        "4f94c35d-f32d-47e3-b941-b3c37db9c4eb",
+        "efca260e-d810-4c38-9475-75483c622551"
+      ]
+    },
+    {
+      "email": "p125-1787756385137-20@test.com",
+      "n": 1,
+      "ids": [
+        "c63bc56a-286e-46b2-9711-098edb60900f"
+      ]
+    },
+    {
+      "email": "p125-1787758182676-2@test.com",
+      "n": 2,
+      "ids": [
+        "1503f6a6-b447-4120-a816-fa89837fa8fd",
+        "763c8ed6-acee-459d-ad45-fa04e9d2cad1"
+      ]
+    },
+    {
+      "email": "p125-1787758184342-20@test.com",
+      "n": 1,
+      "ids": [
+        "16b1eb77-2e13-4bff-bf50-9d931cc98ac4"
+      ]
+    },
+    {
+      "email": "p125-1787758665126-2@test.com",
+      "n": 2,
+      "ids": [
+        "022c5dea-9c23-4d9b-8588-268f1fcf653e",
+        "db5d772c-98d2-42c9-96d5-bef1e2f178eb"
+      ]
+    },
+    {
+      "email": "p125-1787758666720-20@test.com",
+      "n": 1,
+      "ids": [
+        "6ca76ff2-bf38-4048-afdd-23dd66bad678"
+      ]
+    }
+  ],
+  "remainingOrphans": 0,
+  "merchantBackedBefore": {
+    "emails": 60,
+    "rows": 103
+  },
+  "merchantBackedAfter": {
+    "emails": 60,
+    "rows": 103
+  }
+}

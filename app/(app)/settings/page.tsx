@@ -4,24 +4,25 @@ import { Download, FileText, Printer } from "lucide-react";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { ActionLogHint, ActionLogList } from "@/components/layout/action-log";
-import { AppHeader } from "@/components/layout/app-header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { SectionTabs } from "@/components/ui/section-tabs";
-import { useAnalysis } from "@/context/analysis-context";
-import { useAppearance } from "@/context/appearance";
-import { useAuth } from "@/context/auth-context";
-import { useSmartGuard } from "@/context/smart-guard-context";
-import { exportMonthlyReport } from "@/lib/export-report";
-import { formatMoney } from "@/lib/format";
-import { normalizeMobile } from "@/lib/phone";
-import { GuardBlockedError } from "@/lib/smart-guard/client";
+import { ActionLogHint, ActionLogList } from "@/frontend/components/layout/action-log";
+import { AppHeader } from "@/frontend/components/layout/app-header";
+import { Button } from "@/frontend/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { Input } from "@/frontend/components/ui/input";
+import { Label } from "@/frontend/components/ui/label";
+import { SectionTabs } from "@/frontend/components/ui/section-tabs";
+import { useAnalysis } from "@/frontend/context/analysis-context";
+import { useAppearance } from "@/frontend/context/appearance";
+import { useAuth } from "@/frontend/context/auth-context";
+import { useSmartGuard } from "@/frontend/context/smart-guard-context";
+import { exportMonthlyReport } from "@/frontend/lib/export-report";
+import { formatMoney } from "@/frontend/lib/format";
+import { normalizeMobile } from "@/frontend/lib/phone";
+import { apiFetch } from "@/frontend/lib/api/client";
+import { GuardBlockedError } from "@/frontend/lib/smart-guard/client";
 import type { AppSettings, CurrencyCode } from "@/lib/types";
-import { SmartGuardDemoPanel } from "@/components/guard/smart-guard-demo-panel";
-import { SmartGuardLogPanel } from "@/components/guard/smart-guard-log-panel";
+import { SmartGuardDemoPanel } from "@/frontend/components/guard/smart-guard-demo-panel";
+import { SmartGuardLogPanel } from "@/frontend/components/guard/smart-guard-log-panel";
 
 function SettingsPageInner() {
   const router = useRouter();
@@ -29,9 +30,10 @@ function SettingsPageInner() {
   const { t, months } = useAppearance();
   const requested = searchParams.get("tab");
   const tab = requested === "actions" || requested === "reports" ? requested : "store";
-  const { settings, saveSettings, result, currency, parseResult } = useAnalysis();
+  const { settings, saveSettings, result, currency } = useAnalysis();
   const { user, updateProfile } = useAuth();
-  const { protect, pending } = useSmartGuard();
+  const { surfaceVerdict } = useSmartGuard();
+  const [exporting, setExporting] = useState(false);
   const [form, setForm] = useState<AppSettings>(settings);
   const [phone, setPhone] = useState(user?.phone ?? "");
   const [storeLat, setStoreLat] = useState("");
@@ -52,7 +54,7 @@ function SettingsPageInner() {
 
   useEffect(() => {
     if (!user?.email) return;
-    fetch(`/api/auth/profile?email=${encodeURIComponent(user.email)}`)
+    apiFetch("/api/auth/profile")
       .then((res) => res.json())
       .then((data: { homeLat?: number | null; homeLng?: number | null }) => {
         if (typeof data.homeLat === "number") setStoreLat(String(data.homeLat));
@@ -90,11 +92,10 @@ function SettingsPageInner() {
     const lat = Number(storeLat);
     const lng = Number(storeLng);
     if (storeLat && storeLng && Number.isFinite(lat) && Number.isFinite(lng)) {
-      await fetch("/api/auth/profile", {
+      await apiFetch("/api/auth/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: user?.email,
           phone: normalized,
           storeName: form.storeName,
           homeLat: lat,
@@ -108,35 +109,29 @@ function SettingsPageInner() {
   }
 
   async function exportReport(monthKey: string, mode: "html" | "pdf", scope: "month" | "all" = "month") {
-    if (!result || !parseResult) {
+    if (!result) {
       toast.error(t("settings.needFile"));
       return;
     }
     try {
-      await protect("report_export");
-      exportMonthlyReport(
-        {
-          monthKey,
-          result,
-          settings,
-          currency,
-          transactions: parseResult.transactions,
-          storeName: settings.storeName,
-          scope,
-        },
-        mode,
+      setExporting(true);
+      await exportMonthlyReport(
+        { monthKey, mode, scope, currency },
+        (verdict) => surfaceVerdict(verdict),
       );
       toast.success(mode === "pdf" ? t("settings.pdfOk") : t("settings.htmlOk"));
     } catch (error) {
       if (error instanceof GuardBlockedError) return;
       toast.error(error instanceof Error ? error.message : t("settings.exportFail"));
+    } finally {
+      setExporting(false);
     }
   }
 
   return (
     <>
       <AppHeader title={t("settings.title")} subtitle={t("settings.subtitle")} />
-      <div className="space-y-5 p-6">
+      <div className="page-pad">
         <SectionTabs tabs={tabs} value={tab} onChange={setTab} />
 
         {tab === "store" && (
@@ -289,13 +284,13 @@ function SettingsPageInner() {
               <p className="mt-2 text-xs leading-6 text-amber-700 dark:text-amber-200/80">{t("settings.guardExportHint")}</p>
               {reports[0] && (
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <Button disabled={pending} onClick={() => exportReport(reports[0].key, "html", "all")}>
+                  <Button disabled={exporting} onClick={() => exportReport(reports[0].key, "html", "all")}>
                     <Download className="h-4 w-4" />
-                    {pending ? t("guard.checking") : t("settings.downloadAll")}
+                    {exporting ? t("guard.checking") : t("settings.downloadAll")}
                   </Button>
-                  <Button variant="outline" disabled={pending} onClick={() => exportReport(reports[0].key, "pdf", "all")}>
+                  <Button variant="outline" disabled={exporting} onClick={() => exportReport(reports[0].key, "pdf", "all")}>
                     <Printer className="h-4 w-4" />
-                    {pending ? t("guard.checking") : t("settings.printPdf")}
+                    {exporting ? t("guard.checking") : t("settings.printPdf")}
                   </Button>
                 </div>
               )}
@@ -311,11 +306,11 @@ function SettingsPageInner() {
                 {reports.map((report) => (
                   <div key={report.key} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-black/[0.03] px-4 py-3 dark:bg-white/3">
                     <div className="flex flex-wrap gap-2">
-                      <Button size="sm" variant="outline" disabled={pending} onClick={() => exportReport(report.key, "html")}>
+                      <Button size="sm" variant="outline" disabled={exporting} onClick={() => exportReport(report.key, "html")}>
                         <Download className="h-4 w-4" />
                         HTML
                       </Button>
-                      <Button size="sm" disabled={pending} onClick={() => exportReport(report.key, "pdf")}>
+                      <Button size="sm" disabled={exporting} onClick={() => exportReport(report.key, "pdf")}>
                         <Printer className="h-4 w-4" />
                         PDF
                       </Button>
@@ -344,7 +339,7 @@ function SettingsPageInner() {
 
 function SettingsFallback() {
   const { t } = useAppearance();
-  return <p className="p-6 text-sm text-muted">{t("settings.loading")}</p>;
+  return <p className="page-pad text-sm text-muted">{t("settings.loading")}</p>;
 }
 
 export default function SettingsPage() {

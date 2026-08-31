@@ -4,15 +4,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { AuthBrandPanel } from "@/components/auth/auth-shell";
-import { Logo } from "@/components/brand/logo";
-import { AppearanceToggles } from "@/components/layout/appearance-toggles";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useAdminAuth } from "@/context/admin-auth";
-import { useAppearance } from "@/context/appearance";
-import { DEFAULT_ADMIN } from "@/lib/admin/config";
+import { AuthBrandPanel } from "@/frontend/components/auth/auth-shell";
+import { Logo } from "@/frontend/components/brand/logo";
+import { AppearanceToggles } from "@/frontend/components/layout/appearance-toggles";
+import { Button } from "@/frontend/components/ui/button";
+import { Input } from "@/frontend/components/ui/input";
+import { Label } from "@/frontend/components/ui/label";
+import { useAdminAuth } from "@/frontend/context/admin-auth";
+import { useAppearance } from "@/frontend/context/appearance";
+import { ADMIN_LOGIN_HINT_EMAIL } from "@/lib/admin/config";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -23,12 +23,12 @@ export default function AdminLoginPage() {
     if (ready && admin) router.replace("/admin");
   }, [admin, ready, router]);
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = String(data.get("email") || "").trim();
     const password = String(data.get("password") || "");
-    if (!login(email, password)) {
+    if (!(await login(email, password))) {
       toast.error(t("admin.badLogin"));
       return;
     }
@@ -37,14 +37,14 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-background">
-      <section className="flex w-full flex-col justify-center overflow-y-auto px-6 py-10 lg:w-1/2 lg:px-16">
+    <div className="flex min-h-dvh bg-background lg:h-dvh lg:overflow-hidden">
+      <section className="flex min-h-dvh w-full flex-col justify-center overflow-y-auto px-4 py-8 sm:px-6 sm:py-10 lg:h-dvh lg:w-1/2 lg:px-16">
         <div className="mx-auto w-full max-w-md">
           <div className="mb-6 flex flex-col gap-4">
             <Logo size="lg" tagline={t("admin.tagline.login")} />
             <AppearanceToggles />
           </div>
-          <h1 className="mt-4 text-3xl font-bold text-foreground">{t("admin.login.title")}</h1>
+          <h1 className="mt-4 text-2xl font-bold text-foreground sm:text-3xl">{t("admin.login.title")}</h1>
           <p className="mt-2 text-sm leading-7 text-muted">{t("admin.login.subtitle")}</p>
 
           <form className="mt-8 space-y-4" onSubmit={onSubmit}>
@@ -54,8 +54,8 @@ export default function AdminLoginPage() {
                 id="email"
                 name="email"
                 type="email"
-                defaultValue={DEFAULT_ADMIN.email}
-                placeholder={DEFAULT_ADMIN.email}
+                defaultValue={ADMIN_LOGIN_HINT_EMAIL}
+                placeholder={ADMIN_LOGIN_HINT_EMAIL}
                 required
               />
             </div>
@@ -65,7 +65,6 @@ export default function AdminLoginPage() {
                 id="password"
                 name="password"
                 type="password"
-                defaultValue={DEFAULT_ADMIN.password}
                 placeholder="••••••••"
                 required
               />

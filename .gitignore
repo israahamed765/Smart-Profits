@@ -41,6 +41,21 @@ yarn-error.log*
 /data/nac-demo.json
 /data/guard-decisions.json
 
+# P14.11 / P14.12R frozen snapshots (contain password hashes) and write-freeze flag
+/.p14.11-snapshot/
+/.p14.12r-snapshot/
+/.p14.13-snapshot/
+/.p14.13-reconcile/
+/.p14.14r-snapshot/
+/.p14.14r-reconcile/
+/.p14.15-pre-cutover-snapshot/
+/.p14.15-pre-cutover-reconcile/
+/data/.p14.12r-write-freeze
+/data/.p14.15-pg-primary-cutover
+/data/.p14.16-shadow-validation
+/data/.p14.17-json-shadow-removed
+/.p14.17-json-archive/
+
 
 # vercel
 .vercel

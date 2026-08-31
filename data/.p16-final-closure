@@ -1,0 +1,39 @@
+{
+  "evaluatedAt": "2026-08-30T09:50:00.000Z",
+  "status": "GO",
+  "fullyClosed": true,
+  "postgresMutated": false,
+  "rowsDeleted": 0,
+  "sourceOfTruth": "postgresql",
+  "catalogs": ["merchants", "workspaces", "track_events", "guard_decisions"],
+  "counts": {
+    "merchants": 205,
+    "workspaces": 3,
+    "track_events": 181,
+    "guard_decisions": 115
+  },
+  "orphans": {
+    "workspace": 0,
+    "guard": 0,
+    "event": 0
+  },
+  "payloadMismatches": 0,
+  "eventIds": {
+    "sha256": 125,
+    "uuid": 56,
+    "other": 0
+  },
+  "schemaMigrations": ["001_current_schema.sql"],
+  "foreignKeysAdded": false,
+  "uniquePhoneAdded": false,
+  "jsonCatalogFallback": false,
+  "nacDemoJsonRetained": true,
+  "cutoverToolsRemoved": true,
+  "finalVerification": {
+    "isolatedP14P15": "106/106",
+    "backendTypecheck": "PASS",
+    "nextBuild": "PASS",
+    "smoke": "PASS"
+  },
+  "p17_started": false
+}

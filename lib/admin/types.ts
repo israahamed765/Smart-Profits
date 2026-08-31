@@ -1,4 +1,5 @@
-import type { AccountStatus, PlanTier, TxStatus } from "./config";
+import type { AccountStatus, PlanTier, TrackEvent, TxStatus } from "./config";
+import type { PersistedWorkspace } from "@/lib/financial-engine/serialization";
 
 export interface AdminUserRow {
   id: string;
@@ -27,6 +28,21 @@ export interface AdminAlert {
   tone: "info" | "warning" | "danger" | "success";
   text: string;
   time: string;
+}
+
+/** Server + client snapshot input. No localStorage in this module. */
+export interface AdminFacts {
+  users: Array<{
+    fullName: string;
+    storeName: string;
+    email: string;
+    createdAt?: string;
+    lastActive?: string;
+    plan?: PlanTier;
+    status?: AccountStatus;
+  }>;
+  events: TrackEvent[];
+  workspaces: Array<{ email: string; workspace: PersistedWorkspace }>;
 }
 
 export interface AdminSnapshot {

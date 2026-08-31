@@ -1,10 +1,6 @@
 export type DateRangeKey = "today" | "week" | "month" | "year" | "custom";
 
-export const DEFAULT_ADMIN = {
-  email: "admin@smartprofits.com",
-  password: "SmartAdmin@2026",
-  name: "مديرة Smart Profits",
-};
+export const ADMIN_LOGIN_HINT_EMAIL = "admin@smartprofits.com";
 
 export const RANGE_LABELS: Record<DateRangeKey, string> = {
   today: "اليوم",

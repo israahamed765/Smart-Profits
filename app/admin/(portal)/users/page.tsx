@@ -3,16 +3,16 @@
 import { Ban, Eye, Gift, Search, UserMinus, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { AdminHeader } from "@/components/admin/admin-header";
-import { AdminKpi } from "@/components/admin/admin-kpi";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { useAdminPortal } from "@/context/admin-portal";
-import { useAppearance } from "@/context/appearance";
+import { AdminHeader } from "@/frontend/components/admin/admin-header";
+import { AdminKpi } from "@/frontend/components/admin/admin-kpi";
+import { Badge } from "@/frontend/components/ui/badge";
+import { Button } from "@/frontend/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { Input } from "@/frontend/components/ui/input";
+import { useAdminPortal } from "@/frontend/context/admin-portal";
+import { useAppearance } from "@/frontend/context/appearance";
 import type { AccountStatus, PlanTier } from "@/lib/admin/config";
-import { formatUsd } from "@/lib/admin/money";
+import { formatUsd } from "@/frontend/lib/admin/money";
 import type { AdminUserRow } from "@/lib/admin/types";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
@@ -56,7 +56,7 @@ export default function AdminUsersPage() {
   }, [query, snapshot, status]);
 
   if (!ready || !snapshot) {
-    return <p className="p-6 text-sm text-muted">جاري تحميل المستخدمين...</p>;
+    return <p className="page-pad text-sm text-muted">جاري تحميل المستخدمين...</p>;
   }
 
   const planData = [
@@ -69,14 +69,14 @@ export default function AdminUsersPage() {
   return (
     <>
       <AdminHeader title={t("admin.users.title")} subtitle={t("admin.users.subtitle")} />
-      <div className="space-y-5 p-6">
+      <div className="page-pad">
         <div className="grid gap-4 md:grid-cols-3">
           <AdminKpi title="معدل الاحتفاظ" value={`${snapshot.retention}%`} hint="Retention Rate" icon={Users} />
           <AdminKpi title="معدل التسرب" value={`${snapshot.churn}%`} hint="Churn Rate" icon={UserMinus} />
           <AdminKpi title="القيمة مدى الحياة" value={formatUsd(snapshot.ltv)} hint="LTV المتوقع من التاجر" icon={Gift} />
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3">
           <Card className="xl:col-span-1">
             <CardHeader>
               <CardTitle>تقسيم خطط الاشتراك</CardTitle>

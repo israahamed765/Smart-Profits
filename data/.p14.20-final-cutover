@@ -1,0 +1,18 @@
+{
+  "cutoverAt": "2026-08-28T12:59:08.362Z",
+  "reason": "P14.20 final cutover — freeze lifted; PostgreSQL-only catalogs",
+  "freezeHeld": false,
+  "freezeLifted": true,
+  "archiveDeleted": false,
+  "jsonRecreated": false,
+  "probeRemoved": true,
+  "counts": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 139,
+    "guard_decisions": 163
+  },
+  "appliedMigrations": [
+    "001_current_schema.sql"
+  ]
+}

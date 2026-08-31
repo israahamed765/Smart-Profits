@@ -1,5 +1,5 @@
 import type { GuardInput, GuardReason, GuardVerdict, SensitiveAction } from "./types";
-import { SIM_SWAP_MAX_AGE_HOURS } from "./nac-contract";
+import { DEVICE_SWAP_MAX_AGE_HOURS, SIM_SWAP_MAX_AGE_HOURS } from "./nac-contract";
 
 const LOCATION_BOUND: SensitiveAction[] = ["file_upload", "report_export"];
 const IDENTITY_BOUND: SensitiveAction[] = ["login", "password_reset", "price_change"];
@@ -10,6 +10,7 @@ export const HARD_LOCATION_MATCH_RATE = 40;
 const SUMMARY: Record<GuardReason, string> = {
   clean: "Signals are consistent. Smart Guard allows the action.",
   sim_swap: `SIM swap detected within the last ${SIM_SWAP_MAX_AGE_HOURS} hours. Session is frozen; SMS OTP is not trusted.`,
+  device_swap: `Device swap detected within the last ${DEVICE_SWAP_MAX_AGE_HOURS} hours. Session is frozen until network identity is confirmed.`,
   location_mismatch: "Device is far outside the usual store area. Financial upload/export is frozen.",
   location_soft: "Location is only a slight mismatch. The action is not rejected — confirm identity with a network code.",
   account_frozen: "This account is already frozen. Confirm network identity before any sensitive action.",
@@ -17,7 +18,18 @@ const SUMMARY: Record<GuardReason, string> = {
   location_unknown: "Store location could not be verified. Step-up is required before ingesting the file.",
   missing_phone: "No mobile number on the account. Network APIs cannot run until a number is saved.",
   financial_risk: "Financial context looks unusual together with weak network signals. Step-up required.",
+  check_failed: "Smart Guard could not verify this action. It was blocked.",
 };
+
+export function guardSwapTriggers(
+  simSwap: GuardInput["simSwap"],
+  deviceSwap: GuardInput["deviceSwap"],
+): GuardVerdict["inputs"]["triggers"] {
+  return {
+    sim_swap_detected: simSwap.recent,
+    device_swap_detected: deviceSwap.recent,
+  };
+}
 
 function verdict(
   input: GuardInput,
@@ -33,6 +45,10 @@ function verdict(
       simSwapRecent: input.simSwap.recent,
       simSwapHoursAgo: input.simSwap.hoursAgo,
       latestSimChange: input.simSwap.latestSimChange,
+      deviceSwapRecent: input.deviceSwap.recent,
+      deviceSwapHoursAgo: input.deviceSwap.hoursAgo,
+      latestDeviceChange: input.deviceSwap.latestDeviceChange,
+      triggers: guardSwapTriggers(input.simSwap, input.deviceSwap),
       locationMatch: input.location.match,
       locationResult: input.location.verificationResult ?? null,
       locationMatchRate: input.location.matchRate ?? null,
@@ -44,9 +60,9 @@ function verdict(
 }
 
 /**
- * Smart Guard brain. Callers must not branch on SIM Swap / Location / Number
- * APIs themselves — they pass the three gathered signals here and obey the
- * single Allow / Step-up / Freeze result.
+ * Smart Guard brain. Callers must not branch on CAMARA signals themselves —
+ * they pass gathered SIM Swap, Device Swap, Location, and Number signals here
+ * and obey the single Allow / Step-up / Freeze result.
  */
 function isHardLocationMismatch(location: GuardInput["location"]) {
   if (location.verificationResult === "PARTIAL") return false;
@@ -73,6 +89,10 @@ export function decideSmartGuard(input: GuardInput): GuardVerdict {
 
   if (input.simSwap.recent) {
     return verdict(input, "freeze", "sim_swap");
+  }
+
+  if (input.deviceSwap.recent) {
+    return verdict(input, "freeze", "device_swap");
   }
 
   if (locationBound && isHardLocationMismatch(input.location)) {

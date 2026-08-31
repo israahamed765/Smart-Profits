@@ -10,12 +10,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AdminHeader } from "@/components/admin/admin-header";
-import { AdminKpi } from "@/components/admin/admin-kpi";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAdminPortal } from "@/context/admin-portal";
-import { useAppearance } from "@/context/appearance";
-import { formatCount, formatUsd } from "@/lib/admin/money";
+import { AdminHeader } from "@/frontend/components/admin/admin-header";
+import { AdminKpi } from "@/frontend/components/admin/admin-kpi";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { useAdminPortal } from "@/frontend/context/admin-portal";
+import { useAppearance } from "@/frontend/context/appearance";
+import { formatCount, formatUsd } from "@/frontend/lib/admin/money";
 
 const ACTIVITY_ICON = {
   analyze: FileSpreadsheet,
@@ -34,13 +34,13 @@ export default function AdminOverviewPage() {
   const { t } = useAppearance();
 
   if (!ready || !snapshot) {
-    return <p className="p-6 text-sm text-muted">{t("admin.overview.loading")}</p>;
+    return <p className="page-pad text-sm text-muted">{t("admin.overview.loading")}</p>;
   }
 
   return (
     <>
       <AdminHeader title={t("admin.overview.title")} subtitle={t("admin.overview.subtitle")} />
-      <div className="space-y-5 p-6">
+      <div className="page-pad">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <AdminKpi
             title="النشاط الفريد"
@@ -69,7 +69,7 @@ export default function AdminOverviewPage() {
           />
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle>المالية — الدخل مقابل المصاريف</CardTitle>

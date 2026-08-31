@@ -3,26 +3,26 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { KpiCards } from "@/components/dashboard/kpi-cards";
-import { RevenueExpenseChart } from "@/components/dashboard/revenue-chart";
-import { ExpenseDonut } from "@/components/dashboard/expense-donut";
-import { HealthPanel } from "@/components/advisor/health-panel";
-import { TodayActions } from "@/components/advisor/today-actions";
-import { ProfitLeaks } from "@/components/advisor/profit-leaks";
-import { RiskRadar } from "@/components/advisor/risk-radar";
-import { ActionPlan } from "@/components/advisor/action-plan";
-import { InventoryAdviceTable } from "@/components/advisor/inventory-table";
-import { SmartPricingList } from "@/components/advisor/pricing-list";
-import { MonthCompare } from "@/components/advisor/month-compare";
-import { OpexInsights } from "@/components/dashboard/opex-insights";
-import { AppHeader } from "@/components/layout/app-header";
-import { useAnalysis } from "@/context/analysis-context";
-import { useAppearance } from "@/context/appearance";
-import { useAuth } from "@/context/auth-context";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { trackPlatform } from "@/lib/admin/track";
+import { KpiCards } from "@/frontend/components/dashboard/kpi-cards";
+import { RevenueExpenseChart } from "@/frontend/components/dashboard/revenue-chart";
+import { ExpenseDonut } from "@/frontend/components/dashboard/expense-donut";
+import { HealthPanel } from "@/frontend/components/advisor/health-panel";
+import { TodayActions } from "@/frontend/components/advisor/today-actions";
+import { ProfitLeaks } from "@/frontend/components/advisor/profit-leaks";
+import { RiskRadar } from "@/frontend/components/advisor/risk-radar";
+import { ActionPlan } from "@/frontend/components/advisor/action-plan";
+import { InventoryAdviceTable } from "@/frontend/components/advisor/inventory-table";
+import { SmartPricingList } from "@/frontend/components/advisor/pricing-list";
+import { MonthCompare } from "@/frontend/components/advisor/month-compare";
+import { OpexInsights } from "@/frontend/components/dashboard/opex-insights";
+import { AppHeader } from "@/frontend/components/layout/app-header";
+import { useAnalysis } from "@/frontend/context/analysis-context";
+import { useAppearance } from "@/frontend/context/appearance";
+import { useAuth } from "@/frontend/context/auth-context";
+import { Badge } from "@/frontend/components/ui/badge";
+import { Button } from "@/frontend/components/ui/button";
+import { Card } from "@/frontend/components/ui/card";
+import { trackPlatform } from "@/frontend/lib/admin/track";
 
 export default function DashboardPage() {
   const { result, isDemo } = useAnalysis();
@@ -37,7 +37,7 @@ export default function DashboardPage() {
     <>
       <AppHeader title={t("dash.title")} subtitle={t("dash.subtitle")} />
       <motion.div
-        className="space-y-5 p-6"
+        className="page-pad"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
@@ -47,7 +47,7 @@ export default function DashboardPage() {
         )}
 
         {!result && (
-          <Card className="p-8 text-center">
+          <Card className="p-5 text-center sm:p-8">
             <p className="text-foreground">{t("dash.needFile")}</p>
             <Link href="/data">
               <Button className="mt-4">{t("dash.goData")}</Button>
@@ -60,28 +60,28 @@ export default function DashboardPage() {
             <KpiCards />
             <OpexInsights />
             <MonthCompare />
-            <div className="grid gap-4 xl:grid-cols-12">
-              <div className="xl:col-span-8">
+            <div className="grid gap-4 lg:grid-cols-12">
+              <div className="min-w-0 lg:col-span-8">
                 <RevenueExpenseChart />
               </div>
-              <div className="xl:col-span-4">
+              <div className="min-w-0 lg:col-span-4">
                 <ExpenseDonut />
               </div>
             </div>
-            <div className="grid gap-4 xl:grid-cols-12">
-              <div className="xl:col-span-7">
+            <div className="grid gap-4 lg:grid-cols-12">
+              <div className="min-w-0 lg:col-span-7">
                 <HealthPanel />
               </div>
-              <div className="xl:col-span-5">
+              <div className="min-w-0 lg:col-span-5">
                 <TodayActions />
               </div>
             </div>
-            <div className="grid gap-4 xl:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
               <ProfitLeaks />
               <RiskRadar />
             </div>
             <InventoryAdviceTable />
-            <div className="grid gap-4 xl:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
               <SmartPricingList />
               <ActionPlan />
             </div>

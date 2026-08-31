@@ -1,0 +1,17 @@
+{
+  "verifiedAt": "2026-08-28T12:44:04.959Z",
+  "reason": "P14.19 PostgreSQL-only operational verification",
+  "freezeHeld": true,
+  "freezeLifted": false,
+  "archiveDeleted": false,
+  "jsonRecreated": false,
+  "counts": {
+    "merchants": 205,
+    "workspaces": 5,
+    "track_events": 139,
+    "guard_decisions": 163
+  },
+  "appliedMigrations": [
+    "001_current_schema.sql"
+  ]
+}

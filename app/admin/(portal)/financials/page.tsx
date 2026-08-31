@@ -1,13 +1,13 @@
 "use client";
 
 import { CreditCard, Server, Sparkles, TrendingUp, Wallet } from "lucide-react";
-import { AdminHeader } from "@/components/admin/admin-header";
-import { AdminKpi } from "@/components/admin/admin-kpi";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAdminPortal } from "@/context/admin-portal";
-import { useAppearance } from "@/context/appearance";
-import { formatUsd, formatUsdPrecise } from "@/lib/admin/money";
+import { AdminHeader } from "@/frontend/components/admin/admin-header";
+import { AdminKpi } from "@/frontend/components/admin/admin-kpi";
+import { Badge } from "@/frontend/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { useAdminPortal } from "@/frontend/context/admin-portal";
+import { useAppearance } from "@/frontend/context/appearance";
+import { formatUsd, formatUsdPrecise } from "@/frontend/lib/admin/money";
 
 const TX_TONE = {
   success: "success" as const,
@@ -26,7 +26,7 @@ export default function AdminFinancialsPage() {
   const { t } = useAppearance();
 
   if (!ready || !snapshot) {
-    return <p className="p-6 text-sm text-muted">جاري تحميل الخزينة...</p>;
+    return <p className="page-pad text-sm text-muted">جاري تحميل الخزينة...</p>;
   }
 
   const inflowRows = [
@@ -43,7 +43,7 @@ export default function AdminFinancialsPage() {
   return (
     <>
       <AdminHeader title={t("admin.financials.title")} subtitle={t("admin.financials.subtitle")} />
-      <div className="space-y-5 p-6">
+      <div className="page-pad">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <AdminKpi title="إجمالي المداخيل" value={formatUsd(snapshot.inflow.total)} hint="Inflow" icon={TrendingUp} />
           <AdminKpi title="إجمالي المصاريف" value={formatUsd(snapshot.outflow.total)} hint="Outflow" icon={Wallet} />
@@ -51,7 +51,7 @@ export default function AdminFinancialsPage() {
           <AdminKpi title="MRR" value={formatUsd(snapshot.mrr)} hint={`ARPU ${formatUsdPrecise(snapshot.arpu)}`} icon={CreditCard} />
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle>تفصيل مصادر الدخل</CardTitle>
@@ -98,12 +98,12 @@ export default function AdminFinancialsPage() {
         <div className="grid gap-4 md:grid-cols-2">
           <Card className="p-5">
             <p className="text-sm text-muted">مؤشرات SaaS</p>
-            <p className="mt-3 text-3xl font-bold text-foreground">{formatUsd(snapshot.mrr)}</p>
+            <p className="mt-3 text-2xl font-bold text-foreground sm:text-3xl">{formatUsd(snapshot.mrr)}</p>
             <p className="mt-1 text-sm text-slate-400">Monthly Recurring Revenue</p>
           </Card>
           <Card className="p-5">
             <p className="text-sm text-muted">متوسط ما يدفعه التاجر</p>
-            <p className="mt-3 text-3xl font-bold text-foreground">{formatUsdPrecise(snapshot.arpu)}</p>
+            <p className="mt-3 text-2xl font-bold text-foreground sm:text-3xl">{formatUsdPrecise(snapshot.arpu)}</p>
             <p className="mt-1 text-sm text-slate-400">ARPU — Average Revenue Per User</p>
           </Card>
         </div>

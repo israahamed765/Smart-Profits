@@ -3,20 +3,19 @@
 import { Lock, Mail } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AuthShell } from "@/components/auth/auth-shell";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useAppearance } from "@/context/appearance";
-import { useAuth } from "@/context/auth-context";
-import { useSmartGuard } from "@/context/smart-guard-context";
-import { GuardBlockedError } from "@/lib/smart-guard/client";
+import { AuthShell } from "@/frontend/components/auth/auth-shell";
+import { Button } from "@/frontend/components/ui/button";
+import { Input } from "@/frontend/components/ui/input";
+import { Label } from "@/frontend/components/ui/label";
+import { useAppearance } from "@/frontend/context/appearance";
+import { useAuth } from "@/frontend/context/auth-context";
+import { useSmartGuard } from "@/frontend/context/smart-guard-context";
 import { toast } from "sonner";
 
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const { protect } = useSmartGuard();
+  const { surfaceVerdict } = useSmartGuard();
   const { t } = useAppearance();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -34,28 +33,26 @@ export default function LoginPage() {
       return;
     }
 
-    const ok = await login(email, password);
-    if (!ok) {
-      toast.error(t("auth.badLogin"));
+    const result = await login(email, password);
+    if (!result.ok) {
+      if (result.verdict) {
+        surfaceVerdict(result.verdict, { email });
+        return;
+      }
+      if (result.status === 429) toast.error(t("auth.loginBusy"));
+      else if (result.status === 401) toast.error(t("auth.badLogin"));
+      else if (!result.status || result.status >= 500) toast.error(t("auth.loginUnavailable"));
+      else toast.error(result.error || t("auth.badLogin"));
       return;
     }
 
-    try {
-      await protect("login", { email });
-      toast.success(t("auth.loggedIn"));
-      router.push("/dashboard");
-    } catch (error) {
-      if (error instanceof GuardBlockedError) {
-        return;
-      }
-      toast.success(t("auth.loggedIn"));
-      router.push("/dashboard");
-    }
+    toast.success(t("auth.loggedIn"));
+    router.push("/dashboard");
   }
 
   return (
     <AuthShell>
-      <h1 className="mt-8 text-3xl font-bold text-foreground">{t("auth.login.title")}</h1>
+      <h1 className="mt-6 text-2xl font-bold text-foreground sm:mt-8 sm:text-3xl">{t("auth.login.title")}</h1>
       <p className="mt-2 text-sm text-muted">{t("auth.login.subtitle")}</p>
 
       <form className="mt-8 space-y-4" onSubmit={onSubmit}>

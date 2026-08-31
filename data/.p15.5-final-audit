@@ -1,0 +1,85 @@
+{
+  "evaluatedAt": "2026-08-30T09:41:56.016Z",
+  "go": "GO",
+  "readyForCleanupThenP16": true,
+  "reasons": [
+    "PostgreSQL is the catalog source of truth. Orphans are zero. Schema and repositories match the P15.4 close state."
+  ],
+  "deferred": [
+    "UNIQUE(phone) stays BLOCKED: 4 empty phones.",
+    "FK not present and not required for closure.",
+    "P14/P15 operator tools stay until after this audit (cleanup is a later GO).",
+    "P16 / final close is not started."
+  ],
+  "postgresMutated": false,
+  "rowsDeleted": 0,
+  "foreignKeysAdded": 0,
+  "uniqueConstraintsAdded": 0,
+  "migration002": false,
+  "p16_started": false,
+  "evidence": {
+    "tables": [
+      "guard_decisions",
+      "merchants",
+      "schema_migrations",
+      "track_events",
+      "workspaces"
+    ],
+    "counts": {
+      "merchants": 205,
+      "workspaces": 3,
+      "track_events": 181,
+      "guard_decisions": 115
+    },
+    "workspaceOrphans": 0,
+    "guardOrphans": 0,
+    "eventOrphans": 0,
+    "workspaceEmails": [
+      "pitch.demo.1786709548@smartprofits.dev",
+      "pitch.demo.1786709716@smartprofits.dev",
+      "tsraathmd@gmail.com"
+    ],
+    "foreignKeyCount": 0,
+    "extraUnique": [],
+    "appliedMigrations": [
+      "001_current_schema.sql"
+    ],
+    "indexNames": [
+      "guard_decisions_decision_created_idx",
+      "guard_decisions_email_created_idx",
+      "guard_decisions_pkey",
+      "merchants_pkey",
+      "schema_migrations_pkey",
+      "track_events_at_idx",
+      "track_events_pkey",
+      "workspaces_pkey"
+    ],
+    "merchantEmailMismatch": 0,
+    "merchantBadPayload": 0,
+    "workspaceOwnerMismatch": 0,
+    "workspaceMissingFiles": 0,
+    "eventBadPayload": 0,
+    "eventIds": {
+      "sha256": 125,
+      "uuid": 56,
+      "other": 0
+    },
+    "emptyPhoneCount": 4,
+    "emptyPhoneEmails": [
+      "p124-admin-patch@test.com",
+      "p124-live-patch@test.com",
+      "pitch.demo.1786709548@smartprofits.dev",
+      "pitch.demo.1786709716@smartprofits.dev"
+    ],
+    "duplicatePhones": 0,
+    "sources": {
+      "catalogJsonFallback": false,
+      "demoUsesJsonStore": true,
+      "demoFile": true,
+      "migration002OnDisk": false,
+      "p15UmbrellaDoc": false,
+      "p16Doc": false,
+      "libUtilsPresent": true
+    }
+  }
+}
