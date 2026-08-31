@@ -12,7 +12,7 @@
     "backend:typecheck": "npx tsc --noEmit -p backend/tsconfig.json",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
-    "db:migrate": "npx --yes tsx --tsconfig tsconfig.json --env-file=.env server/db/migrate-cli.ts",
+    "db:migrate": "tsx server/db/migrate-cli.ts",
     "db:audit-postgres": "npx --yes tsx --tsconfig tsconfig.json --env-file=.env server/db/postgres-audit-cli.ts",
     "db:classify-orphans": "npx --yes tsx --tsconfig tsconfig.json --env-file=.env server/db/orphan-classify-cli.ts",
     "db:p15.3-index-eval": "npx --yes tsx --tsconfig tsconfig.json --env-file=.env server/db/p15.3-index-eval-cli.ts",
