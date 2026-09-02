@@ -346,7 +346,7 @@ for l, t, w, h, text in boxes:
     add_text(s, Inches(l + 0.18), Inches(t + 0.15), Inches(w - 0.35), Inches(h - 0.25), text, 12, False, WHITE)
 add_text(s, Inches(0.55), Inches(5.55), Inches(12.2), Inches(1.2),
          "Security: NAC_API_KEY server-only · CSRF same-origin · scrypt passwords · guard logs with IP/UA · admin Smart Guard status dashboard.\n"
-         "Repository: https://github.com/BITSANDBYTESDUDE/Smart-Profits",
+         "Repository: https://github.com/israahamed765/Smart-Profits",
          12, False, CYAN)
 footer(s)
 
@@ -389,7 +389,7 @@ for i, (title, body) in enumerate(walk):
     add_text(s, Inches(0.75), y + Inches(0.45), Inches(11.8), Inches(0.55), body, 13, False, WHITE)
 add_text(s, Inches(0.55), Inches(5.15), Inches(12.2), Inches(1.35),
          "Links for judges:\n"
-         "GitHub: https://github.com/BITSANDBYTESDUDE/Smart-Profits\n"
+         "GitHub: https://github.com/israahamed765/Smart-Profits\n"
          "Studio: https://bitsandbytesdude.vercel.app/\n"
          "Live demo URL: [deploy before submission — Railway/Vercel + NAC_API_KEY + PostgreSQL]",
          13, False, CYAN)

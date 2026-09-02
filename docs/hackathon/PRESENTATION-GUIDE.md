@@ -62,7 +62,7 @@ python docs/hackathon/build_pitch_pptx.py
 - [ ] Add screenshots to `docs/hackathon/screenshots/`
 - [ ] Re-run `build_pitch_pptx.py`
 - [ ] Test demo numbers: +99999991001, +99999991000, +99999991002
-- [ ] Have GitHub open: https://github.com/BITSANDBYTESDUDE/Smart-Profits
+- [ ] Have GitHub open: https://github.com/israahamed765/Smart-Profits
 
 ---
 

@@ -25,7 +25,7 @@ Arabic-first (RTL) merchant SaaS that turns messy Excel/CSV into profit decision
 | **Presentation guide** | [`docs/hackathon/PRESENTATION-GUIDE.md`](docs/hackathon/PRESENTATION-GUIDE.md) |
 | **Live demo** | _Add your deployed URL before submission_ |
 | **Demo video (3 min)** | _Add YouTube/Loom link before submission_ |
-| **Source code** | https://github.com/BITSANDBYTESDUDE/Smart-Profits |
+| **Source code** | https://github.com/israahamed765/Smart-Profits |
 
 ### Mandatory hackathon requirements — both implemented
 
@@ -46,7 +46,7 @@ Arabic-first (RTL) merchant SaaS that turns messy Excel/CSV into profit decision
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/BITSANDBYTESDUDE/Smart-Profits.git
+git clone https://github.com/israahamed765/Smart-Profits.git
 cd Smart-Profits
 npm install
 ```
@@ -292,7 +292,7 @@ npm run build     # Production build check
 | Founder / Product | **Israa Nael Hamad** — University of Palestine, Gaza |
 | Engineering | **Mir Kashif** — Bitsandbytesdude Software Agency |
 
-**Repository:** https://github.com/BITSANDBYTESDUDE/Smart-Profits  
+**Repository:** https://github.com/israahamed765/Smart-Profits  
 **Studio:** https://bitsandbytesdude.vercel.app/
 
 ---
