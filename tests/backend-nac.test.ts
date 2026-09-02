@@ -12,7 +12,7 @@ import { createBackendServer } from "@/backend/src/http/server";
 import { bindRepoRoot } from "@/backend/src/config/paths";
 import { guardApi } from "@/backend/src/services/guard";
 import { createMerchantToken } from "@/server/crypto/session-core";
-import { nacCheckSimSwap, nacEffectiveMode } from "@/server/smart-guard/nac-client";
+import { nacEffectiveMode } from "@/server/smart-guard/nac-client";
 import { merchantRequest } from "./helpers";
 
 bindRepoRoot();
@@ -40,14 +40,11 @@ function jsonBody(response: Response) {
 }
 
 describe("P12.6 NAC boundary", () => {
-  it("official Nokia simulator MSISDNs stay on local profiles even with NAC_API_KEY", async () => {
+  it("NAC_API_KEY present → nacEffectiveMode is live (no local MSISDN bypass)", async () => {
     const prevKey = process.env.NAC_API_KEY;
     process.env.NAC_API_KEY = "live-test-key";
     try {
-      assert.equal(nacEffectiveMode(ALLOW), "simulator");
-      const result = await nacCheckSimSwap(ALLOW, "nac-live-mock@test.com", 24);
-      assert.equal(result.swapped, false);
-      assert.equal(result.trace.mode, "simulator");
+      assert.equal(nacEffectiveMode(), "live");
     } finally {
       if (prevKey === undefined) delete process.env.NAC_API_KEY;
       else process.env.NAC_API_KEY = prevKey;

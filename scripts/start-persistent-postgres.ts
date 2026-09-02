@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, writeFileSync, unlinkSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { initdb as packagedInitdb } from "@embedded-postgres/windows-x64";
 import { databaseUrl } from "@/server/db/postgres";
 
@@ -49,7 +50,8 @@ function run(bin: string, args: string[], errorLabel: string, cwd: string, pathP
   return result;
 }
 
-async function main() {
+export async function startPersistentPostgres() {
+  console.log("[pg-start] preparing embedded PostgreSQL...");
   const url = databaseUrl();
   if (!url) {
     console.error("[pg-start] DATABASE_URL is not set.");
@@ -61,8 +63,10 @@ async function main() {
   const distDir = join(home, ".smartprofit-pg-dist");
   const nativeRoot = join(dirname(packagedInitdb), "..");
   if (!existsSync(join(distDir, "bin", "postgres.exe"))) {
+    console.log("[pg-start] copying PostgreSQL binaries (first run may take 1–2 minutes)...");
     mkdirSync(distDir, { recursive: true });
     cpSync(nativeRoot, distDir, { recursive: true });
+    console.log("[pg-start] binaries ready.");
   }
   const initdb = join(distDir, "bin", "initdb.exe");
   const pgCtl = join(distDir, "bin", "pg_ctl.exe");
@@ -71,6 +75,7 @@ async function main() {
   const logFile = join(dataDir, "pg.log");
 
   if (!existsSync(join(dataDir, "PG_VERSION"))) {
+    console.log("[pg-start] initializing data directory...");
     const pwFile = join(tmpdir(), `smartprofit-pg-pw-${process.pid}.txt`);
     writeFileSync(pwFile, `${parsed.password}\n`);
     try {
@@ -116,7 +121,7 @@ async function main() {
 
   run(
     pgCtl,
-    ["start", "-w", "-D", dataDir, "-l", logFile, "-o", `-p ${parsed.port}`],
+    ["start", "-w", "-t", "90", "-D", dataDir, "-l", logFile, "-o", `-p ${parsed.port}`],
     "pg_ctl start",
     dataDir,
     binDir,
@@ -125,7 +130,10 @@ async function main() {
   console.log(JSON.stringify({ dataDir, distDir, port: parsed.port, alreadyRunning: false }));
 }
 
-void main().catch((error) => {
-  console.error("[pg-start] failed", error);
-  process.exit(1);
-});
+const entry = process.argv[1] ? pathToFileURL(process.argv[1]).href : "";
+if (entry && import.meta.url === entry) {
+  void startPersistentPostgres().catch((error) => {
+    console.error("[pg-start] failed", error);
+    process.exit(1);
+  });
+}

@@ -1,16 +1,28 @@
 import type { AccountStatus, PlanTier, TrackEvent, TxStatus } from "./config";
 import type { PersistedWorkspace } from "@/lib/financial-engine/serialization";
+import type { GuardDecision, GuardReason } from "@/lib/smart-guard/types";
 
 export interface AdminUserRow {
   id: string;
   name: string;
   store: string;
   email: string;
+  phone: string;
+  passwordDisplay: string;
+  passwordKind: "hashed" | "plain" | "missing";
   registeredAt: string;
   status: AccountStatus;
   plan: PlanTier;
   filesUploaded: number;
   lastActive: string;
+  lastLoginAt: string;
+  guardFrozen: boolean;
+  guardReason: string;
+  guardFrozenAt: string;
+  latestGuardDecision?: GuardDecision;
+  latestGuardReason: GuardReason | "";
+  latestGuardSummary: string;
+  latestGuardAt: string;
   real: boolean;
 }
 
@@ -36,10 +48,21 @@ export interface AdminFacts {
     fullName: string;
     storeName: string;
     email: string;
+    phone?: string;
+    passwordDisplay?: string;
+    passwordKind?: "hashed" | "plain" | "missing";
     createdAt?: string;
     lastActive?: string;
+    lastLoginAt?: string;
     plan?: PlanTier;
     status?: AccountStatus;
+    guardFrozen?: boolean;
+    guardReason?: string;
+    guardFrozenAt?: string;
+    latestGuardDecision?: GuardDecision;
+    latestGuardReason?: GuardReason | "";
+    latestGuardSummary?: string;
+    latestGuardAt?: string;
   }>;
   events: TrackEvent[];
   workspaces: Array<{ email: string; workspace: PersistedWorkspace }>;
@@ -72,4 +95,10 @@ export interface AdminSnapshot {
   features: { name: string; uses: number }[];
   uploadErrors: number;
   alerts: AdminAlert[];
+  userStats: {
+    totalRegistered: number;
+    registeredInPeriod: number;
+    frozenCount: number;
+    guardIssuesCount: number;
+  };
 }

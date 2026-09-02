@@ -15,9 +15,11 @@ export function nacNvOidcClientSecret() {
   return (process.env.NAC_NV_OIDC_CLIENT_SECRET || "").trim();
 }
 
-/** Simulator demoCode is never returned in production. */
+/** Step-up demoCode: always in local development (hackathon UI); never in production. */
 export function allowSimulatorDemoCode(nodeEnv = process.env.NODE_ENV, key = nacLiveKey()) {
-  return nodeEnv !== "production" && !key;
+  if (nodeEnv === "production") return false;
+  if (nodeEnv === "development") return true;
+  return !key;
 }
 
 export function nacMode(nodeEnv = process.env.NODE_ENV, key = nacLiveKey()): NacMode {

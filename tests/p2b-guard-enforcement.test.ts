@@ -50,6 +50,8 @@ describe("Phase 2b Guard enforcement", () => {
     assert.equal(nacMode("test", ""), "simulator");
     assert.equal(nacMode("production", "live-key"), "live");
     assert.equal(allowSimulatorDemoCode("production", "live-key"), false);
+    assert.equal(allowSimulatorDemoCode("development", "live-key"), true);
+    assert.equal(allowSimulatorDemoCode("test", "live-key"), false);
   });
 
   it("H13: non-production simulator may still return demoCode", () => {

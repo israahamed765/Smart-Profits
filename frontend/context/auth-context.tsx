@@ -5,6 +5,7 @@ import { trackPlatform } from "@/frontend/lib/admin/track";
 import { apiFetch } from "@/frontend/lib/api/client";
 import { normalizeMobile } from "@/frontend/lib/phone";
 import { GuardBlockedError, verdictFromPayload } from "@/frontend/lib/smart-guard/client";
+import { mapRegisterApiError, mapRegisterApiCodes } from "@/frontend/lib/register-errors";
 import type { GuardVerdict } from "@/lib/smart-guard/types";
 
 export interface AuthUser {
@@ -27,7 +28,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 async function readErrorPayload(response: Response) {
   try {
-    return (await response.json()) as { error?: string; verdict?: GuardVerdict };
+    return (await response.json()) as { error?: string; codes?: string[]; verdict?: GuardVerdict };
   } catch {
     return {};
   }
@@ -61,24 +62,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = useCallback(async (next: AuthUser & { password: string }) => {
     const phone = normalizeMobile(next.phone || "") || "";
-    const response = await apiFetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fullName: next.fullName,
-        storeName: next.storeName,
-        email: next.email,
-        phone,
-        password: next.password,
-      }),
-    });
+    let response: Response;
+    try {
+      response = await apiFetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: next.fullName,
+          storeName: next.storeName,
+          email: next.email,
+          phone,
+          password: next.password,
+        }),
+      });
+    } catch {
+      throw mapRegisterApiError(0, "");
+    }
     if (!response.ok) {
       const payload = await readErrorPayload(response);
       const verdict = verdictFromPayload(payload);
       if (verdict) throw new GuardBlockedError(verdict);
-      const message = payload.error || "";
-      if (response.status === 409 && message.includes("الجوال")) throw new Error("phone-taken");
-      throw new Error(message || "register-failed");
+      if (payload.codes?.length) {
+        throw mapRegisterApiCodes(response.status, payload.codes, payload.error || "");
+      }
+      throw mapRegisterApiError(response.status, payload.error || "");
     }
     const data = (await response.json()) as { user: AuthUser };
     setUser(data.user);

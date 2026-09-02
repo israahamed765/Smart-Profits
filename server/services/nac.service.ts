@@ -43,7 +43,7 @@ export function nacCatalog() {
   return {
     name: "Smart Profits — Nokia NaC mock",
     mode: "simulator" as const,
-    note: "Official NaC simulator numbers: +99999991000 swap occurred, +99999991001 clean. Set NAC_API_KEY for live RapidAPI.",
+    note: "Smart Guard live: nokia-adapter.ts → RapidAPI passthrough when NAC_API_KEY is set. /api/nac/* routes stay on local catalog.",
     numbers: NOKIA_MOCK_PROFILES.map((row) => ({
       phoneNumber: row.phoneNumber,
       gate: row.gate,

@@ -10,6 +10,14 @@ export class GuardBlockedError extends Error {
   }
 }
 
+/** Fired after step-up succeeds on /register so the page can finish sign-up. */
+export const SMART_GUARD_REGISTER_CONTINUE = "smart-guard-register-continue";
+
+export function notifyRegisterContinueAfterStepUp() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(SMART_GUARD_REGISTER_CONTINUE));
+}
+
 function denyFallback(action: SensitiveAction): GuardVerdict {
   return {
     decision: "freeze",

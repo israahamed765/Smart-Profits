@@ -1,6 +1,8 @@
 export {
   loginMerchant,
   registerMerchant,
+  assertRegisterAvailable,
+  listRegisterAvailabilityIssues,
   currentMerchant,
   requestPasswordReset,
   resetMerchantPassword,

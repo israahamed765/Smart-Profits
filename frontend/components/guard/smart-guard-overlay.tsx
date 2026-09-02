@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShieldAlert, ShieldCheck, ShieldQuestion } from "lucide-react";
+import { ShieldAlert, ShieldCheck, ShieldQuestion, Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/frontend/components/ui/button";
@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/
 import { Input } from "@/frontend/components/ui/input";
 import { useAppearance } from "@/frontend/context/appearance";
 import { useSmartGuardOptional } from "@/frontend/context/smart-guard-context";
-import { GuardBlockedError } from "@/frontend/lib/smart-guard/client";
+import { GuardBlockedError, notifyRegisterContinueAfterStepUp } from "@/frontend/lib/smart-guard/client";
 import type { GuardReason, GuardVerdict } from "@/lib/smart-guard/types";
 
 const REASON_KEY: Record<GuardReason, string> = {
@@ -59,6 +59,7 @@ export function SmartGuardOverlay() {
   const [demoCode, setDemoCode] = useState<string | undefined>();
   const [retryAfter, setRetryAfter] = useState(0);
   const [sending, setSending] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   const verdict = guard?.lastVerdict ?? null;
   const needsCode = Boolean(
@@ -132,11 +133,17 @@ export function SmartGuardOverlay() {
   }
 
   async function onConfirm() {
-    if (!guard) return;
+    if (!guard || confirming) return;
+    setConfirming(true);
     try {
       await guard.confirmStepUp(code.replace(/\s/g, ""));
+      if (pathname === "/register") {
+        toast.success(t("guard.stepup.registerVerified"));
+        notifyRegisterContinueAfterStepUp();
+        return;
+      }
       toast.success(t("guard.stepup.ok"));
-      if (pathname === "/login" || pathname === "/register" || pathname === "/forgot-password") {
+      if (pathname === "/login" || pathname === "/forgot-password") {
         return;
       }
     } catch (error) {
@@ -146,8 +153,12 @@ export function SmartGuardOverlay() {
       }
       const key = error instanceof Error ? CODE_ERROR_KEY[error.message] : undefined;
       toast.error(key ? t(key) : t("guard.stepup.fail"));
+    } finally {
+      setConfirming(false);
     }
   }
+
+  const confirmBusy = confirming || Boolean(guard?.pending);
 
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/50 p-3 sm:items-center sm:p-4">
@@ -237,15 +248,20 @@ export function SmartGuardOverlay() {
               <>
                 <Button
                   onClick={() => void onConfirm()}
-                  disabled={guard?.pending || sending || code.length !== 6}
+                  disabled={confirmBusy || sending || code.length !== 6}
                 >
-                  <ShieldCheck className="h-4 w-4" />
-                  {t("guard.stepup.action")}
+                  {confirmBusy ? (
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  ) : (
+                    <ShieldCheck className="h-4 w-4" aria-hidden />
+                  )}
+                  {confirmBusy ? t("guard.stepup.confirming") : t("guard.stepup.action")}
                 </Button>
-                <Button variant="outline" onClick={() => void onResend()} disabled={sending || retryAfter > 0}>
+                <Button variant="outline" onClick={() => void onResend()} disabled={sending || retryAfter > 0 || confirmBusy}>
+                  {sending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
                   {retryAfter > 0 ? `${t("guard.stepup.resend")} (${retryAfter})` : t("guard.stepup.resend")}
                 </Button>
-                <Button variant="outline" onClick={guard?.dismiss}>
+                <Button variant="outline" onClick={guard?.dismiss} disabled={confirmBusy || sending}>
                   {t("guard.cancel")}
                 </Button>
               </>

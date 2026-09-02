@@ -1,4 +1,5 @@
 import { countRealFiles, PLAN_PRICE_USD, readAllLocalWorkspaces, USERS_KEY } from "@/frontend/lib/tenant";
+import { filterUsersRegisteredInRange, hasGuardIssue, isUserFrozen } from "@/frontend/lib/admin/guard-status";
 import type { DateRangeKey } from "@/lib/admin/config";
 import { rangeBounds } from "@/lib/admin/config";
 import type { TrackEvent } from "@/lib/admin/config";
@@ -108,6 +109,40 @@ export function saveUserOverride(id: string, patch: Partial<AdminUserRow>) {
   }
 }
 
+export function computeUserStats(users: AdminUserRow[], start: Date, end: Date) {
+  const registeredInPeriod = filterUsersRegisteredInRange(users, start, end);
+  const frozenCount = users.filter(isUserFrozen).length;
+  const guardIssuesCount = users.filter(hasGuardIssue).length;
+  return {
+    totalRegistered: users.length,
+    registeredInPeriod: registeredInPeriod.length,
+    frozenCount,
+    guardIssuesCount,
+  };
+}
+
+export function resolveUserStats(
+  snapshot: Pick<AdminSnapshot, "users" | "userStats">,
+  range?: DateRangeKey,
+  from?: string,
+  to?: string,
+): AdminSnapshot["userStats"] {
+  if (snapshot.userStats) return snapshot.userStats;
+  const { start, end } = rangeBounds(range ?? "month", from, to);
+  return computeUserStats(snapshot.users ?? [], start, end);
+}
+
+export function normalizeAdminSnapshot(
+  snapshot: AdminSnapshot,
+  range: DateRangeKey,
+  from?: string,
+  to?: string,
+): AdminSnapshot {
+  if (snapshot.userStats) return snapshot;
+  const { start, end } = rangeBounds(range, from, to);
+  return { ...snapshot, userStats: computeUserStats(snapshot.users, start, end) };
+}
+
 export function buildAdminSnapshotFromFacts(
   facts: AdminFacts,
   range: DateRangeKey,
@@ -131,11 +166,22 @@ export function buildAdminSnapshotFromFacts(
         name: user.fullName || "تاجر",
         store: user.storeName || "—",
         email: user.email.toLowerCase(),
+        phone: user.phone || "—",
+        passwordDisplay: user.passwordDisplay || "—",
+        passwordKind: user.passwordKind ?? "missing",
         registeredAt: user.createdAt || lastActive,
         status,
         plan: user.plan ?? "free",
         filesUploaded: filesByEmail.get(user.email.toLowerCase()) ?? 0,
         lastActive,
+        lastLoginAt: user.lastLoginAt || "",
+        guardFrozen: Boolean(user.guardFrozen),
+        guardReason: user.guardReason || "",
+        guardFrozenAt: user.guardFrozenAt || "",
+        latestGuardDecision: user.latestGuardDecision,
+        latestGuardReason: user.latestGuardReason || "",
+        latestGuardSummary: user.latestGuardSummary || "",
+        latestGuardAt: user.latestGuardAt || "",
         real: true,
       };
     })
@@ -240,8 +286,15 @@ export function buildAdminSnapshotFromFacts(
   ].filter((row) => row.value > 0);
 
   const filesTotal = users.reduce((sum, user) => sum + user.filesUploaded, 0);
+  const userStats = computeUserStats(users, start, end);
+
   const alerts = [
     ...(registers > 0 ? [{ id: "a1", tone: "success" as const, text: `${registers} حساب جديد في الفترة المحددة`, time: "هذه الفترة" }] : []),
+    ...(userStats.registeredInPeriod > 0 && registers === 0
+      ? [{ id: "a1b", tone: "success" as const, text: `${userStats.registeredInPeriod} تسجيل في الفترة المحددة`, time: "هذه الفترة" }]
+      : []),
+    ...(userStats.frozenCount > 0 ? [{ id: "a5", tone: "danger" as const, text: `${userStats.frozenCount} حساب مجمّد حالياً (Smart Guard)`, time: "الآن" }] : []),
+    ...(userStats.guardIssuesCount > 0 ? [{ id: "a6", tone: "warning" as const, text: `${userStats.guardIssuesCount} حساب يحتاج متابعة (تحقق إضافي / مشاكل)`, time: "الآن" }] : []),
     ...(uploadErrors > 0 ? [{ id: "a2", tone: "danger" as const, text: `${uploadErrors} ملف فشل رفعه`, time: "هذه الفترة" }] : []),
     ...(users.length === 0 ? [{ id: "a3", tone: "warning" as const, text: "لا يوجد تجار مسجّلون بعد", time: "الآن" }] : []),
     ...(filesTotal > 0 ? [{ id: "a4", tone: "info" as const, text: `${filesTotal} ملف مبيعات محفوظ لدى التجار`, time: "حتى الآن" }] : []),
@@ -282,6 +335,7 @@ export function buildAdminSnapshotFromFacts(
     ],
     uploadErrors,
     alerts,
+    userStats,
   };
 }
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { Lock, Mail, Phone, Store, User } from "lucide-react";
+import { Lock, Mail, Phone, Store, User, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AuthShell } from "@/frontend/components/auth/auth-shell";
 import { Button } from "@/frontend/components/ui/button";
 import { Input } from "@/frontend/components/ui/input";
@@ -11,9 +11,24 @@ import { Label } from "@/frontend/components/ui/label";
 import { useAuth } from "@/frontend/context/auth-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { useSmartGuard } from "@/frontend/context/smart-guard-context";
-import { GuardBlockedError } from "@/frontend/lib/smart-guard/client";
+import { GuardBlockedError, SMART_GUARD_REGISTER_CONTINUE } from "@/frontend/lib/smart-guard/client";
+import {
+  isRegisterError,
+  isRegisterValidationErrors,
+  registerErrorMessage,
+  validateRegisterForm,
+  type RegisterError,
+} from "@/frontend/lib/register-errors";
 import { normalizeMobile } from "@/frontend/lib/phone";
 import { toast } from "sonner";
+
+type PendingRegister = {
+  fullName: string;
+  storeName: string;
+  email: string;
+  phone: string;
+  password: string;
+};
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -21,37 +36,100 @@ export default function RegisterPage() {
   const { surfaceVerdict } = useSmartGuard();
   const { t } = useAppearance();
   const [accepted, setAccepted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const pendingRegisterRef = useRef<PendingRegister | null>(null);
+
+  const showRegisterErrors = useCallback(
+    (errors: RegisterError[]) => {
+      const seen = new Set<string>();
+      for (const error of errors) {
+        if (seen.has(error.code)) continue;
+        seen.add(error.code);
+        toast.error(registerErrorMessage(t, error));
+      }
+    },
+    [t],
+  );
+
+  const completeRegister = useCallback(
+    (payload: PendingRegister) => {
+      setSubmitting(true);
+      return register(payload)
+        .then(() => {
+          pendingRegisterRef.current = null;
+          toast.success(t("auth.registered"));
+          router.push("/dashboard");
+        })
+        .catch((error: unknown) => {
+          if (error instanceof GuardBlockedError) {
+            pendingRegisterRef.current = payload;
+            surfaceVerdict(error.verdict, { email: payload.email, phone: payload.phone });
+            return;
+          }
+          if (isRegisterValidationErrors(error)) {
+            if (error.errors.some((item) => item.code === "emailTaken" || item.code === "phoneTaken")) {
+              pendingRegisterRef.current = null;
+            }
+            showRegisterErrors(error.errors);
+            return;
+          }
+          if (isRegisterError(error)) {
+            if (error.code === "emailTaken" || error.code === "phoneTaken") {
+              pendingRegisterRef.current = null;
+            }
+            toast.error(registerErrorMessage(t, error));
+            return;
+          }
+          toast.error(t("auth.register.error.server"));
+        })
+        .finally(() => setSubmitting(false));
+    },
+    [register, router, showRegisterErrors, surfaceVerdict, t],
+  );
+
+  useEffect(() => {
+    function onStepUpDone() {
+      const pending = pendingRegisterRef.current;
+      if (!pending || submitting) return;
+      void completeRegister(pending);
+    }
+    window.addEventListener(SMART_GUARD_REGISTER_CONTINUE, onStepUpDone);
+    return () => window.removeEventListener(SMART_GUARD_REGISTER_CONTINUE, onStepUpDone);
+  }, [completeRegister, submitting]);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submitting) return;
     const data = new FormData(e.currentTarget);
     const fullName = String(data.get("fullName") || "").trim();
     const storeName = String(data.get("storeName") || "").trim();
     const email = String(data.get("email") || "").trim();
-    const phone = normalizeMobile(String(data.get("phone") || ""));
+    const phoneRaw = String(data.get("phone") || "");
+    const phone = normalizeMobile(phoneRaw);
     const password = String(data.get("password") || "");
 
-    if (!fullName || !storeName || !email || !phone || password.length < 6) {
-      toast.error(phone ? t("auth.needFields") : t("auth.phone.invalid"));
-      return;
-    }
-    if (!accepted) {
-      toast.error(t("auth.needTerms"));
+    const validationErrors = validateRegisterForm({
+      fullName,
+      storeName,
+      email,
+      phoneRaw,
+      password,
+      accepted,
+    });
+    if (validationErrors.length > 0) {
+      showRegisterErrors(validationErrors);
       return;
     }
 
-    register({ fullName, storeName, email, phone, password })
-      .then(() => {
-        toast.success(t("auth.registered"));
-        router.push("/dashboard");
-      })
-      .catch((error: unknown) => {
-        if (error instanceof GuardBlockedError) {
-          surfaceVerdict(error.verdict, { email, phone });
-          return;
-        }
-        toast.error(error instanceof Error && error.message === "phone-taken" ? t("auth.phone.taken") : t("auth.needFields"));
-      });
+    const payload: PendingRegister = {
+      fullName,
+      storeName,
+      email,
+      phone: phone!,
+      password,
+    };
+    pendingRegisterRef.current = payload;
+    void completeRegister(payload);
   }
 
   return (
@@ -123,8 +201,9 @@ export default function RegisterPage() {
           </span>
         </label>
 
-        <Button type="submit" variant="accent" size="lg" className="w-full">
-          {t("auth.create")}
+        <Button type="submit" variant="accent" size="lg" className="w-full" disabled={submitting}>
+          {submitting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+          {submitting ? t("auth.loading") : t("auth.create")}
         </Button>
       </form>
 

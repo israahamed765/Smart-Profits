@@ -7,6 +7,7 @@ import {
   buildAdminSnapshotFromFacts,
   collectClientFacts,
   mergeFacts,
+  normalizeAdminSnapshot,
   saveUserOverride,
   type AdminFacts,
 } from "@/frontend/lib/admin/metrics";
@@ -53,7 +54,12 @@ export function AdminPortalProvider({ children }: { children: React.ReactNode })
         const response = await apiFetch(`/api/admin/snapshot?${params.toString()}`);
         if (response.ok) {
           const serverFacts = (await response.json()) as AdminFacts;
-          const merged = buildAdminSnapshotFromFacts(mergeFacts(local, serverFacts), range, from, to);
+          const merged = normalizeAdminSnapshot(
+            buildAdminSnapshotFromFacts(mergeFacts(local, serverFacts), range, from, to),
+            range,
+            from,
+            to,
+          );
           if (!cancelled) {
             setSnapshot(merged);
             setReady(true);
@@ -64,7 +70,7 @@ export function AdminPortalProvider({ children }: { children: React.ReactNode })
         // fall through to local
       }
       if (!cancelled) {
-        setSnapshot(buildAdminSnapshot(range, from, to));
+        setSnapshot(normalizeAdminSnapshot(buildAdminSnapshot(range, from, to), range, from, to));
         setReady(true);
       }
     }

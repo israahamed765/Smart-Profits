@@ -8,6 +8,7 @@ import {
   nacVerifyNumber,
 } from "./nac-client";
 import { DEVICE_SWAP_MAX_AGE_HOURS, SIM_SWAP_MAX_AGE_HOURS, type NacCallTrace } from "@/shared/contracts/nac-contract";
+import { isNacProviderError } from "@/shared/contracts/nac-provider";
 import { sessionNumberVerified, sessionStepUpVerified } from "./demo";
 import type { DeviceSwapSignal, LocationSignal, NumberSignal, SensitiveAction, SimSwapSignal } from "@/lib/smart-guard/types";
 
@@ -84,9 +85,21 @@ export async function gatherCamaraSignals(input: {
   } else if (sessionStepUpVerified(input.email) || (!input.forceNumberCheck && sessionNumberVerified(input.email))) {
     number = { verified: true };
   } else {
-    const nv = await nacVerifyNumber(phone, input.email);
-    traces.push(nv.trace);
-    number = { verified: Boolean(nv.devicePhoneNumberVerified) };
+    try {
+      const nv = await nacVerifyNumber(phone, input.email);
+      traces.push(nv.trace);
+      number = { verified: Boolean(nv.devicePhoneNumberVerified) };
+    } catch (error) {
+      if (isNacProviderError(error) && error.recoverableForNumberVerification()) {
+        traces.push(error.trace);
+        number = { verified: false };
+        console.warn(
+          "[smart-guard] Nokia Number Verification unavailable (auth/config). Step-up required — not treated as verified.",
+        );
+      } else {
+        throw error;
+      }
+    }
   }
 
   let location: LocationSignal = { match: true, reason: "not_required", verificationResult: null };
@@ -94,20 +107,32 @@ export async function gatherCamaraSignals(input: {
     if (!phone) {
       location = { match: null, reason: "missing_phone", verificationResult: null };
     } else {
-      const loc = await nacVerifyLocation(phone, input.email, input.store ?? { lat: 31.5017, lng: 34.4668 });
-      traces.push(loc.trace);
-      location = {
-        match: loc.verificationResult === "TRUE" ? true : loc.verificationResult === "FALSE" ? false : null,
-        reason:
-          loc.verificationResult === "TRUE"
-            ? "inside_store_geofence"
-            : loc.verificationResult === "PARTIAL"
-              ? "near_store_geofence"
-              : "outside_store_geofence",
-        verificationResult: loc.verificationResult,
-        lastLocationTime: loc.lastLocationTime,
-        matchRate: loc.matchRate ?? null,
-      };
+      try {
+        const loc = await nacVerifyLocation(phone, input.email, input.store ?? { lat: 31.5017, lng: 34.4668 });
+        traces.push(loc.trace);
+        location = {
+          match: loc.verificationResult === "TRUE" ? true : loc.verificationResult === "FALSE" ? false : null,
+          reason:
+            loc.verificationResult === "TRUE"
+              ? "inside_store_geofence"
+              : loc.verificationResult === "PARTIAL"
+                ? "near_store_geofence"
+                : "outside_store_geofence",
+          verificationResult: loc.verificationResult,
+          lastLocationTime: loc.lastLocationTime,
+          matchRate: loc.matchRate ?? null,
+        };
+      } catch (error) {
+        if (isNacProviderError(error) && error.recoverableForLocationVerification()) {
+          traces.push(error.trace);
+          location = { match: null, reason: "provider_unavailable", verificationResult: null };
+          console.warn(
+            "[smart-guard] Nokia Location Verification unavailable. Location unknown — step-up path, not a mapped Nokia result.",
+          );
+        } else {
+          throw error;
+        }
+      }
     }
   }
 

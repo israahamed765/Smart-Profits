@@ -67,4 +67,15 @@ export interface NacCallTrace {
   mode: NacMode;
   request: unknown;
   response: unknown;
+  /** Present for live RapidAPI calls — audit trail for hackathon / ops. */
+  provider?: {
+    provider: "Nokia";
+    transport: "RapidAPI";
+    nacMode: "live";
+    endpoint: string;
+    status: number;
+    latencyMs: number;
+    outcome: "success" | "auth" | "not_found" | "rate_limit" | "timeout" | "upstream" | "network";
+    requestId?: string;
+  };
 }

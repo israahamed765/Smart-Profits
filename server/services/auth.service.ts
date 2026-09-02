@@ -12,6 +12,51 @@ import {
   type StoredAccount,
 } from "@/server/repositories/user.repository";
 
+export async function listRegisterAvailabilityIssues(
+  email: string,
+  phone: string,
+): Promise<Array<{ code: "phone" | "emailTaken" | "phoneTaken"; message: string }>> {
+  const emailNorm = email.trim().toLowerCase();
+  const phoneNorm = normalizeMobile(phone);
+  const issues: Array<{ code: "phone" | "emailTaken" | "phoneTaken"; message: string }> = [];
+
+  if (!phoneNorm) {
+    issues.push({
+      code: "phone",
+      message: "رقم الجوال غير صالح. استخدمي الصيغة الدولية مثل +97059XXXXXXX.",
+    });
+  }
+
+  const existing = await findAccount(emailNorm);
+  if (existing) {
+    issues.push({
+      code: "emailTaken",
+      message: "هذا البريد مسجّل مسبقاً. سجّلي الدخول.",
+    });
+  }
+
+  if (phoneNorm) {
+    const taken = await findAccountByPhone(phoneNorm);
+    if (taken) {
+      issues.push({
+        code: "phoneTaken",
+        message: "رقم الجوال مرتبط بحساب آخر.",
+      });
+    }
+  }
+
+  return issues;
+}
+
+export async function assertRegisterAvailable(email: string, phone: string) {
+  const issues = await listRegisterAvailabilityIssues(email, phone);
+  if (!issues.length) return;
+  const status = issues.some((issue) => issue.code === "phone") ? 400 : 409;
+  const err = new AppError(issues[0].message, status);
+  (err as AppError & { codes?: string[] }).codes = issues.map((issue) => issue.code);
+  throw err;
+}
+
 export async function registerMerchant(input: {
   fullName: string;
   storeName: string;

@@ -8,10 +8,19 @@
 
 | File | Use |
 |------|-----|
-| `Smart-Profits-IDEA-CAPTURE-TEMPLATE-EN.docx` | Idea Capture — English Word file (submit this) |
-| `Smart-Profits-PITCH-DECK.pptx` | Pitch deck — PowerPoint, 10 slides, with live product screenshots |
-| `PITCH-DECK.html` | Same deck in the browser (Ctrl+P → Save as PDF, landscape, background graphics) |
+| **`HACKATHON.md`** | **Judge quick-start** — demo script, MSISDNs, `[nac-live]` logs |
+| **`Smart-Profits-HACKATHON-PITCH-DECK.pptx`** | **Main pitch — 18 slides, submit/present this** |
+| `PRESENTATION-GUIDE.md` | Slide map + 5–7 min script + judge checklist |
+| `Smart-Profits-IDEA-CAPTURE-TEMPLATE-EN.docx` | Idea Capture — English Word file |
+| `Smart-Profits-PITCH-DECK.pptx` | Legacy 10-slide version |
+| `PITCH-DECK.html` | Browser version (Ctrl+P → PDF) |
 | `IDEA-CAPTURE-TEMPLATE.md` | Markdown draft of the idea |
+
+Regenerate the PowerPoint:
+
+```bash
+python docs/hackathon/build_pitch_pptx.py
+```
 
 ## How to export PDF
 

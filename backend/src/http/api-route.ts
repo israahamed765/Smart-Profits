@@ -23,6 +23,10 @@ export async function backendApiRoute(
       return Response.json({ error: error.message, verdict: error.verdict }, { status: error.status });
     }
     if (isAppError(error)) {
+      const codes = (error as AppError & { codes?: string[] }).codes;
+      if (codes?.length) {
+        return Response.json({ error: error.message, codes }, { status: error.status });
+      }
       return jsonError(error.message, error.status);
     }
     if (error instanceof ZodError) {

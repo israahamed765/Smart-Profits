@@ -33,11 +33,13 @@ export interface NokiaMockProfile {
 }
 
 /**
- * Nokia NaC simulator numbers (official docs):
+ * Local Nokia NaC profiles — used ONLY when NAC_API_KEY is absent (see nac-client / nokia-adapter).
+ * Live mode never reads these profiles; Nokia/RapidAPI responses are mapped via nac-live-mapper.
+ *
+ * Official simulator MSISDNs (Nokia docs):
  * https://networkascode.nokia.io/_docs/sim-swap/sim-swap#simulated-sim-swap-scenario-responses
- * https://networkascode.nokia.io/_docs/device-swap/device-swap#simulated-device-swap-scenario-responses
  * +99999991000 → swap occurred · +99999991001 → no swap
- * +99999991002 is a local Step-up profile for location mismatch demos.
+ * +99999991002 → location PARTIAL (location-verification docs)
  */
 export const NOKIA_MOCK_PROFILES: NokiaMockProfile[] = [
   {
