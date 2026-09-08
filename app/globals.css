@@ -44,7 +44,8 @@ html.dark {
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-purple: var(--purple);
-  --font-sans: var(--font-ibm-plex-arabic), var(--font-ibm-plex), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-cairo), var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
 }
 
 * {
@@ -67,6 +68,18 @@ body {
   font-family: var(--font-sans);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  letter-spacing: 0.01em;
+  font-feature-settings: "ss01" on, "cv11" on;
+}
+
+html[lang="en"] body {
+  font-family: var(--font-jakarta), var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+html[lang="ar"] body {
+  font-family: var(--font-cairo), var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0;
 }
 
 img {

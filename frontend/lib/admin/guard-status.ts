@@ -1,50 +1,63 @@
 import type { AdminUserRow } from "@/lib/admin/types";
 
-export const GUARD_REASON_LABEL: Record<string, string> = {
-  clean: "نظيف",
-  sim_swap: "تبديل شريحة",
-  device_swap: "تبديل جهاز",
-  location_mismatch: "عدم تطابق الموقع",
-  location_soft: "موقع مشكوك",
-  location_unknown: "موقع غير معروف",
-  account_frozen: "حساب مجمّد",
-  need_number_verification: "تحقق الرقم",
-  missing_phone: "بدون جوال",
-  financial_risk: "مخاطرة مالية",
-  check_failed: "فشل الفحص",
+export const GUARD_REASON_LABEL: Record<string, { ar: string; en: string }> = {
+  clean: { ar: "نظيف", en: "Clean" },
+  sim_swap: { ar: "تبديل شريحة", en: "SIM swap" },
+  device_swap: { ar: "تبديل جهاز", en: "Device swap" },
+  location_mismatch: { ar: "عدم تطابق الموقع", en: "Location mismatch" },
+  location_soft: { ar: "موقع مشكوك", en: "Soft location doubt" },
+  location_unknown: { ar: "موقع غير معروف", en: "Location unknown" },
+  account_frozen: { ar: "حساب مجمّد", en: "Account frozen" },
+  need_number_verification: { ar: "تحقق الرقم", en: "Number verification" },
+  missing_phone: { ar: "بدون جوال", en: "Missing phone" },
+  financial_risk: { ar: "مخاطرة مالية", en: "Financial risk" },
+  check_failed: { ar: "فشل الفحص", en: "Check failed" },
 };
 
-export function guardSecurityLabel(user: AdminUserRow) {
-  if (user.guardFrozen) {
-    const reason = GUARD_REASON_LABEL[user.guardReason] || user.guardReason || "Smart Guard";
-    return { tone: "danger" as const, text: `مجمّد — ${reason}` };
+export function guardSecurityLabel(user: AdminUserRow, locale: "ar" | "en" = "ar") {
+  const en = locale === "en";
+  const reasonLabel = (reason?: string) =>
+    (reason && GUARD_REASON_LABEL[reason]?.[locale]) || reason || "Smart Guard";
+
+  if (user.guardFrozen || user.latestGuardDecision === "freeze") {
+    return {
+      tone: "danger" as const,
+      text: en
+        ? `Frozen — ${reasonLabel(user.guardReason || user.latestGuardReason)}`
+        : `مجمّد — ${reasonLabel(user.guardReason || user.latestGuardReason)}`,
+    };
   }
   if (user.latestGuardDecision === "step_up") {
-    const reason = GUARD_REASON_LABEL[user.latestGuardReason] || "تحقق إضافي";
-    return { tone: "warning" as const, text: `تحقق إضافي — ${reason}` };
-  }
-  if (user.latestGuardDecision === "freeze") {
-    return { tone: "danger" as const, text: "تجميد (سابق)" };
+    return {
+      tone: "warning" as const,
+      text: en
+        ? `Step-up — ${reasonLabel(user.latestGuardReason)}`
+        : `تحقق إضافي — ${reasonLabel(user.latestGuardReason)}`,
+    };
   }
   if (user.latestGuardDecision === "allow") {
-    return { tone: "success" as const, text: "دخول طبيعي" };
+    return { tone: "success" as const, text: en ? "Normal access" : "دخول طبيعي" };
   }
   if (user.lastLoginAt) {
-    return { tone: "success" as const, text: "مسجّل — بدون فحص Guard" };
+    return {
+      tone: "success" as const,
+      text: en ? "Signed in — no Guard flag" : "مسجّل — بدون فحص Guard",
+    };
   }
-  return { tone: "info" as const, text: "لم يسجّل دخول بعد" };
+  return { tone: "info" as const, text: en ? "No login yet" : "لم يسجّل دخول بعد" };
 }
 
-export function isUserFrozen(user: Pick<AdminUserRow, "guardFrozen">) {
-  return user.guardFrozen;
+export function isUserFrozen(
+  user: Pick<AdminUserRow, "guardFrozen" | "latestGuardDecision">,
+) {
+  return Boolean(user.guardFrozen) || user.latestGuardDecision === "freeze";
 }
 
 export function hasGuardIssue(
   user: Pick<AdminUserRow, "guardFrozen" | "latestGuardDecision" | "latestGuardReason">,
 ) {
-  if (user.guardFrozen) return false;
+  if (isUserFrozen(user)) return false;
   if (user.latestGuardDecision === "step_up") return true;
-  if (user.latestGuardDecision === "freeze") return true;
   if (user.latestGuardReason === "check_failed" || user.latestGuardReason === "financial_risk") return true;
   return false;
 }

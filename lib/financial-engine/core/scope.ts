@@ -61,9 +61,11 @@ const MONTH_INDEX: Record<string, number> = {
   ديسمبر: 11,
 };
 
-export function monthKeyFromDate(date: Date | null | undefined) {
-  if (!date || Number.isNaN(date.getTime())) return null;
-  return monthKey(date.getFullYear(), date.getMonth());
+export function monthKeyFromDate(date: Date | string | null | undefined) {
+  const value =
+    date instanceof Date ? date : typeof date === "string" && date ? new Date(date) : null;
+  if (!value || Number.isNaN(value.getTime())) return null;
+  return monthKey(value.getFullYear(), value.getMonth());
 }
 
 export function filterTransactions(transactions: Transaction[], scope: AnalysisScope) {

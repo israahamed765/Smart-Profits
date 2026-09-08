@@ -86,6 +86,38 @@ describe("Smart Guard policy", () => {
     assert.throws(() => parseSensitiveAction(""));
     assert.doesNotThrow(() => parseSensitiveAction("login"));
   });
+
+  it("keeps a frozen account frozen until step-up succeeds", () => {
+    const blocked = decideSmartGuard(
+      baseInput({
+        merchant: {
+          email: "a@b.com",
+          phone: "+970599000000",
+          alreadyFrozen: true,
+          stepUpVerified: false,
+          accountAgeHours: 100,
+          suspicious: false,
+        },
+      }),
+    );
+    assert.equal(blocked.decision, "freeze");
+    assert.equal(blocked.reason, "account_frozen");
+
+    const cleared = decideSmartGuard(
+      baseInput({
+        merchant: {
+          email: "a@b.com",
+          phone: "+970599000000",
+          alreadyFrozen: true,
+          stepUpVerified: true,
+          accountAgeHours: 100,
+          suspicious: false,
+        },
+      }),
+    );
+    assert.equal(cleared.decision, "allow");
+    assert.equal(cleared.reason, "clean");
+  });
 });
 
 describe("Smart Guard evaluate route", () => {

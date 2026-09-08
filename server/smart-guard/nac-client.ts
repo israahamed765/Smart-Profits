@@ -12,6 +12,7 @@ import {
   type NacMode,
 } from "@/shared/contracts/nac-contract";
 import { nacMode } from "./nac-env";
+import { findNokiaMockProfile } from "./nokia-mock";
 import {
   nokiaDeviceSwapCheck,
   nokiaDeviceSwapDate,
@@ -34,10 +35,12 @@ function e164(phone: string) {
 }
 
 /**
- * Live when NAC_API_KEY is set; local nokia-mock only when the key is absent.
- * No hardcoded MSISDN bypass — Nokia/RapidAPI is the source of truth in live mode.
+ * Official Nokia NaC test MSISDNs (+99999991000/1001/1002) stay on local profiles even
+ * when NAC_API_KEY is set — RapidAPI live often misroutes them and breaks the demo script.
+ * All other numbers use live Nokia when the key is present.
  */
-export function nacEffectiveMode(): NacMode {
+export function nacEffectiveMode(phone?: string): NacMode {
+  if (phone && findNokiaMockProfile(e164(phone))) return "simulator";
   return nacMode();
 }
 
@@ -53,8 +56,8 @@ function trace(
 }
 
 export async function nacCheckSimSwap(phone: string, email: string, maxAgeHours: number) {
-  const mode = nacEffectiveMode();
   const request = { phoneNumber: e164(phone), maxAge: maxAgeHours };
+  const mode = nacEffectiveMode(request.phoneNumber);
   if (mode === "live") {
     const live = await nokiaSimSwapCheck(request);
     return { ...live.data, trace: live.trace };
@@ -67,8 +70,8 @@ export async function nacCheckSimSwap(phone: string, email: string, maxAgeHours:
 }
 
 export async function nacRetrieveSimSwapDate(phone: string, email: string) {
-  const mode = nacEffectiveMode();
   const request = { phoneNumber: e164(phone) };
+  const mode = nacEffectiveMode(request.phoneNumber);
   if (mode === "live") {
     const live = await nokiaSimSwapDate(request);
     return { ...live.data, trace: live.trace };
@@ -81,8 +84,8 @@ export async function nacRetrieveSimSwapDate(phone: string, email: string) {
 }
 
 export async function nacCheckDeviceSwap(phone: string, email: string, maxAgeHours: number) {
-  const mode = nacEffectiveMode();
   const request = { phoneNumber: e164(phone), maxAge: maxAgeHours };
+  const mode = nacEffectiveMode(request.phoneNumber);
   if (mode === "live") {
     const live = await nokiaDeviceSwapCheck(request);
     return { ...live.data, trace: live.trace };
@@ -95,8 +98,8 @@ export async function nacCheckDeviceSwap(phone: string, email: string, maxAgeHou
 }
 
 export async function nacRetrieveDeviceSwapDate(phone: string, email: string) {
-  const mode = nacEffectiveMode();
   const request = { phoneNumber: e164(phone) };
+  const mode = nacEffectiveMode(request.phoneNumber);
   if (mode === "live") {
     const live = await nokiaDeviceSwapDate(request);
     return { ...live.data, trace: live.trace };
@@ -109,8 +112,8 @@ export async function nacRetrieveDeviceSwapDate(phone: string, email: string) {
 }
 
 export async function nacVerifyNumber(phone: string, email: string) {
-  const mode = nacEffectiveMode();
   const request = { phoneNumber: e164(phone) };
+  const mode = nacEffectiveMode(request.phoneNumber);
   if (mode === "live") {
     const live = await nokiaNumberVerify(request);
     return { ...live.data, trace: live.trace };
@@ -127,7 +130,6 @@ export async function nacVerifyLocation(
   email: string,
   store: { lat: number; lng: number },
 ) {
-  const mode = nacEffectiveMode();
   const request = {
     device: { phoneNumber: e164(phone) },
     area: {
@@ -136,6 +138,7 @@ export async function nacVerifyLocation(
       radius: STORE_RADIUS_METERS,
     },
   };
+  const mode = nacEffectiveMode(request.device.phoneNumber);
   if (mode === "live") {
     const live = await nokiaLocationVerify(request);
     return { ...live.data, trace: live.trace };

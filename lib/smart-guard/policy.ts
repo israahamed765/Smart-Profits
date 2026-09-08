@@ -99,6 +99,11 @@ export function decideSmartGuard(input: GuardInput): GuardVerdict {
     return verdict(input, "freeze", "location_mismatch");
   }
 
+  // Stay frozen until network identity is confirmed (step-up). Do not clear on a later allow/step_up path by accident.
+  if (input.merchant.alreadyFrozen && !steppedUp) {
+    return verdict(input, "freeze", "account_frozen");
+  }
+
   if (!input.merchant.phone) {
     return verdict(input, "step_up", "missing_phone");
   }

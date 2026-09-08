@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parent
 SHOTS = ROOT / "screenshots"
 LOGO = ROOT.parent.parent / "public" / "brand" / "mark.png"
 
-TOTAL = 18
+TOTAL = 19
 page = 0
 
 prs = Presentation()
@@ -145,7 +145,33 @@ add_text(s, Inches(0.55), Inches(6.05), Inches(12), Inches(0.55),
 footer(s)
 
 # ---------------------------------------------------------------------------
-# 02 Executive summary (judges scan this first)
+# 02 The Story (pitch opener — judges remember this)
+# ---------------------------------------------------------------------------
+s = prs.slides.add_slide(BLANK)
+chrome(
+    s,
+    "The story — pitch opener",
+    "A merchant. An Excel file. A stolen SIM.",
+    "Start every pitch with this narrative — then show the live demo that stops it.",
+)
+add_round(s, Inches(0.5), Inches(1.7), Inches(12.3), Inches(2.55), CARD)
+add_text(
+    s, Inches(0.75), Inches(1.9), Inches(11.8), Inches(2.15),
+    "A merchant in the Middle East runs the business from Excel. Their phone line is hijacked "
+    "through a SIM swap. The attacker opens the advisor, downloads the P&L, and changes product prices.\n\n"
+    "Smart Profits stops that — from the moment of registration until the latest financial file upload.",
+    16, False, WHITE,
+)
+card(s, Inches(0.5), Inches(4.45), Inches(4.0), Inches(2.05), "Same files = business",
+     "The spreadsheet IS the books. Whoever owns login owns profit, prices and exports.")
+card(s, Inches(4.65), Inches(4.45), Inches(4.0), Inches(2.05), "SMS OTP fails",
+     "After SIM swap, SMS codes go to the attacker. Network APIs do not trust that channel.")
+card(s, Inches(8.8), Inches(4.45), Inches(4.0), Inches(2.05), "Smart Guard stops it",
+     "CAMARA signals + financial sensitivity → Allow · Step-up · Freeze before damage.")
+footer(s)
+
+# ---------------------------------------------------------------------------
+# 03 Executive summary (judges scan this first)
 # ---------------------------------------------------------------------------
 s = prs.slides.add_slide(BLANK)
 chrome(s, "Executive summary", "One slide for the jury", "What we built, why it wins Theme 4, and how both mandatory requirements are met.")
@@ -165,7 +191,7 @@ add_paras(s, Inches(0.75), Inches(5.05), Inches(11.8), Inches(1.3), [
 footer(s)
 
 # ---------------------------------------------------------------------------
-# 03 Problem
+# 04 Problem
 # ---------------------------------------------------------------------------
 s = prs.slides.add_slide(BLANK)
 chrome(s, "1. Problem statement", "The P&L lives in Excel. So does the fraud.")
@@ -213,8 +239,8 @@ actions = "Register  ·  Login  ·  Password reset  ·  Excel/CSV/PDF upload  ·
 add_text(s, Inches(0.75), Inches(4.2), Inches(11.8), Inches(0.45), actions, 14, True, CYAN)
 add_text(s, Inches(0.75), Inches(4.75), Inches(11.8), Inches(1.55),
          "Positioning: Not a generic Excel AI. A FinTech control plane for SMEs — using 4G/5G CAMARA signals the way banks do, on the merchant’s own books.\n"
-         "No sensitive action completes unless Smart Guard runs the network + policy loop.",
-         14, False, WHITE)
+         "Silent Authentication on the clean path (Number Verification on the network). Friction only when risk is real. No sensitive action completes unless Smart Guard runs the network + financial-risk loop.",
+         13, False, WHITE)
 footer(s)
 
 # ---------------------------------------------------------------------------
@@ -273,7 +299,7 @@ rows = [
     ("Location Verification", "Financial file upload, P&L export", "Must match store geofence — else STEP-UP or block upload."),
     ("Device Swap", "Same sensitive actions as SIM", "Recent device change → FREEZE (complements SIM signal)."),
 ]
-table = s.shapes.add_table(5, 3, Inches(0.5), Inches(1.5), Inches(12.3), Inches(3.1)).table
+table = s.shapes.add_table(5, 3, Inches(0.5), Inches(1.5), Inches(12.3), Inches(2.85)).table
 for j, h in enumerate(headers):
     table.columns[j].width = col_w[j]
     cell = table.cell(0, j)
@@ -292,40 +318,45 @@ for i, row in enumerate(rows, start=1):
         for p in cell.text_frame.paragraphs:
             for r in p.runs:
                 set_run(r, 11, j == 0, WHITE if j else CYAN)
-add_text(s, Inches(0.55), Inches(4.85), Inches(12.2), Inches(1.5),
-         "Prototype: Nokia NaC developer simulators + live RapidAPI (NAC_API_KEY).\n"
-         "Official test MSISDNs: +99999991001 clean · +99999991000 swap/freeze · +99999991002 location step-up · +99999991003 location unknown.\n"
-         "Policy engine (policy.ts) is unchanged — Nokia results map through nac-live-mapper; no hardcoded fake success on provider failure.",
-         12, False, MUTED)
+add_round(s, Inches(0.5), Inches(4.55), Inches(12.3), Inches(2.05), CARD)
+add_text(s, Inches(0.75), Inches(4.7), Inches(12), Inches(0.32), "Frictionless security — Silent Authentication", 14, True, GOLD)
+add_text(
+    s, Inches(0.75), Inches(5.05), Inches(11.8), Inches(1.35),
+    "In the normal path, Number Verification runs quietly on the operator 4G/5G network — the merchant does not wait for SMS or type a code.\n"
+    "Security friction appears only when risk is real (SIM/device swap → Freeze, soft location mismatch → Step-up).\n"
+    "Demo MSISDNs: +99999991001 clean · +99999991000 freeze · +99999991002 step-up. Policy stays pure — no fake success on provider failure.",
+    12, False, WHITE,
+)
 footer(s)
 
 # ---------------------------------------------------------------------------
-# 08 AI Agent design
+# 09 AI Agent design — NOT a plain if/else rule sheet
 # ---------------------------------------------------------------------------
 s = prs.slides.add_slide(BLANK)
-chrome(s, "6. Smart Guard AI Agent", "Sense → Query → Decide → Act")
+chrome(
+    s,
+    "6. Smart Guard AI Agent",
+    "Not a static rule engine — an agent that fuses network risk + financial sensitivity",
+    "Sense → Query tools → Decide with context → Act (enforce).",
+)
 steps = [
-    ("1 · Sense", "Merchant action: login, register, upload, export, price change."),
-    ("2 · Query", "Parallel CAMARA calls via Nokia NaC: SIM Swap, Device Swap, NV, Location."),
-    ("3 · Decide", "Fuse network risk + file sensitivity + account age. Output: Allow · Step-up · Freeze."),
-    ("4 · Act", "Enforce on server (403/503). UI overlay for step-up network code. Explain in AR/EN."),
+    ("1 · Sense", "Action + file context: login, register, upload size/name, price change, account age."),
+    ("2 · Query", "Parallel CAMARA tools via Nokia NaC: SIM Swap, Device Swap, Number Verification, Location."),
+    ("3 · Decide", "Fuse network signals WITH financial risk (financialSuspicion). Output Allow · Step-up · Freeze."),
+    ("4 · Act", "Server enforce (403/503). UI step-up only when needed. Explain in AR/EN."),
 ]
 for i, (title, body) in enumerate(steps):
     x = Inches(0.5) + i * Inches(3.2)
-    card(s, x, Inches(1.45), Inches(3.0), Inches(2.15), title, body, CYAN, 12)
-decisions = [
-    ("ALLOW", "Signals consistent. Continue analytics / upload.", GREEN),
-    ("STEP-UP", "NV unavailable or soft location mismatch. Network code — not SMS.", AMBER),
-    ("FREEZE", "SIM/device swap or hard location mismatch. Block sensitive actions.", RED),
-]
-for i, (title, body, col) in enumerate(decisions):
-    x = Inches(0.5) + i * Inches(4.2)
-    add_round(s, x, Inches(3.85), Inches(3.95), Inches(1.55), CARD)
-    add_text(s, x + Inches(0.2), Inches(3.98), Inches(3.5), Inches(0.35), title, 18, True, col)
-    add_text(s, x + Inches(0.2), Inches(4.38), Inches(3.5), Inches(0.85), body, 12, False, WHITE)
-add_text(s, Inches(0.55), Inches(5.65), Inches(12.2), Inches(1.2),
-         "Example freeze: upload monthly_sales.xlsx → SIM Swap recent OR location ≠ store → FREEZE → file not stored → recover via Number Verification on trusted line.",
-         13, False, MUTED)
+    card(s, x, Inches(1.55), Inches(3.0), Inches(1.95), title, body, CYAN, 11)
+# Fusion matrix — the anti-rule-engine argument
+add_round(s, Inches(0.5), Inches(3.7), Inches(12.3), Inches(2.85), CARD)
+add_text(s, Inches(0.75), Inches(3.85), Inches(12), Inches(0.3), "Why this is an AI Agent decision — not plain if/else", 14, True, GOLD)
+add_paras(s, Inches(0.75), Inches(4.2), Inches(11.8), Inches(2.15), [
+    "Small network change + ordinary purchases file → Agent ALLOWS — no merchant friction.",
+    "Same small network change + sensitive P&L upload OR price change → Agent STEP-UPS — financial risk raises the bar.",
+    "SIM/device swap (any action) → Agent FREEZES — SMS OTP is untrusted after swap.",
+    "Tools are CAMARA APIs; the brain is policy.ts fused with financialSuspicion (file size, dump names, new account + large file). That fusion is the agent.",
+], 12, WHITE, bullet=True)
 footer(s)
 
 # ---------------------------------------------------------------------------
@@ -461,25 +492,30 @@ for i, row in enumerate(rows, start=1):
 footer(s)
 
 # ---------------------------------------------------------------------------
-# 14 Business model
+# 15 Business model — B2B2X for operators
 # ---------------------------------------------------------------------------
 s = prs.slides.add_slide(BLANK)
-chrome(s, "12. Business model", "SaaS revenue + Open Gateway COGS + operator B2B2X")
+chrome(
+    s,
+    "12. Business model",
+    "How operators make money from Smart Profits",
+    "SaaS for merchants + continuous CAMARA API usage for telcos (B2B2X).",
+)
 plans = [
-    ("Free trial · 7 days", "Full product — upload, diagnosis, advisor, Smart Guard demo. Converts to Pro."),
+    ("Free trial · 7 days", "Full product — upload, diagnosis, advisor, Smart Guard. Converts to Pro."),
     ("Pro · $49 / month", "Single store — P&L, leaks, Q&A, telco-secured login/upload/export."),
     ("Business · $99 / month", "Multi-branch — tighter geofences, team seats, priority guard review."),
 ]
 for i, (title, body) in enumerate(plans):
-    card(s, Inches(0.5) + i * Inches(4.2), Inches(1.45), Inches(3.95), Inches(2.5), title, body)
-add_round(s, Inches(0.5), Inches(4.2), Inches(12.3), Inches(2.35), CARD)
-add_text(s, Inches(0.75), Inches(4.35), Inches(12), Inches(0.35), "Monetization logic for GSMA / Nokia / operators", 15, True, GOLD)
-add_paras(s, Inches(0.75), Inches(4.75), Inches(11.8), Inches(1.65), [
-    "Merchant subscription = primary revenue (SME FinTech SaaS).",
-    "CAMARA API calls = security COGS — every login, upload and export consumes operator value.",
-    "Future B2B2X: white-label Smart Guard for banks, wallets and marketplaces via Open Gateway.",
-    "Incubated at Bitsandbytesdude — shipping product line, not a one-hack demo.",
-], 13, WHITE, bullet=True)
+    card(s, Inches(0.5) + i * Inches(4.2), Inches(1.55), Inches(3.95), Inches(1.85), title, body, GOLD, 12)
+add_round(s, Inches(0.5), Inches(3.6), Inches(12.3), Inches(2.95), CARD)
+add_text(s, Inches(0.75), Inches(3.75), Inches(12), Inches(0.32), "Operator revenue — continuous API consumption (B2B2X)", 15, True, GOLD)
+add_paras(s, Inches(0.75), Inches(4.15), Inches(11.8), Inches(2.2), [
+    "Every login, register, password reset, Excel upload, P&L export and price change triggers CAMARA calls (SIM Swap, Device Swap, Number Verification, Location).",
+    "That is recurring, metered Open Gateway usage — not a one-time integration demo. More active merchants = more billable API events for the operator.",
+    "Merchant SaaS subscription funds the product; CAMARA usage is the telco monetization layer GSMA sponsors care about.",
+    "Future white-label: banks, wallets and marketplaces consume the same Smart Guard + NaC path under operator B2B2X deals.",
+], 12, WHITE, bullet=True)
 footer(s)
 
 # ---------------------------------------------------------------------------
@@ -549,10 +585,10 @@ add_text(s, Inches(0.55), Inches(1.55), Inches(12), Inches(0.35), "THE ASK", 14,
 add_text(s, Inches(0.55), Inches(2.0), Inches(12.2), Inches(1.1), "Advance Smart Profits under Theme 4.", 38, True, WHITE)
 add_paras(s, Inches(0.55), Inches(3.25), Inches(12), Inches(1.5), [
     "A real merchant SaaS — not slideware.",
-    "A real AI Agent — Allow / Step-up / Freeze on every sensitive action.",
-    "Real CAMARA APIs through Nokia Network-as-Code — with live logs judges can verify.",
-    "Built for MENA — Arabic RTL, English, messy ledgers, SIM-swap-aware FinTech.",
-], 16, WHITE, bullet=True)
+    "A real AI Agent — fuses network risk WITH financial sensitivity (Allow / Step-up / Freeze).",
+    "Silent Authentication on the clean path — Freeze only when SIM swap is real.",
+    "Real CAMARA APIs via Nokia NaC — continuous operator API revenue (B2B2X).",
+], 15, WHITE, bullet=True)
 badge_row(s, Inches(5.0), [
     "✓ CAMARA via Nokia NaC",
     "✓ AI Agent orchestration",

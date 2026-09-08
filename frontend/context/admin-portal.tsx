@@ -8,11 +8,13 @@ import {
   collectClientFacts,
   mergeFacts,
   normalizeAdminSnapshot,
+  removeUserFromLocalStorage,
   saveUserOverride,
   type AdminFacts,
 } from "@/frontend/lib/admin/metrics";
 import type { AdminSnapshot, AdminUserRow } from "@/lib/admin/types";
 import { apiFetch } from "@/frontend/lib/api/client";
+import { useAppearance } from "@/frontend/context/appearance";
 
 interface AdminPortalValue {
   range: DateRangeKey;
@@ -24,6 +26,7 @@ interface AdminPortalValue {
   setCustomRange: (from: string, to: string) => void;
   refresh: () => void;
   patchUser: (id: string, patch: Partial<AdminUserRow>) => void;
+  deleteUser: (id: string) => Promise<boolean>;
 }
 
 const AdminPortalContext = createContext<AdminPortalValue | null>(null);
@@ -38,6 +41,7 @@ function monthStartIso() {
 }
 
 export function AdminPortalProvider({ children }: { children: React.ReactNode }) {
+  const { locale } = useAppearance();
   const [range, setRangeState] = useState<DateRangeKey>("month");
   const [from, setFrom] = useState(monthStartIso);
   const [to, setTo] = useState(todayIso);
@@ -55,7 +59,7 @@ export function AdminPortalProvider({ children }: { children: React.ReactNode })
         if (response.ok) {
           const serverFacts = (await response.json()) as AdminFacts;
           const merged = normalizeAdminSnapshot(
-            buildAdminSnapshotFromFacts(mergeFacts(local, serverFacts), range, from, to),
+            buildAdminSnapshotFromFacts(mergeFacts(local, serverFacts), range, from, to, locale),
             range,
             from,
             to,
@@ -70,7 +74,7 @@ export function AdminPortalProvider({ children }: { children: React.ReactNode })
         // fall through to local
       }
       if (!cancelled) {
-        setSnapshot(normalizeAdminSnapshot(buildAdminSnapshot(range, from, to), range, from, to));
+        setSnapshot(normalizeAdminSnapshot(buildAdminSnapshot(range, from, to, locale), range, from, to));
         setReady(true);
       }
     }
@@ -78,7 +82,7 @@ export function AdminPortalProvider({ children }: { children: React.ReactNode })
     return () => {
       cancelled = true;
     };
-  }, [range, from, to, tick]);
+  }, [range, from, to, tick, locale]);
 
   const setRange = useCallback((key: DateRangeKey) => {
     setRangeState(key);
@@ -103,9 +107,21 @@ export function AdminPortalProvider({ children }: { children: React.ReactNode })
     setTick((n) => n + 1);
   }, []);
 
+  const deleteUser = useCallback(async (id: string) => {
+    const email = id.replace(/^real-/, "");
+    removeUserFromLocalStorage(email);
+    const response = await apiFetch("/api/admin/users", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    if (response.ok) setTick((n) => n + 1);
+    return response.ok;
+  }, []);
+
   const value = useMemo(
-    () => ({ range, from, to, snapshot, ready, setRange, setCustomRange, refresh, patchUser }),
-    [range, from, to, snapshot, ready, setRange, setCustomRange, refresh, patchUser],
+    () => ({ range, from, to, snapshot, ready, setRange, setCustomRange, refresh, patchUser, deleteUser }),
+    [range, from, to, snapshot, ready, setRange, setCustomRange, refresh, patchUser, deleteUser],
   );
 
   return <AdminPortalContext.Provider value={value}>{children}</AdminPortalContext.Provider>;

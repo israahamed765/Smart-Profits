@@ -13,7 +13,7 @@ import { POST as postAdminLogin } from "./admin-login";
 import { GET as getAdminMe } from "./admin-me";
 import { POST as postAdminLogout } from "./admin-logout";
 import { GET as getAdminSnapshot } from "./admin-snapshot";
-import { POST as postAdminUsers } from "./admin-users";
+import { POST as postAdminUsers, DELETE as deleteAdminUsers } from "./admin-users";
 import { POST as postGuardEvaluate } from "./guard-evaluate";
 import { GET as getGuardLogs } from "./guard-logs";
 import { GET as getGuardDemo, POST as postGuardDemo } from "./guard-demo";
@@ -55,6 +55,7 @@ export async function dispatchProductRequest(request: Request): Promise<Response
   if (method === "POST" && path === "/api/admin/logout") return postAdminLogout(request);
   if (method === "GET" && path === "/api/admin/snapshot") return getAdminSnapshot(request);
   if (method === "POST" && path === "/api/admin/users") return postAdminUsers(request);
+  if (method === "DELETE" && path === "/api/admin/users") return deleteAdminUsers(request);
   if (method === "POST" && path === "/api/smart-guard/evaluate") return postGuardEvaluate(request);
   if (method === "GET" && path === "/api/smart-guard/logs") return getGuardLogs(request);
   if (method === "GET" && path === "/api/smart-guard/demo") return getGuardDemo(request);

@@ -9,6 +9,7 @@ import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { formatMoney } from "@/frontend/lib/format";
 import { localizeSheetReason, localizeWarning } from "@/frontend/lib/localize-warning";
+import { reviveTransactionDate } from "@/lib/serialize";
 import { dateFromSheetName } from "@/lib/sheets";
 import { filterTransactions, scopeFromSheetName } from "@/lib/scope";
 import type { ColumnRole, SheetScan } from "@/lib/types";
@@ -87,7 +88,9 @@ export function FileStudyReport() {
   const scopedRows = filterTransactions(parseResult.transactions, scope);
   const sample = scopedRows.slice(0, 12);
   const products = new Set(scopedRows.map((tx) => tx.product).filter(Boolean)).size;
-  const dated = scopedRows.map((tx) => tx.date).filter((d): d is Date => d instanceof Date);
+  const dated = scopedRows
+    .map((tx) => reviveTransactionDate(tx.date))
+    .filter((d): d is Date => Boolean(d));
   const from = dated.length ? dated.reduce((a, b) => (a < b ? a : b)) : null;
   const to = dated.length ? dated.reduce((a, b) => (a > b ? a : b)) : null;
   const dateLocale = locale === "ar" ? "ar" : "en-GB";
@@ -280,7 +283,12 @@ export function FileStudyReport() {
                 {sample.map((tx, index) => (
                   <tr key={`${tx.product}-${index}`} className="border-b border-border/60 text-foreground">
                     <td className="px-2 py-2">
-                      {tx.date ? tx.date.toLocaleDateString(dateLocale, { day: "numeric", month: "short", year: "numeric" }) : "—"}
+                      {(() => {
+                        const date = reviveTransactionDate(tx.date);
+                        return date
+                          ? date.toLocaleDateString(dateLocale, { day: "numeric", month: "short", year: "numeric" })
+                          : "—";
+                      })()}
                     </td>
                     <td className="px-2 py-2">{tx.product || "—"}</td>
                     <td className="px-2 py-2">{tx.quantity || "—"}</td>

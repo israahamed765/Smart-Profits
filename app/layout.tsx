@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Cairo, Plus_Jakarta_Sans } from "next/font/google";
 import { Providers } from "@/frontend/components/providers";
 import "./globals.css";
 
-const ibmPlexArabic = IBM_Plex_Sans_Arabic({
-  variable: "--font-ibm-plex-arabic",
-  subsets: ["arabic"],
+const cairo = Cairo({
+  variable: "--font-cairo",
+  subsets: ["arabic", "latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-const ibmPlex = IBM_Plex_Sans({
-  variable: "--font-ibm-plex",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -34,7 +34,7 @@ try {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ar" dir="rtl" className={`${ibmPlexArabic.variable} ${ibmPlex.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
+    <html lang="ar" dir="rtl" className={`${cairo.variable} ${jakarta.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>

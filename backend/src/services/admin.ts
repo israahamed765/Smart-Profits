@@ -1,1 +1,1 @@
-export { loginAdmin, adminSnapshot, patchMerchantAccount } from "@/server/services/admin.service";
+export { loginAdmin, adminSnapshot, patchMerchantAccount, deleteMerchantAccount } from "@/server/services/admin.service";

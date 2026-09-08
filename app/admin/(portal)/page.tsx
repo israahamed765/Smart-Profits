@@ -35,19 +35,20 @@ const ACTIVITY_DOT = {
 
 export default function AdminOverviewPage() {
   const { snapshot, ready, range, from, to } = useAdminPortal();
-  const { t } = useAppearance();
+  const { t, locale } = useAppearance();
 
   if (!ready || !snapshot) {
     return <p className="page-pad text-sm text-muted">{t("admin.overview.loading")}</p>;
   }
 
   const planData = [
-    { name: "مجانية", value: snapshot.planSplit.free, color: "#94a3b8" },
-    { name: "احترافية", value: snapshot.planSplit.pro, color: "#4fd1c5" },
-    { name: "أعمال", value: snapshot.planSplit.business, color: "#e8c56b" },
+    { name: t("admin.plan.free"), value: snapshot.planSplit.free, color: "#94a3b8" },
+    { name: t("admin.plan.pro"), value: snapshot.planSplit.pro, color: "#4fd1c5" },
+    { name: t("admin.plan.business"), value: snapshot.planSplit.business, color: "#e8c56b" },
   ];
   const totalPlans = Math.max(1, snapshot.planSplit.free + snapshot.planSplit.pro + snapshot.planSplit.business);
   const stats = resolveUserStats(snapshot, range, from, to);
+  const chartLocale = locale === "ar" ? "ar" : "en";
 
   return (
     <>
@@ -55,55 +56,55 @@ export default function AdminOverviewPage() {
       <div className="page-pad">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <AdminKpi
-            title="المسجّلون (إجمالاً)"
+            title={t("admin.kpi.registered")}
             value={formatCount(stats.totalRegistered)}
-            hint={`${stats.registeredInPeriod} في الفترة المحددة`}
+            hint={t("admin.kpi.registeredHint").replace("{n}", String(stats.registeredInPeriod))}
             icon={Users}
           />
           <AdminKpi
-            title="حسابات مجمّدة"
+            title={t("admin.kpi.frozen")}
             value={formatCount(stats.frozenCount)}
-            hint="Smart Guard — تجميد نشط"
+            hint={t("admin.kpi.frozenHint")}
             icon={ShieldAlert}
           />
           <AdminKpi
-            title="مشاكل أمنية"
+            title={t("admin.kpi.issues")}
             value={formatCount(stats.guardIssuesCount)}
-            hint="تحقق إضافي / تجميد سابق / فشل فحص"
+            hint={t("admin.kpi.issuesHint")}
             icon={AlertTriangle}
           />
           <AdminKpi
-            title="دخول طبيعي"
+            title={t("admin.kpi.normal")}
             value={formatCount(Math.max(0, stats.totalRegistered - stats.frozenCount - stats.guardIssuesCount))}
-            hint="بدون تجميد أو مشاكل Guard"
+            hint={t("admin.kpi.normalHint")}
             icon={ShieldCheck}
           />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <AdminKpi
-            title="النشاط الفريد"
+            title={t("admin.kpi.unique")}
             value={formatCount(snapshot.visitors)}
-            hint="حسابات دخلت أو حلّلت في الفترة"
+            hint={t("admin.kpi.uniqueHint")}
             change={snapshot.visitorsChange}
             icon={Eye}
           />
           <AdminKpi
-            title="المستخدمون النشطون"
+            title={t("admin.kpi.active")}
             value={formatCount(snapshot.activeUsers)}
-            hint={`${snapshot.retention}% احتفاظ`}
+            hint={t("admin.kpi.activeHint").replace("{n}", String(snapshot.retention))}
             icon={Users}
           />
           <AdminKpi
-            title="معدل التسرب"
+            title={t("admin.kpi.churn")}
             value={`${snapshot.churn}%`}
-            hint={`LTV ${formatUsd(snapshot.ltv)}`}
+            hint={t("admin.kpi.churnHint").replace("{n}", formatUsd(snapshot.ltv))}
             icon={UserMinus}
           />
           <AdminKpi
-            title="إيراد الاشتراكات / MRR"
+            title={t("admin.kpi.mrr")}
             value={formatUsd(snapshot.mrr)}
-            hint={`صافي ${formatUsd(snapshot.netProfit)}`}
+            hint={t("admin.kpi.mrrHint").replace("{n}", formatUsd(snapshot.netProfit))}
             icon={CreditCard}
           />
         </div>
@@ -111,7 +112,7 @@ export default function AdminOverviewPage() {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader>
-              <CardTitle>تقسيم خطط الاشتراك</CardTitle>
+              <CardTitle>{t("admin.chart.plans")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="mx-auto h-[180px] w-[180px]" dir="ltr">
@@ -144,7 +145,7 @@ export default function AdminOverviewPage() {
 
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle>نمو المستخدمين</CardTitle>
+              <CardTitle>{t("admin.chart.growth")}</CardTitle>
             </CardHeader>
             <CardContent className="h-[280px]" dir="ltr">
               <ResponsiveContainer width="100%" height="100%">
@@ -153,7 +154,7 @@ export default function AdminOverviewPage() {
                   <XAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid #334155", borderRadius: 12 }} />
-                  <Line type="monotone" dataKey="users" name="مسجّلون" stroke="#e8c56b" strokeWidth={3} dot={false} />
+                  <Line type="monotone" dataKey="users" name={t("admin.chart.growthSeries")} stroke="#e8c56b" strokeWidth={3} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -163,13 +164,13 @@ export default function AdminOverviewPage() {
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>المالية — الدخل مقابل المصاريف</CardTitle>
+              <CardTitle>{t("admin.chart.finance")}</CardTitle>
               <div className="flex gap-4 text-xs text-muted">
                 <span className="flex items-center gap-1.5">
-                  <i className="h-2 w-2 rounded-full bg-accent" /> المبيعات والاشتراكات
+                  <i className="h-2 w-2 rounded-full bg-accent" /> {t("admin.chart.sales")}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <i className="h-2 w-2 rounded-full bg-slate-400" /> التكاليف
+                  <i className="h-2 w-2 rounded-full bg-slate-400" /> {t("admin.chart.costs")}
                 </span>
               </div>
             </CardHeader>
@@ -180,8 +181,8 @@ export default function AdminOverviewPage() {
                   <XAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid #334155", borderRadius: 12 }} />
-                  <Line type="monotone" dataKey="revenue" name="الدخل" stroke="#4fd1c5" strokeWidth={3} dot={false} />
-                  <Line type="monotone" dataKey="expenses" name="المصاريف" stroke="#94a3b8" strokeWidth={2} strokeDasharray="6 6" dot={false} />
+                  <Line type="monotone" dataKey="revenue" name={t("admin.chart.income")} stroke="#4fd1c5" strokeWidth={3} dot={false} />
+                  <Line type="monotone" dataKey="expenses" name={t("admin.chart.expenses")} stroke="#94a3b8" strokeWidth={2} strokeDasharray="6 6" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -189,11 +190,11 @@ export default function AdminOverviewPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>صافي ربح المنصة</CardTitle>
+              <CardTitle>{t("admin.chart.net")}</CardTitle>
             </CardHeader>
             <CardContent className="flex h-[280px] flex-col items-center justify-center gap-2">
               <p className="text-4xl font-bold text-accent">{formatUsd(snapshot.netProfit)}</p>
-              <p className="text-sm text-muted">الاشتراكات − تكاليف مسجّلة (حالياً 0)</p>
+              <p className="text-sm text-muted">{t("admin.chart.netHint")}</p>
               <TrendingUp className="h-8 w-8 text-muted" />
             </CardContent>
           </Card>
@@ -201,11 +202,11 @@ export default function AdminOverviewPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>جدول النشاط الفوري</CardTitle>
+            <CardTitle>{t("admin.activity.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {snapshot.activity.length === 0 && (
-              <p className="text-sm text-muted">لا يوجد نشاط حقيقي في هذه الفترة بعد.</p>
+              <p className="text-sm text-muted">{t("admin.activity.empty")}</p>
             )}
             {snapshot.activity.map((item) => {
               const Icon = ACTIVITY_ICON[item.icon];
@@ -214,7 +215,9 @@ export default function AdminOverviewPage() {
                   <span className={`h-2.5 w-2.5 rounded-full ${ACTIVITY_DOT[item.icon]}`} />
                   <Icon className="h-4 w-4 text-slate-400" />
                   <p className="flex-1 text-sm text-slate-200">{item.text}</p>
-                  <span className="text-xs text-muted">{item.time}</span>
+                  <span className="text-xs text-muted" lang={chartLocale}>
+                    {item.time}
+                  </span>
                 </div>
               );
             })}

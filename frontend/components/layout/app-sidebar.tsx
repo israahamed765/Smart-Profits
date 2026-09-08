@@ -38,7 +38,7 @@ export function AppSidebar() {
   return (
     <aside className="sticky top-0 z-40 flex w-full shrink-0 flex-col border-b border-border bg-card px-3 py-2 lg:h-dvh lg:w-60 lg:overflow-y-auto lg:border-b-0 lg:border-e lg:py-4">
       <Logo size="sm" tagline={t("brand.tagline")} className="min-w-0" />
-      <div className="mt-2 overflow-x-auto lg:mt-4">
+      <div className="mt-2 min-w-0 lg:mt-4">
         <AppearanceToggles />
       </div>
 

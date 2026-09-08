@@ -40,11 +40,14 @@ function jsonBody(response: Response) {
 }
 
 describe("P12.6 NAC boundary", () => {
-  it("NAC_API_KEY present → nacEffectiveMode is live (no local MSISDN bypass)", async () => {
+  it("NAC_API_KEY present → official simulator MSISDNs stay local; other numbers go live", async () => {
     const prevKey = process.env.NAC_API_KEY;
     process.env.NAC_API_KEY = "live-test-key";
     try {
-      assert.equal(nacEffectiveMode(), "live");
+      assert.equal(nacEffectiveMode(ALLOW), "simulator");
+      assert.equal(nacEffectiveMode(DENY), "simulator");
+      assert.equal(nacEffectiveMode(STEP), "simulator");
+      assert.equal(nacEffectiveMode("+970599123456"), "live");
     } finally {
       if (prevKey === undefined) delete process.env.NAC_API_KEY;
       else process.env.NAC_API_KEY = prevKey;

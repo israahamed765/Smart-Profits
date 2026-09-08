@@ -14,7 +14,7 @@ export default function AdminTrafficPage() {
   const { t } = useAppearance();
 
   if (!ready || !snapshot) {
-    return <p className="page-pad text-sm text-muted">{t("admin.traffic.title")}...</p>;
+    return <p className="page-pad text-sm text-muted">{t("admin.traffic.loading")}</p>;
   }
 
   const maxCountry = Math.max(...snapshot.countries.map((row) => row.visitors), 1);
@@ -24,16 +24,16 @@ export default function AdminTrafficPage() {
       <AdminHeader title={t("admin.traffic.title")} subtitle={t("admin.traffic.subtitle")} />
       <div className="page-pad">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <AdminKpi title="الزوار الفريدون" value={formatCount(snapshot.uniqueVisitors)} hint="حسابات ظهرت في أحداث الفترة" icon={Eye} />
-          <AdminKpi title="المشاهدات" value={formatCount(snapshot.pageViews)} hint="عدد الأحداث الحقيقية" icon={Globe} />
-          <AdminKpi title="معدل التحويل" value={`${snapshot.conversion}%`} hint="تسجيل جديد ÷ النشاط الفريد" icon={MousePointerClick} />
-          <AdminKpi title="أخطاء رفع Excel" value={formatCount(snapshot.uploadErrors)} hint="ملفات فشل تنظيفها" icon={AlertTriangle} />
+          <AdminKpi title={t("admin.traffic.unique")} value={formatCount(snapshot.uniqueVisitors)} hint={t("admin.traffic.uniqueHint")} icon={Eye} />
+          <AdminKpi title={t("admin.traffic.views")} value={formatCount(snapshot.pageViews)} hint={t("admin.traffic.viewsHint")} icon={Globe} />
+          <AdminKpi title={t("admin.traffic.conversion")} value={`${snapshot.conversion}%`} hint={t("admin.traffic.conversionHint")} icon={MousePointerClick} />
+          <AdminKpi title={t("admin.traffic.uploadErrors")} value={formatCount(snapshot.uploadErrors)} hint={t("admin.traffic.uploadErrorsHint")} icon={AlertTriangle} />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>مصادر النشاط داخل المنصة</CardTitle>
+              <CardTitle>{t("admin.traffic.sources")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="mx-auto h-[220px] w-[220px]" dir="ltr">
@@ -41,7 +41,7 @@ export default function AdminTrafficPage() {
                   <PieChart>
                     <Pie data={snapshot.sources} dataKey="value" nameKey="name" innerRadius={58} outerRadius={84} paddingAngle={3}>
                       {snapshot.sources.map((slice) => (
-                        <Cell key={slice.name} fill={slice.color} />
+                        <Cell key={slice.id ?? slice.name} fill={slice.color} />
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid #334155", borderRadius: 12 }} />
@@ -50,7 +50,7 @@ export default function AdminTrafficPage() {
               </div>
               <ul className="mt-2 space-y-2 text-sm">
                 {snapshot.sources.map((slice) => (
-                  <li key={slice.name} className="flex items-center justify-between">
+                  <li key={slice.id ?? slice.name} className="flex items-center justify-between">
                     <span className="flex items-center gap-2 text-slate-300">
                       <i className="h-2.5 w-2.5 rounded-full" style={{ background: slice.color }} />
                       {slice.name}
@@ -64,14 +64,14 @@ export default function AdminTrafficPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>المتاجر حسب الملفات المحفوظة</CardTitle>
+              <CardTitle>{t("admin.traffic.stores")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {snapshot.countries.length === 0 && (
-                <p className="text-sm text-muted">لا يوجد تجار بملفات محفوظة بعد.</p>
+                <p className="text-sm text-muted">{t("admin.traffic.storesEmpty")}</p>
               )}
               {snapshot.countries.map((row) => (
-                <div key={row.name}>
+                <div key={row.id}>
                   <div className="mb-1 flex items-center justify-between text-sm">
                     <span className="text-slate-300">{row.name}</span>
                     <span className="text-muted">{formatCount(row.visitors)}</span>
@@ -89,7 +89,7 @@ export default function AdminTrafficPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Stethoscope className="h-4 w-4 text-accent" />
-              استهلاك الميزات داخل المنصة
+              {t("admin.traffic.features")}
             </CardTitle>
           </CardHeader>
           <CardContent className="h-[300px]" dir="ltr">
@@ -99,7 +99,7 @@ export default function AdminTrafficPage() {
                 <XAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
                 <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid #334155", borderRadius: 12 }} />
-                <Bar dataKey="uses" name="مرات الاستخدام" fill="#4fd1c5" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="uses" name={t("admin.traffic.uses")} fill="#4fd1c5" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

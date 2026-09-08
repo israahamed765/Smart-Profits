@@ -224,12 +224,17 @@ export function localizeAlert(alert: RiskAlert, amountLabel: string, t: T) {
   const title = t(titleKey) === titleKey ? alert.title : t(titleKey);
   const drop = alert.value ?? Number(alert.message.match(/([\d.]+)%/)?.[1] ?? "");
   const loss = alert.value ?? Number(alert.message.replace(/[^\d.]/g, ""));
+  const shippingPct =
+    alert.value ?? Number(alert.message.match(/([\d.]+)\s*%/)?.[1] ?? "");
   const messages: Record<string, string> = {
     "loss-next-month": fill(t("alert.loss-next-month.msg"), { n: amountLabel || String(Math.round(loss)) }),
     "sales-drop": fill(t("alert.sales-drop.msg"), { n: Number.isFinite(drop) ? drop : alert.value ?? "" }),
     "opex-faster": t("alert.opex-faster.msg"),
     "margin-squeeze": t("alert.margin-squeeze.msg"),
     "healthy-trend": t("alert.healthy-trend.msg"),
+    "shipping-spike": fill(t("alert.shipping-spike.msg"), {
+      n: Number.isFinite(shippingPct) ? Math.round(shippingPct) : "",
+    }),
   };
   const recs: Record<string, string> = {
     "loss-next-month": t("alert.loss-next-month.rec"),
@@ -237,6 +242,7 @@ export function localizeAlert(alert: RiskAlert, amountLabel: string, t: T) {
     "opex-faster": t("alert.opex-faster.rec"),
     "margin-squeeze": t("alert.margin-squeeze.rec"),
     "healthy-trend": t("alert.healthy-trend.rec"),
+    "shipping-spike": t("alert.shipping-spike.rec"),
   };
   return {
     title,

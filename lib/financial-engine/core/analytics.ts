@@ -479,5 +479,6 @@ function buildShippingInsight(transactions: Transaction[]) {
     title: "محلل النظام الاصطناعي",
     message: `لاحظنا ارتفاع تكاليف الشحن بنسبة ${change.toFixed(0)}% مقارنة بالفترة السابقة. نوصي بمراجعة عقود المورّدين للحفاظ على هامش الربح.`,
     recommendation: "قارن أسعار 3 مزودي شحن وأعد التفاوض على الشرائح الحجمية.",
+    value: Math.round(change),
   };
 }

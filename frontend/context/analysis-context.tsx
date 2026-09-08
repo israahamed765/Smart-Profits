@@ -380,7 +380,7 @@ export function AnalysisProvider({ children }: { children: React.ReactNode }) {
         if (!response.ok || !payload.parsed) {
           throw new FileParseError(payload.error || "فشل تحليل الملف على الخادم.");
         }
-        const parsed = payload.parsed;
+        const parsed = deserializeParseResult(payload.parsed);
         const nextFile: StoredFile = {
           id: newId(),
           fileName: parsed.fileName,

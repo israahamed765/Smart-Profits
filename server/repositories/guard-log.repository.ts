@@ -118,7 +118,7 @@ function mapPgRow(row: Record<string, unknown>): GuardDecisionLog {
 }
 
 export async function listGuardDecisions(input: { email?: string; limit?: number }) {
-  const limit = Math.min(Math.max(input.limit ?? 50, 1), 200);
+  const limit = Math.min(Math.max(input.limit ?? 50, 1), 10000);
   const email = input.email?.trim().toLowerCase();
   const pg = email
     ? await queryPostgres(

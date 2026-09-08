@@ -40,10 +40,11 @@ export function serializeParseResult(parsed: ParseResult): SerializedParseResult
 }
 
 /** Revive a persisted ISO string, or keep a Date that skipped serialization. */
-function reviveTransactionDate(value: string | Date | null): Date | null {
+export function reviveTransactionDate(value: string | Date | null | undefined): Date | null {
   if (!value) return null;
-  if ((value as object) instanceof Date) return value as Date;
-  return new Date(value as string);
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
 export function deserializeParseResult(parsed: SerializedParseResult): ParseResult {

@@ -10,3 +10,7 @@ export const adminUserPatchSchema = z.object({
   plan: z.enum(["free", "pro", "business"]).optional(),
   status: z.enum(["active", "inactive", "churned"]).optional(),
 });
+
+export const adminUserDeleteSchema = z.object({
+  email: z.string().trim().email().transform((value) => value.toLowerCase()),
+});

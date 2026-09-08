@@ -5,6 +5,7 @@ import { gatherCamaraSignals } from "./camara";
 import { financialSuspicion, decideSmartGuard } from "@/lib/smart-guard/policy";
 import { markNumberVerified, sessionStepUpVerified } from "./demo";
 import { nacMode } from "./nac-env";
+import { nacEffectiveMode } from "./nac-client";
 import type { GuardVerdict, SensitiveAction } from "@/lib/smart-guard/types";
 
 export interface RunGuardRequest {
@@ -50,7 +51,7 @@ export async function runSmartGuard(req: RunGuardRequest): Promise<GuardVerdict>
     deviceSwap: bundle.deviceSwap,
     location: bundle.location,
     number: bundle.number,
-    nacMode: nacMode(),
+    nacMode: nacEffectiveMode(phone),
     merchant: {
       email,
       phone,
@@ -70,10 +71,18 @@ export async function runSmartGuard(req: RunGuardRequest): Promise<GuardVerdict>
 
   if (account) {
     try {
+      const wasFrozen = Boolean(account.guardFrozen);
+      // Freeze sticks until an explicit allow (successful step-up). step_up must not clear the flag.
+      const nextFrozen =
+        verdict.decision === "freeze" ? true : verdict.decision === "allow" ? false : wasFrozen;
       await upsertAccount({
         email,
-        guardFrozen: verdict.decision === "freeze",
-        guardFrozenAt: verdict.decision === "freeze" ? verdict.at : "",
+        guardFrozen: nextFrozen,
+        guardFrozenAt: nextFrozen
+          ? verdict.decision === "freeze"
+            ? verdict.at
+            : account.guardFrozenAt || verdict.at
+          : "",
         guardReason: verdict.reason,
         homeLat: account.homeLat,
         homeLng: account.homeLng,

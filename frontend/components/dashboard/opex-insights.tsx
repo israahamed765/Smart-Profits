@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/
 import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { formatMoney, monthKey } from "@/frontend/lib/format";
+import { reviveTransactionDate } from "@/lib/serialize";
 import { computeBreakEven, computeOpexHealth, computeRealVsPhantom, monthlyOpexFromSettings } from "@/lib/opex";
 import type { AppSettings } from "@/lib/types";
 import { cn } from "@/frontend/ui/cn";
@@ -20,9 +21,11 @@ export function OpexInsights() {
   const txs = useMemo(() => {
     const all = parseResult?.transactions ?? [];
     if (!latest) return all;
-    const dated = all.filter((tx) => tx.date);
+    const dated = all
+      .map((tx) => ({ tx, date: reviveTransactionDate(tx.date) }))
+      .filter((row): row is { tx: (typeof all)[number]; date: Date } => Boolean(row.date));
     if (!dated.length) return all;
-    return dated.filter((tx) => monthKey(tx.date!.getFullYear(), tx.date!.getMonth()) === latest.key);
+    return dated.filter((row) => monthKey(row.date.getFullYear(), row.date.getMonth()) === latest.key).map((row) => row.tx);
   }, [parseResult?.transactions, latest?.key]);
 
   const phantom = useMemo(() => computeRealVsPhantom(latest, settings), [latest, settings]);

@@ -1,4 +1,4 @@
-import { countRealFiles, PLAN_PRICE_USD, readAllLocalWorkspaces, USERS_KEY } from "@/frontend/lib/tenant";
+import { countRealFiles, PLAN_PRICE_USD, readAllLocalWorkspaces, USERS_KEY, workspaceKey } from "@/frontend/lib/tenant";
 import { filterUsersRegisteredInRange, hasGuardIssue, isUserFrozen } from "@/frontend/lib/admin/guard-status";
 import type { DateRangeKey } from "@/lib/admin/config";
 import { rangeBounds } from "@/lib/admin/config";
@@ -6,6 +6,8 @@ import type { TrackEvent } from "@/lib/admin/config";
 import type { AdminFacts, AdminSnapshot, AdminUserRow } from "@/lib/admin/types";
 import type { AccountStatus, PlanTier } from "@/lib/admin/config";
 import type { PersistedWorkspace } from "@/lib/serialize";
+import type { Locale } from "@/frontend/lib/i18n";
+import { MONTHS, t as translate } from "@/frontend/lib/i18n";
 
 export type { AdminFacts };
 
@@ -19,21 +21,19 @@ function inRange(iso: string | undefined, start: Date, end: Date) {
   return t >= start.getTime() && t <= end.getTime();
 }
 
-function bucketLabels(range: DateRangeKey, start: Date, days: number) {
+function bucketLabels(range: DateRangeKey, start: Date, days: number, locale: Locale) {
   if (range === "year") {
-    return ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"].slice(
-      0,
-      Math.min(12, new Date().getMonth() + 1),
-    );
+    return MONTHS[locale].slice(0, Math.min(12, new Date().getMonth() + 1));
   }
   if (range === "today") {
     return Array.from({ length: 8 }, (_, i) => `${8 + i}:00`);
   }
   const count = Math.min(days, range === "week" ? 7 : 10);
+  const dateLocale = locale === "ar" ? "ar-SA" : "en-GB";
   return Array.from({ length: count }, (_, i) => {
     const d = new Date(start);
     d.setDate(start.getDate() + Math.floor((i * days) / count));
-    return d.toLocaleDateString("ar-SA", { day: "numeric", month: "short" });
+    return d.toLocaleDateString(dateLocale, { day: "numeric", month: "short" });
   });
 }
 
@@ -109,6 +109,36 @@ export function saveUserOverride(id: string, patch: Partial<AdminUserRow>) {
   }
 }
 
+export function removeUserFromLocalStorage(email: string) {
+  if (typeof window === "undefined") return;
+  const normalized = email.trim().toLowerCase();
+  try {
+    const raw = localStorage.getItem(USERS_KEY);
+    const users = raw ? (JSON.parse(raw) as AdminFacts["users"]) : [];
+    localStorage.setItem(
+      USERS_KEY,
+      JSON.stringify(users.filter((item) => item.email.toLowerCase() !== normalized)),
+    );
+  } catch {
+    // ignore
+  }
+  try {
+    const raw = localStorage.getItem("smartprofit-platform-events");
+    const events = raw ? (JSON.parse(raw) as TrackEvent[]) : [];
+    localStorage.setItem(
+      "smartprofit-platform-events",
+      JSON.stringify(events.filter((event) => (event.email ?? "").toLowerCase() !== normalized)),
+    );
+  } catch {
+    // ignore
+  }
+  try {
+    localStorage.removeItem(workspaceKey(normalized));
+  } catch {
+    // ignore
+  }
+}
+
 export function computeUserStats(users: AdminUserRow[], start: Date, end: Date) {
   const registeredInPeriod = filterUsersRegisteredInRange(users, start, end);
   const frozenCount = users.filter(isUserFrozen).length;
@@ -148,12 +178,16 @@ export function buildAdminSnapshotFromFacts(
   range: DateRangeKey,
   from?: string,
   to?: string,
+  locale: Locale = "ar",
 ): AdminSnapshot {
   const { start, end } = rangeBounds(range, from, to);
   const prevEnd = new Date(start.getTime() - 1);
   const prevStart = new Date(prevEnd.getTime() - (end.getTime() - start.getTime()));
   const days = daysBetween(start, end);
   const filesByEmail = new Map(facts.workspaces.map((row) => [row.email, countRealFiles(row.workspace)]));
+  const tr = (key: string) => translate(locale, key);
+  const dateLocale = locale === "ar" ? "ar-SA" : "en-GB";
+  const merchantFallback = tr("admin.metrics.merchant");
 
   const users: AdminUserRow[] = facts.users
     .filter((user) => user.email)
@@ -163,7 +197,7 @@ export function buildAdminSnapshotFromFacts(
       const status: AccountStatus = user.status ?? (ageDays <= 30 ? "active" : "inactive");
       return {
         id: `real-${user.email.toLowerCase()}`,
-        name: user.fullName || "تاجر",
+        name: user.fullName || merchantFallback,
         store: user.storeName || "—",
         email: user.email.toLowerCase(),
         phone: user.phone || "—",
@@ -196,8 +230,9 @@ export function buildAdminSnapshotFromFacts(
   const visitorsChange =
     uniquePrev === 0 ? (visitors > 0 ? 100 : 0) : Math.round(((visitors - uniquePrev) / uniquePrev) * 1000) / 10;
 
-  const activeUsers = users.filter((user) => user.status === "active" && inRange(user.lastActive, start, end)).length
-    || users.filter((user) => user.status === "active").length;
+  const activeUsers =
+    users.filter((user) => user.status === "active" && inRange(user.lastActive, start, end)).length ||
+    users.filter((user) => user.status === "active").length;
   const mrr = users
     .filter((user) => user.status === "active")
     .reduce((sum, user) => sum + PLAN_PRICE_USD[user.plan], 0);
@@ -205,11 +240,11 @@ export function buildAdminSnapshotFromFacts(
   const outflowTotal = 0;
   const netProfit = inflowTotal - outflowTotal;
 
-  const labels = bucketLabels(range, start, days);
+  const labels = bucketLabels(range, start, days, locale);
   const revenueSeries = labels.map((name, index) => {
     const paidInBucket = users.filter((user) => {
-      const t = new Date(user.registeredAt).getTime();
-      return bucketIndex(t, start, end, labels.length) === index && user.plan !== "free";
+      const stamp = new Date(user.registeredAt).getTime();
+      return bucketIndex(stamp, start, end, labels.length) === index && user.plan !== "free";
     });
     return {
       name,
@@ -221,31 +256,45 @@ export function buildAdminSnapshotFromFacts(
   const userGrowth = labels.map((name, index) => ({
     name,
     users: users.filter((user) => {
-      const t = new Date(user.registeredAt).getTime();
-      return t <= start.getTime() + ((index + 1) / labels.length) * (end.getTime() - start.getTime());
+      const stamp = new Date(user.registeredAt).getTime();
+      return stamp <= start.getTime() + ((index + 1) / labels.length) * (end.getTime() - start.getTime());
     }).length,
   }));
 
   const storeByEmail = new Map(users.map((user) => [user.email, user.store]));
-  const activity = rangeEvents.slice(0, 12).map((event, index) => ({
-    id: `t-${event.at}-${index}`,
-    icon: event.type === "analyze" || event.type === "doctor" || event.type === "whatif" ? ("analyze" as const) : event.type === "register" ? ("user" as const) : ("pay" as const),
-    text:
+  const activity = rangeEvents.slice(0, 12).map((event, index) => {
+    const who = storeByEmail.get(event.email || "") || event.email || event.label || merchantFallback;
+    const text =
       event.type === "analyze"
-        ? `${storeByEmail.get(event.email || "") || event.email || "تاجر"} حلّل ملفاً${event.label ? ` (${event.label})` : ""}`
+        ? tr("admin.act.analyze").replace("{who}", who).replace("{label}", event.label ? ` (${event.label})` : "")
         : event.type === "register"
-          ? `حساب جديد: ${event.label || event.email || "تاجر"}`
+          ? tr("admin.act.register").replace("{who}", String(event.label || event.email || merchantFallback))
           : event.type === "login"
-            ? `دخول: ${storeByEmail.get(event.email || "") || event.email || "تاجر"}`
+            ? tr("admin.act.login").replace("{who}", who)
             : event.type === "doctor"
-              ? `${storeByEmail.get(event.email || "") || "تاجر"} فتح التشخيص`
+              ? tr("admin.act.doctor").replace("{who}", who)
               : event.type === "whatif"
-                ? `${storeByEmail.get(event.email || "") || "تاجر"} شغّل المحاكاة`
+                ? tr("admin.act.whatif").replace("{who}", who)
                 : event.type === "upload_error"
-                  ? `فشل رفع ملف${event.label ? ` (${event.label})` : ""}`
-                  : "نشاط على المنصة",
-    time: new Date(event.at).toLocaleString("ar-SA", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" }),
-  }));
+                  ? tr("admin.act.uploadError").replace("{label}", event.label ? ` (${event.label})` : "")
+                  : tr("admin.act.generic");
+    return {
+      id: `t-${event.at}-${index}`,
+      icon:
+        event.type === "analyze" || event.type === "doctor" || event.type === "whatif"
+          ? ("analyze" as const)
+          : event.type === "register"
+            ? ("user" as const)
+            : ("pay" as const),
+      text,
+      time: new Date(event.at).toLocaleString(dateLocale, {
+        hour: "2-digit",
+        minute: "2-digit",
+        day: "numeric",
+        month: "short",
+      }),
+    };
+  });
 
   const free = users.filter((user) => user.plan === "free").length;
   const pro = users.filter((user) => user.plan === "pro").length;
@@ -279,25 +328,38 @@ export function buildAdminSnapshotFromFacts(
 
   const totalFeature = Math.max(1, analyze + doctor + whatif + logins);
   const sources = [
-    { name: "تحليل ملفات", value: Math.round((analyze / totalFeature) * 100), color: "#4FD1C5" },
-    { name: "تسجيل دخول", value: Math.round((logins / totalFeature) * 100), color: "#E8C56B" },
-    { name: "التشخيص", value: Math.round((doctor / totalFeature) * 100), color: "#67E8F9" },
-    { name: "محاكاة", value: Math.round((whatif / totalFeature) * 100), color: "#F59E0B" },
+    { id: "analyze", name: tr("admin.source.analyze"), value: Math.round((analyze / totalFeature) * 100), color: "#4FD1C5" },
+    { id: "login", name: tr("admin.source.login"), value: Math.round((logins / totalFeature) * 100), color: "#E8C56B" },
+    { id: "doctor", name: tr("admin.source.doctor"), value: Math.round((doctor / totalFeature) * 100), color: "#67E8F9" },
+    { id: "whatif", name: tr("admin.source.whatif"), value: Math.round((whatif / totalFeature) * 100), color: "#F59E0B" },
   ].filter((row) => row.value > 0);
 
   const filesTotal = users.reduce((sum, user) => sum + user.filesUploaded, 0);
   const userStats = computeUserStats(users, start, end);
+  const timePeriod = tr("admin.alert.time.period");
+  const timeNow = tr("admin.alert.time.now");
+  const timeUntil = tr("admin.alert.time.until");
 
   const alerts = [
-    ...(registers > 0 ? [{ id: "a1", tone: "success" as const, text: `${registers} حساب جديد في الفترة المحددة`, time: "هذه الفترة" }] : []),
-    ...(userStats.registeredInPeriod > 0 && registers === 0
-      ? [{ id: "a1b", tone: "success" as const, text: `${userStats.registeredInPeriod} تسجيل في الفترة المحددة`, time: "هذه الفترة" }]
+    ...(registers > 0
+      ? [{ id: "a1", tone: "success" as const, text: tr("admin.alert.registers").replace("{n}", String(registers)), time: timePeriod }]
       : []),
-    ...(userStats.frozenCount > 0 ? [{ id: "a5", tone: "danger" as const, text: `${userStats.frozenCount} حساب مجمّد حالياً (Smart Guard)`, time: "الآن" }] : []),
-    ...(userStats.guardIssuesCount > 0 ? [{ id: "a6", tone: "warning" as const, text: `${userStats.guardIssuesCount} حساب يحتاج متابعة (تحقق إضافي / مشاكل)`, time: "الآن" }] : []),
-    ...(uploadErrors > 0 ? [{ id: "a2", tone: "danger" as const, text: `${uploadErrors} ملف فشل رفعه`, time: "هذه الفترة" }] : []),
-    ...(users.length === 0 ? [{ id: "a3", tone: "warning" as const, text: "لا يوجد تجار مسجّلون بعد", time: "الآن" }] : []),
-    ...(filesTotal > 0 ? [{ id: "a4", tone: "info" as const, text: `${filesTotal} ملف مبيعات محفوظ لدى التجار`, time: "حتى الآن" }] : []),
+    ...(userStats.registeredInPeriod > 0 && registers === 0
+      ? [{ id: "a1b", tone: "success" as const, text: tr("admin.alert.signups").replace("{n}", String(userStats.registeredInPeriod)), time: timePeriod }]
+      : []),
+    ...(userStats.frozenCount > 0
+      ? [{ id: "a5", tone: "danger" as const, text: tr("admin.alert.frozen").replace("{n}", String(userStats.frozenCount)), time: timeNow }]
+      : []),
+    ...(userStats.guardIssuesCount > 0
+      ? [{ id: "a6", tone: "warning" as const, text: tr("admin.alert.issues").replace("{n}", String(userStats.guardIssuesCount)), time: timeNow }]
+      : []),
+    ...(uploadErrors > 0
+      ? [{ id: "a2", tone: "danger" as const, text: tr("admin.alert.uploadErrors").replace("{n}", String(uploadErrors)), time: timePeriod }]
+      : []),
+    ...(users.length === 0 ? [{ id: "a3", tone: "warning" as const, text: tr("admin.alert.noUsers"), time: timeNow }] : []),
+    ...(filesTotal > 0
+      ? [{ id: "a4", tone: "info" as const, text: tr("admin.alert.files").replace("{n}", String(filesTotal)), time: timeUntil }]
+      : []),
   ];
 
   return {
@@ -321,17 +383,18 @@ export function buildAdminSnapshotFromFacts(
     users,
     uniqueVisitors,
     pageViews,
-    sources: sources.length ? sources : [{ name: "لا يوجد نشاط بعد", value: 100, color: "#64748B" }],
+    sources: sources.length ? sources : [{ id: "empty", name: tr("admin.source.empty"), value: 100, color: "#64748B" }],
     countries: users.slice(0, 8).map((user) => ({
+      id: user.id,
       name: user.store,
       visitors: user.filesUploaded + (inRange(user.lastActive, start, end) ? 1 : 0),
     })),
     conversion,
     features: [
-      { name: "Profit Leak Detector", uses: leak },
-      { name: "What-If Simulator", uses: whatif },
-      { name: "Business Doctor", uses: doctor },
-      { name: "تنظيف Excel", uses: analyze },
+      { id: "leak", name: "Profit Leak Detector", uses: leak },
+      { id: "whatif", name: "What-If Simulator", uses: whatif },
+      { id: "doctor", name: "Business Doctor", uses: doctor },
+      { id: "excel", name: tr("admin.feature.excel"), uses: analyze },
     ],
     uploadErrors,
     alerts,
@@ -339,6 +402,11 @@ export function buildAdminSnapshotFromFacts(
   };
 }
 
-export function buildAdminSnapshot(range: DateRangeKey, from?: string, to?: string): AdminSnapshot {
-  return buildAdminSnapshotFromFacts(collectClientFacts(), range, from, to);
+export function buildAdminSnapshot(
+  range: DateRangeKey,
+  from?: string,
+  to?: string,
+  locale: Locale = "ar",
+): AdminSnapshot {
+  return buildAdminSnapshotFromFacts(collectClientFacts(), range, from, to, locale);
 }

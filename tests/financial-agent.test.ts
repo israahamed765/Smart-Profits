@@ -81,12 +81,37 @@ describe("financial agent (local tools, no LLM)", () => {
     assert.doesNotMatch(turn.answer, /Chair/);
   });
 
-  it("asks for a file when numbers are required and none is open", () => {
-    const turn = ask("مين أعلى منتج ربح؟", { result: null });
-    assert.deepEqual(
-      turn.tools.map((tool) => tool.id),
-      ["need_file"],
-    );
-    assert.equal(turn.answer, "ارفع ملفاً أولاً.");
+  it("answers in English when UI locale is en (no Arabic engine strings)", () => {
+    const turn = runFinancialAgent({
+      question: "Where is the profit leak?",
+      result,
+      parseResult: parsed,
+      settings: zeroOpexSettings,
+      taxonomy: {},
+      scope: EMPTY_SCOPE,
+      locale: "en",
+      currency: "SAR",
+      needFileMessage: "Upload a file first.",
+    });
+    assert.ok(turn.tools.some((tool) => tool.id === "file_leaks"));
+    assert.match(turn.answer, /Leak|No clear profit leak|thin margin|below cost|Cost is far/i);
+    assert.doesNotMatch(turn.answer, /تسريب|مبيعات عالية لكن|يبيع تحت التكلفة|التكلفة مرتفعة/);
+  });
+
+  it("keeps English for health when locale is en", () => {
+    const turn = runFinancialAgent({
+      question: "How is my store health?",
+      result,
+      parseResult: parsed,
+      settings: zeroOpexSettings,
+      taxonomy: {},
+      scope: EMPTY_SCOPE,
+      locale: "en",
+      currency: "SAR",
+      needFileMessage: "Upload a file first.",
+    });
+    assert.ok(turn.tools.some((tool) => tool.id === "file_health"));
+    assert.match(turn.answer, /Store health/i);
+    assert.doesNotMatch(turn.answer, /صحة المتجر|المبيعات جيدة|ممتاز|جيد جداً/);
   });
 });

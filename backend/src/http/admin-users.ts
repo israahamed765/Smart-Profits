@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/server/middleware/authenticate";
-import { adminUserPatchSchema } from "@/server/validators/admin.validator";
+import { adminUserDeleteSchema, adminUserPatchSchema } from "@/server/validators/admin.validator";
 import { backendApiRoute, jsonOk, readJson } from "./api-route";
-import { patchMerchantAccount } from "../services/admin";
+import { deleteMerchantAccount, patchMerchantAccount } from "../services/admin";
 
 export function POST(request: Request) {
   return backendApiRoute(request, async (req) => {
@@ -9,5 +9,14 @@ export function POST(request: Request) {
     const input = adminUserPatchSchema.parse(await readJson(req));
     const account = await patchMerchantAccount(input);
     return jsonOk({ ok: true, account });
+  });
+}
+
+export function DELETE(request: Request) {
+  return backendApiRoute(request, async (req) => {
+    await requireAdmin(req);
+    const input = adminUserDeleteSchema.parse(await readJson(req));
+    const deleted = await deleteMerchantAccount(input.email);
+    return jsonOk({ ok: true, deleted });
   });
 }

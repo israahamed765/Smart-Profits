@@ -8,6 +8,7 @@ import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { useAuth } from "@/frontend/context/auth-context";
 import { monthKey } from "@/frontend/lib/format";
+import { reviveTransactionDate } from "@/lib/serialize";
 import { filterTransactions, uniqueProducts } from "@/lib/scope";
 import type { CurrencyCode } from "@/lib/types";
 import { cn } from "@/frontend/ui/cn";
@@ -47,10 +48,11 @@ export function AppHeader({
   const monthOptions = Array.from(
     new Map(
       (parseResult?.transactions ?? [])
-        .filter((tx) => tx.date)
-        .map((tx) => {
-          const key = monthKey(tx.date!.getFullYear(), tx.date!.getMonth());
-          return [key, { key, month: tx.date!.getMonth(), year: tx.date!.getFullYear() }] as const;
+        .map((tx) => reviveTransactionDate(tx.date))
+        .filter((date): date is Date => Boolean(date))
+        .map((date) => {
+          const key = monthKey(date.getFullYear(), date.getMonth());
+          return [key, { key, month: date.getMonth(), year: date.getFullYear() }] as const;
         }),
     ).values(),
   ).sort((a, b) => a.key.localeCompare(b.key));

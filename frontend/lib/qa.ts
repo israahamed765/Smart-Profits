@@ -1,7 +1,16 @@
 import { formatMoney } from "./format";
-import type { Locale } from "./i18n";
+import { t as translate, type Locale } from "./i18n";
 import { runFullAnalysis } from "@/lib/analytics";
 import { answerKnowledge, detectKnowledgeTopic, isTeachingQuestion } from "./advisor-knowledge";
+import {
+  healthHeadline,
+  localizeAction,
+  localizeFinding,
+  localizeInventoryReason,
+  localizeLeak,
+  localizePlanTask,
+  localizePricingCaution,
+} from "./localize-advisor";
 import { detectMonthKeyFromText, detectProductFromText, filterTransactions, uniqueProducts, type AnalysisScope } from "@/lib/scope";
 import type { AnalysisResult, AppSettings, CurrencyCode, ParseResult, ProductPerformance, TaxonomyMap } from "@/lib/types";
 
@@ -23,12 +32,32 @@ function isEnglishQuestion(q: string) {
   return latin > arabic;
 }
 
+/** UI locale wins; only fall back to question script when locale is unset. */
+function resolveLocale(question: string, options?: { locale?: Locale }): Locale {
+  if (options?.locale === "en" || options?.locale === "ar") return options.locale;
+  return isEnglishQuestion(question) ? "en" : "ar";
+}
+
 function money(value: number, currency: CurrencyCode) {
   return formatMoney(value, currency);
 }
 
 function has(q: string, words: string[]) {
   return words.some((word) => q.includes(word));
+}
+
+function healthLabelFor(score: number, locale: Locale) {
+  const key =
+    score >= 85
+      ? "health.label.excellent"
+      : score >= 70
+        ? "health.label.veryGood"
+        : score >= 50
+          ? "health.label.fair"
+          : score >= 30
+            ? "health.label.weak"
+            : "health.label.critical";
+  return translate(locale, key);
 }
 
 const STOP = new Set([
@@ -91,41 +120,46 @@ function scoreIntents(q: string): Partial<Record<Intent, number>> {
     s[intent] = (s[intent] ?? 0) + n;
   };
 
-  if (has(q, ["كميه", "كميات", "قطعه", "قطع", "انباع", "انبعات", "نباعت", "quantity", "units", "unit sold", "كم قطعه", "عدد القطع"])) {
+  if (has(q, ["كميه", "كميات", "قطعه", "قطع", "انباع", "انبعات", "نباعت", "quantity", "quantities", "units", "unit sold", "units sold", "كم قطعه", "عدد القطع", "how many sold", "how many units"])) {
     add("qty", 4);
   }
-  if (has(q, ["مبيع", "مبيعات", "ايراد", "ايرادات", "بعنا", "sales", "revenue", "sold", "بيعات"])) add("sales", 3);
-  if (has(q, ["ربح", "ارباح", "مكسب", "صافي", "profit"]) && !isTeachingQuestion(q)) add("profit", 3);
-  if (has(q, ["هامش", "margin"])) add("margin", 3);
-  if (has(q, ["اعلى", "اعلا", "اعلي", "اكثر", "افضل", "احسن", "اكبر", "top", "most", "highest", "best", "biggest"])) {
+  if (has(q, ["مبيع", "مبيعات", "ايراد", "ايرادات", "بعنا", "sales", "revenue", "sold", "بيعات", "turnover", "how much did i sell", "total revenue"])) add("sales", 3);
+  if (has(q, ["ربح", "ارباح", "مكسب", "صافي", "profit", "earnings", "net income", "how much did i make", "made money"]) && !isTeachingQuestion(q)) add("profit", 3);
+  if (has(q, ["هامش", "margin", "markup"])) add("margin", 3);
+  if (has(q, ["اعلى", "اعلا", "اعلي", "اكثر", "افضل", "احسن", "اكبر", "top", "most", "highest", "best", "biggest", "best seller", "bestseller", "hero product", "winning product"])) {
     add("rank_top", 3);
   }
-  if (has(q, ["اقل", "اسوا", "خس", "خاسر", "ضعيف", "worst", "least", "lowest", "loss"])) add("rank_worst", 4);
-  if (has(q, ["قائمه", "قائمة", "كل المنتجات", "جميع المنتجات", "اعرض المنتجات", "catalog", "list products", "all products"])) {
+  if (has(q, ["اقل", "اسوا", "خس", "خاسر", "ضعيف", "worst", "least", "lowest", "loss", "losing", "losers", "underperform"])) add("rank_worst", 4);
+  if (has(q, ["قائمه", "قائمة", "كل المنتجات", "جميع المنتجات", "اعرض المنتجات", "catalog", "list products", "all products", "show products", "product list", "sku list"])) {
     add("list", 4);
   }
-  if (has(q, ["ليش", "لماذا", "سبب", "why", "نزل", "هبط", "drop"])) add("why", 3);
-  if (has(q, ["اشتري", "اطلب", "مخزون", "ينفد", "نفاد", "inventory", "stock", "reorder", "buy"]) && !isTeachingQuestion(q) && !has(q, ["مشتريات", "مورد", "purchasing"])) {
+  if (has(q, ["ليش", "لماذا", "سبب", "why", "نزل", "هبط", "drop", "went down", "declined", "falling"])) add("why", 3);
+  if (has(q, ["اشتري", "اطلب", "مخزون", "ينفد", "نفاد", "inventory", "stock", "reorder", "buy", "what should i buy", "restock", "order more"]) && !isTeachingQuestion(q) && !has(q, ["مشتريات", "مورد", "purchasing"])) {
     add("buy", 4);
   }
-  if (has(q, ["تسريب", "leak", "هامش ضعيف"])) add("leak", 4);
-  if (has(q, ["صحه", "تشخيص", "health", "كيف المتجر", "حال المتجر"])) add("health", 4);
-  if (has(q, ["اليوم", "ماذا افعل", "شو اعمل", "قرار اليوم", "today", "what should i do"])) add("today", 3);
-  if (has(q, ["شحن", "توصيل", "shipping", "delivery"])) add("ship", 4);
-  if (has(q, ["توقع", "شهر جاي", "القادم", "forecast", "next month"])) add("forecast", 4);
-  if (has(q, ["مصروف", "مصاريف", "expense", "opex", "تكاليف", "تكلفه"])) add("expenses", 3);
-  if (has(q, ["كيف يحسب", "كيف تم حساب", "how is", "calculated", "يعني شو", "اشرح"])) add("how", 3);
+  if (has(q, ["تسريب", "leak", "leaks", "هامش ضعيف", "profit leak", "bleeding"])) add("leak", 4);
+  if (has(q, ["صحه", "تشخيص", "health", "كيف المتجر", "حال المتجر", "store health", "how is my store", "business health", "overview", "summary", "dashboard"])) add("health", 4);
+  if (has(q, ["اليوم", "ماذا افعل", "شو اعمل", "قرار اليوم", "today", "what should i do", "next step", "recommendation", "recommend", "action item"])) add("today", 3);
+  if (has(q, ["شحن", "توصيل", "shipping", "delivery", "freight"])) add("ship", 4);
+  if (has(q, ["توقع", "شهر جاي", "القادم", "forecast", "next month", "prediction", "outlook"])) add("forecast", 4);
+  if (has(q, ["مصروف", "مصاريف", "expense", "expenses", "opex", "تكاليف", "تكلفه", "costs", "cost of goods", "cogs"])) add("expenses", 3);
+  if (has(q, ["كيف يحسب", "كيف تم حساب", "how is", "how do you calculate", "calculated", "يعني شو", "اشرح", "explain net", "what is net profit"])) add("how", 3);
   if (has(q, [
     "خطه", "خطه تسويق", "تسويقيه", "اعلان", "اعلانات", "ترويج", "سوقي",
-    "حملات", "حمله", "marketing", "campaign", "promote", "promotion", "ads", "advertis",
+    "حملات", "حمله", "marketing", "campaign", "promote", "promotion", "ads", "advertis", "go to market",
   ])) {
     add("plan", 6);
   }
-  if (has(q, ["تسويق", "تسويقي"]) && !has(q, ["خطه", "campaign", "اعلان"])) {
+  if (has(q, ["تسويق", "تسويقي", "marketing tips"]) && !has(q, ["خطه", "campaign", "اعلان", "plan"])) {
     if (isTeachingQuestion(q)) add("plan", 1);
   }
-  if (has(q, ["صافي الربح", "net profit"])) add("profit", 2);
-  if (has(q, ["كم بعنا", "اجمالي المبيعات", "total sales"])) add("totals", 3);
+  if (has(q, ["صافي الربح", "net profit", "bottom line"])) add("profit", 2);
+  if (has(q, ["كم بعنا", "اجمالي المبيعات", "total sales", "overall sales", "grand total"])) add("totals", 3);
+  if (has(q, ["ملخص", "اختصر", "summar", "recap", "brief me", "tell me everything", "full picture"])) {
+    add("health", 2);
+    add("totals", 2);
+    add("rank_top", 1);
+  }
 
   if ((s.rank_top ?? 0) > 0 && (s.profit ?? 0) === 0 && (s.sales ?? 0) === 0) {
     if (has(q, ["مبيع", "بيع"])) add("sales", 2);
@@ -265,14 +299,19 @@ function lineFor(item: ProductPerformance, intents: Intent[], currency: Currency
   return productLine(item, currency, en);
 }
 
-function marketingPlan(result: AnalysisResult, currency: CurrencyCode, en: boolean) {
+function marketingPlan(result: AnalysisResult, currency: CurrencyCode, locale: Locale) {
+  const en = locale === "en";
+  const t = (key: string) => translate(locale, key);
   const { advisor, productHighlights, kpis, fileName } = result;
   const winners = [...productHighlights.catalog].sort((a, b) => b.profit - a.profit).slice(0, 3);
   const slow = productHighlights.lowestSales;
   const loss = productHighlights.lossMakers[0];
   const leak = advisor.leaks[0];
+  const leakL = leak ? localizeLeak(leak, t) : null;
   const price = advisor.pricing[0];
+  const priceCaution = price ? localizePricingCaution(price.margin, t) : "";
   const weeks = advisor.plan.slice(0, 4);
+  const weekTitles = ["plan.w1", "plan.w2", "plan.w3", "plan.w4"] as const;
 
   if (en) {
     const push = winners
@@ -281,16 +320,22 @@ function marketingPlan(result: AnalysisResult, currency: CurrencyCode, en: boole
     const avoid = [
       slow ? `Do not advertise «${slow.name}» (${slow.saleCount} sales). Use a quiet clearance, not paid ads.` : "",
       loss ? `Stop promoting «${loss.name}» — it is dragging profit (${money(loss.profit, currency)}).` : "",
-      leak ? `Leak to fix first: «${leak.product}». ${leak.suggestion}` : "",
+      leak && leakL ? `Leak to fix first: «${leak.product}». ${leakL.suggestion}` : "",
     ]
       .filter(Boolean)
       .join("\n");
     const offer = price
-      ? `This week's offer: keep «${price.product}» between ${money(price.suggestedMin, currency)} and ${money(price.suggestedMax, currency)}. ${price.caution}`
+      ? `This week's offer: keep «${price.product}» between ${money(price.suggestedMin, currency)} and ${money(price.suggestedMax, currency)}. ${priceCaution}`
       : winners[1]
         ? `This week's offer: bundle «${winners[0].name}» with «${winners[1].name}» and keep the discount off the high-margin item.`
         : "This week's offer: one featured item only — the top-profit product.";
-    const calendar = weeks.map((week) => `Week ${week.week} — ${week.title}: ${week.tasks.join("; ")}`).join("\n");
+    const calendar = weeks
+      .map((week, i) => {
+        const title = t(weekTitles[i] ?? "plan.w1");
+        const tasks = week.tasks.map((task) => localizePlanTask(task, t)).join("; ");
+        return `Week ${week.week} — ${title}: ${tasks}`;
+      })
+      .join("\n");
     return [
       `Marketing plan from «${fileName}» (not a generic template). Margin now ${kpis.profitMargin.toFixed(1)}%.`,
       "",
@@ -319,16 +364,22 @@ function marketingPlan(result: AnalysisResult, currency: CurrencyCode, en: boole
       ? `لا تعلني عن «${slow.name}» (${slow.saleCount} عمليات). صفّيه بهدوء أو أوقفي طلبه، الإعلان المدفوع عليه خسارة.`
       : "",
     loss ? `لا تروّجي «${loss.name}» — يسحب الربح (${money(loss.profit, currency)}).` : "",
-    leak ? `أول تسريب تصلحيه: «${leak.product}». ${leak.suggestion}` : "",
+    leak && leakL ? `أول تسريب تصلحيه: «${leak.product}». ${leakL.suggestion}` : "",
   ]
     .filter(Boolean)
     .join("\n");
   const offer = price
-    ? `عرض هذا الأسبوع: ثبّتي «${price.product}» بين ${money(price.suggestedMin, currency)} و${money(price.suggestedMax, currency)}. ${price.caution}`
+    ? `عرض هذا الأسبوع: ثبّتي «${price.product}» بين ${money(price.suggestedMin, currency)} و${money(price.suggestedMax, currency)}. ${priceCaution}`
     : winners[1]
       ? `عرض هذا الأسبوع: اجمعي «${winners[0].name}» مع «${winners[1].name}» في باقة، والخصم يكون على الصنف الأضعف هامشاً مش على الرابحة.`
       : "عرض هذا الأسبوع: منتج واحد فقط في الواجهة — الأعلى ربحاً.";
-  const calendar = weeks.map((week) => `الأسبوع ${week.week} — ${week.title}: ${week.tasks.join("؛ ")}`).join("\n");
+  const calendar = weeks
+    .map((week, i) => {
+      const title = t(weekTitles[i] ?? "plan.w1");
+      const tasks = week.tasks.map((task) => localizePlanTask(task, t)).join("؛ ");
+      return `الأسبوع ${week.week} — ${title}: ${tasks}`;
+    })
+    .join("\n");
   return [
     `خطة تسويق من ملفك «${fileName}» (مو قالب عام). هامش الربح الحالي ${kpis.profitMargin.toFixed(1)}%.`,
     "",
@@ -359,13 +410,20 @@ export function runAdvisorAgent(
   const q = norm(question);
   const prevQ = norm(options?.previousQuestion ?? "");
   const currency = options?.currency ?? "SAR";
-  const en = options?.locale === "en" || (options?.locale !== "ar" && isEnglishQuestion(question));
+  const locale = resolveLocale(question, options);
+  const en = locale === "en";
+  const t = (key: string) => translate(locale, key);
   const { kpis, advisor, productHighlights, forecast, fileName, monthlySeries } = result;
   const monthNote = monthlySeries.length === 1 ? monthlySeries[0].label : "";
   const catalog = productHighlights.catalog;
   const leak = advisor.leaks[0];
+  const leakL = leak ? localizeLeak(leak, t) : null;
   const health = advisor.health;
+  const healthFinding = health.findings[0]
+    ? localizeFinding(health.findings[0], kpis, catalog, t)
+    : null;
   const action = advisor.todayActions[0];
+  const actionL = action ? localizeAction(action, advisor, t) : null;
   const topProfit = productHighlights.mostProfitable;
   const topSales = productHighlights.highestSales;
   const n = topN(q);
@@ -380,7 +438,7 @@ export function runAdvisorAgent(
 
   const knowledge = detectKnowledgeTopic(q);
   if (knowledge) {
-    return done("lessons", answerKnowledge(knowledge, en ? "en" : "ar", result, currency));
+    return done("lessons", answerKnowledge(knowledge, locale, result, currency));
   }
 
   let scores = scoreIntents(q);
@@ -413,10 +471,10 @@ export function runAdvisorAgent(
     : `من الملف المفتوح «${fileName}»${monthNote ? ` — ${monthNote}` : ""}:`;
 
   if (intents.includes("plan")) {
-    return done("marketing_plan", marketingPlan(result, currency, en));
+    return done("marketing_plan", marketingPlan(result, currency, locale));
   }
 
-  if (intents.includes("how") && (intents.includes("profit") || has(q, ["صافي", "net profit", "كيف يحسب"]))) {
+  if (intents.includes("how") && (intents.includes("profit") || has(q, ["صافي", "net profit", "كيف يحسب", "how is net", "how do you calculate", "calculate profit", "what is net"]))) {
     return done(
       "file_how",
       en
@@ -425,7 +483,7 @@ export function runAdvisorAgent(
     );
   }
 
-  if (intents.includes("why") && (intents.includes("profit") || intents.includes("sales") || has(q, ["خس"]))) {
+  if (intents.includes("why") && (intents.includes("profit") || intents.includes("sales") || has(q, ["خس", "loss", "drop"]))) {
     const costNote =
       kpis.expenseChangePct > kpis.revenueChangePct
         ? en
@@ -434,10 +492,10 @@ export function runAdvisorAgent(
         : en
           ? `Profit margin is now ${kpis.profitMargin.toFixed(1)}%. Check low-margin products first.`
           : `هامش الربح حالياً ${kpis.profitMargin.toFixed(1)}%. راجع المنتجات ضعيفة الهامش أولاً.`;
-    const leakNote = leak
+    const leakNote = leak && leakL
       ? en
-        ? ` Biggest leak: «${leak.product}» — ${leak.issue}`
-        : ` وأكبر تسريب ظاهر: «${leak.product}» — ${leak.issue}`
+        ? ` Biggest leak: «${leak.product}» — ${leakL.issue}`
+        : ` وأكبر تسريب ظاهر: «${leak.product}» — ${leakL.issue}`
       : "";
     return done("file_why", `${costNote}${leakNote}`);
   }
@@ -446,10 +504,12 @@ export function runAdvisorAgent(
     const order = advisor.inventory.find((item) => item.decision === "order_now");
     const stop = advisor.inventory.find((item) => item.decision === "dont_buy");
     if (order) {
-      return done("file_inventory", en ? `Buy first: «${order.product}». ${order.reason}` : `الأولوية للشراء: «${order.product}». ${order.reason}`);
+      const reason = localizeInventoryReason(order, t);
+      return done("file_inventory", en ? `Buy first: «${order.product}». ${reason}` : `الأولوية للشراء: «${order.product}». ${reason}`);
     }
     if (stop) {
-      return done("file_inventory", en ? `Do not buy «${stop.product}» now. ${stop.reason}` : `لا تشترِ «${stop.product}» الآن. ${stop.reason}`);
+      const reason = localizeInventoryReason(stop, t);
+      return done("file_inventory", en ? `Do not buy «${stop.product}» now. ${reason}` : `لا تشترِ «${stop.product}» الآن. ${reason}`);
     }
     return done(
       "file_inventory",
@@ -460,29 +520,32 @@ export function runAdvisorAgent(
   }
 
   if (intents.includes("leak")) {
-    if (!leak) return done("file_leaks", en ? "No clear profit leak in this file." : "ما ظهر تسريب واضح في الربح من هذا الملف.");
+    if (!leak || !leakL) return done("file_leaks", en ? "No clear profit leak in this file." : "ما ظهر تسريب واضح في الربح من هذا الملف.");
     return done(
       "file_leaks",
       en
-        ? `Leak in «${leak.product}»: sales ${money(leak.revenue, currency)} vs profit ${money(leak.profit, currency)}. ${leak.suggestion}`
-        : `وجدنا تسريباً في «${leak.product}»: مبيعات ${money(leak.revenue, currency)} مقابل ربح ${money(leak.profit, currency)}. ${leak.suggestion}`,
+        ? `Leak in «${leak.product}»: sales ${money(leak.revenue, currency)} vs profit ${money(leak.profit, currency)}. ${leakL.suggestion}`
+        : `وجدنا تسريباً في «${leak.product}»: مبيعات ${money(leak.revenue, currency)} مقابل ربح ${money(leak.profit, currency)}. ${leakL.suggestion}`,
     );
   }
 
   if (intents.includes("health")) {
+    const headline = healthHeadline(health.daysUntilProblem, t);
+    const label = healthLabelFor(health.score, locale);
+    const detail = healthFinding?.detail ?? "";
     return done(
       "file_health",
       en
-        ? `Store health ${health.score}/100 (${health.label}). ${health.headline} ${health.findings[0]?.detail ?? ""}`
-        : `صحة المتجر ${health.score}/100 (${health.label}). ${health.headline} ${health.findings[0]?.detail ?? ""}`,
+        ? `Store health ${health.score}/100 (${label}). ${headline} ${detail}`
+        : `صحة المتجر ${health.score}/100 (${label}). ${headline} ${detail}`,
     );
   }
 
   if (intents.includes("today")) {
-    if (!action) {
+    if (!action || !actionL) {
       return done("file_today", en ? "Upload a clearer file so I can suggest today's action." : "ارفع ملفاً أوضح حتى نقترح قرار اليوم.");
     }
-    return done("file_today", en ? `Today's action: ${action.title}. ${action.reason}` : `قرار اليوم: ${action.title}. ${action.reason}`);
+    return done("file_today", en ? `Today's action: ${actionL.title}. ${actionL.reason}` : `قرار اليوم: ${actionL.title}. ${actionL.reason}`);
   }
 
   if (intents.includes("ship")) {
@@ -585,21 +648,30 @@ export function runAdvisorAgent(
     );
   }
 
-  const extra = [...catalog].sort((a, b) => b.revenue - a.revenue).slice(0, 3);
+  const extra = [...catalog].sort((a, b) => b.profit - a.profit).slice(0, 3);
+  const today = actionL ? (en ? `Today: ${actionL.title}. ${actionL.reason}` : `اليوم: ${actionL.title}. ${actionL.reason}`) : "";
+  const leakLine =
+    leak && leakL
+      ? en
+        ? `Watch leak: «${leak.product}» — ${leakL.issue}`
+        : `راقبي التسريب: «${leak.product}» — ${leakL.issue}`
+      : "";
   return done(
     "file_overview",
     [
       header,
       en
-        ? `Sales ${money(kpis.totalRevenue, currency)} • net profit ${money(kpis.netProfit, currency)} • health ${health.score}/100.`
-        : `المبيعات ${money(kpis.totalRevenue, currency)} • صافي الربح ${money(kpis.netProfit, currency)} • الصحة ${health.score}/100.`,
+        ? `Sales ${money(kpis.totalRevenue, currency)} • net profit ${money(kpis.netProfit, currency)} • health ${health.score}/100 (${healthLabelFor(health.score, locale)}).`
+        : `المبيعات ${money(kpis.totalRevenue, currency)} • صافي الربح ${money(kpis.netProfit, currency)} • الصحة ${health.score}/100 (${healthLabelFor(health.score, locale)}).`,
+      today,
+      leakLine,
       extra.length
-        ? `${en ? "Top sellers" : "الأعلى مبيعاً"}:\n${extra.map((item, i) => `${i + 1}) ${fullCard(item, currency, en)}`).join("\n")}`
+        ? `${en ? "Highest profit products" : "الأعلى ربحاً"}:\n${extra.map((item, i) => `${i + 1}) ${fullCard(item, currency, en)}`).join("\n")}`
         : "",
       forecast.willLoseNextMonth ? (en ? "Warning: next month may close at a loss." : "تنبيه: الشهر القادم قد يُغلق بخسارة.") : "",
       en
-        ? "You can ask in any wording: quantities, profit, a product name, a month, expenses, or a follow-up like “those ones”."
-        : "اسألي بأي صياغة: كميات، ربح، اسم منتج، شهر، مصاريف، أو متابعة مثل «هذول» و«كمان الكميات».",
+        ? "Try asking: highest profit product, show losses, expenses, what should I buy, marketing plan, January sales, or store health."
+        : "جرّبي: أعلى منتج ربح، الخسائر، المصاريف، شو أشتري، خطة تسويق، مبيعات يناير، أو صحة المتجر.",
     ]
       .filter(Boolean)
       .join("\n"),

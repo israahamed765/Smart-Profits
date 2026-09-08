@@ -89,10 +89,10 @@ export interface AdminSnapshot {
   users: AdminUserRow[];
   uniqueVisitors: number;
   pageViews: number;
-  sources: { name: string; value: number; color: string }[];
-  countries: { name: string; visitors: number }[];
+  sources: { id?: string; name: string; value: number; color: string }[];
+  countries: { id: string; name: string; visitors: number }[];
   conversion: number;
-  features: { name: string; uses: number }[];
+  features: { id?: string; name: string; uses: number }[];
   uploadErrors: number;
   alerts: AdminAlert[];
   userStats: {

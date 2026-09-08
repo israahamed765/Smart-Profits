@@ -39,9 +39,15 @@ const TEACH = [
   "learn",
   "explain",
   "what is",
+  "what's",
+  "whats",
   "basics",
   "advice",
   "tips",
+  "teach me",
+  "help me understand",
+  "how does",
+  "how do",
 ];
 
 export function isTeachingQuestion(question: string) {
@@ -55,16 +61,16 @@ export function detectKnowledgeTopic(question: string): KnowledgeTopic | null {
     scores[topic] = (scores[topic] ?? 0) + n;
   };
 
-  if (has(q, ["كتاب", "كتب", "اقرا", "اقرأ", "قراءه", "book", "books", "read about"])) add("books", 8);
-  if (has(q, ["تسوق", "زبون", "زبائن", "عملاء", "عميل", "تجربة العميل", "customer", "shopper", "shopping", "merchandis"])) {
+  if (has(q, ["كتاب", "كتب", "اقرا", "اقرأ", "قراءه", "book", "books", "read about", "recommend a book", "reading list"])) add("books", 8);
+  if (has(q, ["تسوق", "زبون", "زبائن", "عملاء", "عميل", "تجربة العميل", "customer", "shopper", "shopping", "merchandis", "retail tips", "store tips"])) {
     add("shop", 6);
   }
-  if (has(q, ["تجاره", "تجارة", "تاجر", "تجاري", "بياعه", "commerce", "retail", "trade", "merchant"])) add("trade", 6);
-  if (has(q, ["مشتريات", "مورد", "موردين", "توريد", "purchasing", "procurement", "supplier", "كيف اشتري", "قرار الشراء"])) {
+  if (has(q, ["تجاره", "تجارة", "تاجر", "تجاري", "بياعه", "commerce", "retail", "trade", "merchant", "how to run a shop", "business basics"])) add("trade", 6);
+  if (has(q, ["مشتريات", "مورد", "موردين", "توريد", "purchasing", "procurement", "supplier", "كيف اشتري", "قرار الشراء", "how to buy", "buying rules"])) {
     add("purchase", 6);
   }
-  if (isTeachingQuestion(q) && has(q, ["ربح", "ارباح", "هامش", "profit", "margin"])) add("profit", 7);
-  if (has(q, ["ربح حقيقي", "ربح وهمي", "phantom profit", "real profit", "انواع الربح"])) add("profit", 8);
+  if (isTeachingQuestion(q) && has(q, ["ربح", "ارباح", "هامش", "profit", "margin", "make money"])) add("profit", 7);
+  if (has(q, ["ربح حقيقي", "ربح وهمي", "phantom profit", "real profit", "انواع الربح", "types of profit"])) add("profit", 8);
 
   const ranked = (Object.entries(scores) as [KnowledgeTopic, number][]).sort((a, b) => b[1] - a[1]);
   return ranked[0] && ranked[0][1] >= 6 ? ranked[0][0] : null;

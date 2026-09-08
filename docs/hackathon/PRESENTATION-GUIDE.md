@@ -2,7 +2,9 @@
 
 ## Main file (submit this)
 
-**`Smart-Profits-HACKATHON-PITCH-DECK.pptx`** — 18 slides, 16:9, English, Theme 4.
+**`Smart-Profits-HACKATHON-PITCH-DECK.pptx`** — 19 slides, 16:9, English, Theme 4.
+
+Also copy to Desktop after regenerate if judges ask for that path.
 
 Regenerate after edits:
 
@@ -10,7 +12,7 @@ Regenerate after edits:
 python docs/hackathon/build_pitch_pptx.py
 ```
 
-Optional screenshots (improves slide 10):
+Optional screenshots (improves product slide):
 
 ```bash
 npm run dev
@@ -20,49 +22,79 @@ python docs/hackathon/build_pitch_pptx.py
 
 ---
 
-## Slide map (18 slides)
+## Pitch strategy (say this out loud)
+
+### Open with the story (30–45s)
+
+> “A merchant in the Middle East runs the business from Excel. Their phone line is hijacked through a SIM swap. The attacker opens the advisor, downloads the P&L, and changes product prices. **Smart Profits stops that — from registration until the latest financial upload.**”
+
+Then go live: `91001` allow → `91000` freeze.
+
+### Three talking points judges still need (the last 4–8 points)
+
+1. **AI Agent ≠ plain if/else**  
+   Soft network change + ordinary purchases → **Allow**.  
+   Soft network change + sensitive P&L / price change → **Step-up**.  
+   SIM swap → **Freeze**.  
+   Say: *“We fuse CAMARA tools with financialSuspicion — file size, dump names, new account + large file.”*
+
+2. **Silent Authentication / no friction**  
+   Number Verification on 4G/5G in the background when clean.  
+   Merchant does **not** wait for SMS every day.  
+   Freeze only when SIM swap (or hard location) is real.
+
+3. **Operator money (B2B2X)**  
+   Every login, upload, export, price change = metered CAMARA API calls.  
+   More active merchants = recurring Open Gateway revenue for the telco.
+
+---
+
+## Slide map (19 slides)
 
 | # | Slide | Purpose for judges |
 |---|--------|-------------------|
 | 01 | Title | Theme 4 + both mandatory tags |
-| 02 | Executive summary | 30-second scan + explicit requirements |
-| 03 | Problem | Excel + fraud + Theme 4 gap |
-| 04 | MENA market | Regional fit |
-| 05 | Solution | Financial AI + Smart Guard |
-| 06 | Mandatory requirements | **Critical scoring slide** |
-| 07 | CAMARA APIs | What/when/decision + test MSISDNs |
-| 08 | AI Agent | Sense→Query→Decide→Act + Allow/Step-up/Freeze |
-| 09 | Architecture | Stack + GitHub link |
-| 10 | Live evidence | Nokia logs + tests + demo numbers |
-| 11 | Demo walkthrough | 3-minute script A/B/C |
-| 12 | Screenshots | Product proof |
-| 13 | Differentiation | vs generic Excel AI |
-| 14 | Business model | SaaS + operator B2B2X |
-| 15 | Impact | Why GSMA/Nokia care |
-| 16 | Roadmap | Hackathon → MWC Doha |
-| 17 | Team | Israa + Mir + Bitsandbytesdude |
-| 18 | The Ask | Declaration + thank you |
+| 02 | **The Story** | Pitch opener — SIM swap hijacks Excel P&L |
+| 03 | Executive summary | 30-second scan + mandatory requirements |
+| 04 | Problem | Excel + fraud + Theme 4 gap |
+| 05 | MENA market | Regional fit |
+| 06 | Solution | Financial AI + Smart Guard + silent auth |
+| 07 | Mandatory requirements | **Critical scoring slide** |
+| 08 | CAMARA APIs | What/when/decision + **Silent Authentication** |
+| 09 | AI Agent | Sense→Query→Decide→Act + **network × financial fusion** |
+| 10 | Architecture | Stack + GitHub link |
+| 11 | Live evidence | Nokia logs + tests + demo numbers |
+| 12 | Demo walkthrough | 3-minute script A/B/C |
+| 13 | Screenshots | Product proof |
+| 14 | Differentiation | vs generic Excel AI |
+| 15 | Business model | SaaS + **operator B2B2X API usage** |
+| 16 | Impact | Why GSMA/Nokia care |
+| 17 | Roadmap | Hackathon → MWC Doha |
+| 18 | Team | Israa + Mir + Bitsandbytesdude |
+| 19 | The Ask | Declaration + thank you |
 
 ---
 
 ## Recommended live pitch (5–7 minutes)
 
-1. **Slide 02** (45s) — Problem + both mandatory requirements met.
-2. **Slide 08** (60s) — Smart Guard is an agent, not a chatbot.
-3. **Slide 11** (90s) — Live demo or video: 91001 allow → 91000 freeze → 91002 step-up.
-4. **Slide 10** (30s) — Show terminal `[nac-live] provider=Nokia status=200`.
-5. **Slide 13–15** (60s) — Differentiation + impact.
-6. **Slide 18** (20s) — Close.
+1. **Slide 02 — Story** (45s)
+2. **Slide 09 — AI Agent fusion** (60s) — network × financial sensitivity
+3. **Live demo** (90s) — `91001` allow → `91000` freeze → optional `91002` step-up
+4. **Slide 08 — Silent Auth** (20s) — no SMS friction when clean
+5. **Slide 15 — B2B2X** (40s) — every sensitive action = billable CAMARA usage
+6. **Slide 11 — logs** (20s) — `[nac-live] provider=Nokia status=200`
+7. **Slide 19 — Close** (20s)
 
 ---
 
 ## Before presenting — checklist
 
-- [ ] Replace `[deploy before submission]` on slide 11 with live URL
+- [ ] Replace live demo URL placeholder if still empty
 - [ ] Add screenshots to `docs/hackathon/screenshots/`
 - [ ] Re-run `build_pitch_pptx.py`
 - [ ] Test demo numbers: +99999991001, +99999991000, +99999991002
 - [ ] Have GitHub open: https://github.com/israahamed765/Smart-Profits
+- [ ] Postgres running before local demo (`npm run db:setup`)
 
 ---
 
@@ -70,10 +102,10 @@ python docs/hackathon/build_pitch_pptx.py
 
 | Criterion | Slides |
 |-----------|--------|
-| CAMARA via Nokia NaC | 06, 07, 09, 10 |
-| AI Agent orchestration | 06, 08 |
-| Theme 4 FinTech anti-fraud | 03, 05, 11 |
-| Technical depth | 09, 10 |
-| MENA relevance | 04, 13, 17 |
-| Commercial viability | 14, 16 |
-| Working prototype | 10, 11, 12 |
+| CAMARA via Nokia NaC | 07, 08, 10, 11 |
+| AI Agent orchestration | 07, 09 |
+| Silent / frictionless security | 06, 08 |
+| Theme 4 FinTech anti-fraud | 02, 04, 06, 12 |
+| Operator commercial fit (B2B2X) | 15, 16 |
+| Working prototype | 11, 12, 13 |
+| MENA relevance | 02, 05, 14, 18 |
