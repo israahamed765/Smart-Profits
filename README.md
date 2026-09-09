@@ -4,13 +4,14 @@
 
 [![Theme 4](https://img.shields.io/badge/GSMA-Theme%204%20FinTech-0f9e94)](#business-value)
 [![Nokia NaC](https://img.shields.io/badge/Nokia-Network--as--Code-4fd1c5)](#camara-api-coverage)
-[![Smart Guard](https://img.shields.io/badge/AI%20Agent-Smart%20Guard-e8c56b)](#architecture)
+[![Smart Guard](https://img.shields.io/badge/AI%20Agent-Smart%20Guard%20(rules)-e8c56b)](#smart-guard-ai-agent--what-it-is)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](#tech-stack)
 [![Tests](https://img.shields.io/badge/tests-40%2B%20suites-blue)](#testing--quality)
+[![Live](https://img.shields.io/badge/live%20demo-Railway-0f9e94)](https://smart-profits-production.up.railway.app/)
 
 > **GSMA MENA Ignite Open Gateway Hackathon 2026** · Theme 4: Secure FinTech, Payments & Anti-Fraud Innovation
 
-Arabic-first (RTL) merchant SaaS that turns messy Excel/CSV into profit decisions — protected by **GSMA CAMARA APIs** via **Nokia Network-as-Code**, orchestrated by the **Smart Guard AI Agent** (Allow · Step-up · Freeze).
+Arabic-first (RTL) merchant SaaS that turns messy Excel/CSV into profit decisions — protected by **GSMA CAMARA APIs** via **Nokia Network-as-Code**, orchestrated by the **Smart Guard AI Agent** (deterministic Allow · Step-up · Freeze — **not an LLM**).
 
 **Team:** Israa Nael Hamad · University of Palestine, Gaza · [Bitsandbytesdude](https://bitsandbytesdude.vercel.app/)
 
@@ -20,19 +21,33 @@ Arabic-first (RTL) merchant SaaS that turns messy Excel/CSV into profit decision
 
 | Resource | Link |
 |----------|------|
+| **Live demo (deployed)** | **https://smart-profits-production.up.railway.app/** |
+| **Demo video (3 min)** | **[Paste YouTube / Loom URL here before final submission]** — see [script below](#demo-video--smart-guard-live-decisions) |
 | **Judge quick-start** | [`docs/hackathon/HACKATHON.md`](docs/hackathon/HACKATHON.md) |
-| **Pitch deck (18 slides)** | [`docs/hackathon/Smart-Profits-HACKATHON-PITCH-DECK.pptx`](docs/hackathon/Smart-Profits-HACKATHON-PITCH-DECK.pptx) |
+| **Pitch deck** | [`docs/hackathon/Smart-Profits-HACKATHON-PITCH-DECK.pptx`](docs/hackathon/Smart-Profits-HACKATHON-PITCH-DECK.pptx) · alt: [`Smart-Profits-PITCH-DECK.pptx`](docs/hackathon/Smart-Profits-PITCH-DECK.pptx) |
 | **Presentation guide** | [`docs/hackathon/PRESENTATION-GUIDE.md`](docs/hackathon/PRESENTATION-GUIDE.md) |
-| **Live demo** | _Add your deployed URL before submission_ |
-| **Demo video (3 min)** | _Add YouTube/Loom link before submission_ |
 | **Source code** | https://github.com/israahamed765/Smart-Profits |
+
+> **Until the video URL is published:** open the [live demo](https://smart-profits-production.up.railway.app/), use the sandbox MSISDNs below, and watch Smart Guard take **Allow / Step-up / Freeze** live. Full click-path: [`docs/hackathon/HACKATHON.md`](docs/hackathon/HACKATHON.md).
 
 ### Mandatory hackathon requirements — both implemented
 
 | Requirement | Where to verify |
 |-------------|-----------------|
 | **A — GSMA CAMARA via Nokia Network-as-Code** | `server/smart-guard/nokia-adapter.ts` · live logs `[nac-live] provider=Nokia` |
-| **B — AI Agent orchestration & decisions** | `lib/smart-guard/policy.ts` · `server/smart-guard/enforce.ts` · UI overlay |
+| **B — AI Agent orchestration & decisions** | Deterministic policy agent — `lib/smart-guard/policy.ts` · `server/smart-guard/enforce.ts` · UI overlay ([details](#smart-guard-ai-agent--what-it-is)) |
+
+### Demo video — Smart Guard live decisions
+
+Record / publish a **~3 minute** walkthrough (YouTube unlisted or Loom). Paste the public URL in the table above. Suggested storyboard:
+
+| Time | Show |
+|------|------|
+| 0:00–0:40 | Product: register on live demo · Arabic/EN UI · upload intent |
+| 0:40–1:20 | **`+99999991001` → Allow** (clean signals; action proceeds) |
+| 1:20–2:10 | **`+99999991000` → Freeze** (SIM/device swap; overlay + blocked upload) |
+| 2:10–2:50 | **`+99999991002` → Step-up** (location PARTIAL; network code / demo inbox) |
+| 2:50–3:00 | Close: Theme 4 + CAMARA APIs used (SIM Swap · NV · Location · Device Swap) |
 
 ---
 
@@ -109,6 +124,20 @@ Full judge walkthrough: [`docs/hackathon/HACKATHON.md`](docs/hackathon/HACKATHON
 
 ---
 
+## Smart Guard AI Agent — what it is (and is not)
+
+For GSMA / Nokia judges: **“AI Agent” here means an autonomous decision agent that orchestrates CAMARA signals and enforces outcomes** — not a generative LLM chat bot.
+
+| Layer | Type | LLM? | Role | Code |
+|-------|------|------|------|------|
+| **Smart Guard AI Agent** | **Deterministic rules engine** (policy + enforcement) | **No** | Reads SIM Swap / Device Swap / Number Verification / Location → **Allow · Step-up · Freeze**; fail-closed on provider failure | `lib/smart-guard/policy.ts`, `server/smart-guard/run.ts`, `server/smart-guard/enforce.ts`, `server/smart-guard/camara.ts` |
+| **Nokia / CAMARA I/O** | Adapters only | No | Live RapidAPI or official sandbox MSISDN profiles | `server/smart-guard/nokia-adapter.ts`, `nac-client.ts`, `nokia-mock.ts` |
+| **Merchant financial advisor** | Deterministic analytics + rule-based Q&A (locale-aware) | **No** | P&L diagnosis, leak detection, price simulation, 30-day plan from uploaded books | `lib/financial-engine/` |
+
+**Why call it an Agent?** It owns the closed loop: *sense (CAMARA) → decide (policy) → act (block / step-up / allow)* on sensitive merchant actions, independent of the UI. There are **no LLM prompts** in the Smart Guard path — decisions are auditable, testable (`tests/smart-guard-policy.test.ts`), and telco-grade.
+
+---
+
 ## Architecture
 
 Smart Guard is a **separate decision engine** — not UI glue. Policy is pure; Nokia I/O is adapter-only.
@@ -125,7 +154,8 @@ Smart Guard is a **separate decision engine** — not UI glue. Policy is pure; N
               ▼                               ▼
 ┌─────────────────────────┐     ┌─────────────────────────────┐
 │  Financial engine         │     │  Smart Guard AI Agent       │
-│  parse · P&L · advisor    │     │  policy.ts → Allow/Step/Freeze │
+│  (deterministic)          │     │  rules → Allow/Step/Freeze  │
+│  parse · P&L · advisor    │     │  NO LLM / no prompts        │
 └─────────────────────────┘     └──────────────┬──────────────┘
                                                  │
                               ┌──────────────────▼──────────────┐
@@ -141,10 +171,11 @@ Smart Guard is a **separate decision engine** — not UI glue. Policy is pure; N
 
 **Design rules (for reviewers):**
 
-- `lib/smart-guard/policy.ts` — **pure policy** (no HTTP, no secrets)
+- `lib/smart-guard/policy.ts` — **pure policy** (no HTTP, no secrets, no LLM)
 - `server/smart-guard/nokia-adapter.ts` — live RapidAPI + structured audit logs
 - Provider failures ≠ business rejection (distinct messages in `enforce.ts`)
 - No hardcoded Nokia outcomes in policy — mapped from API responses
+- Official test MSISDNs (`+9999999100x`) stay on local profiles even when `NAC_API_KEY` is set (`nacEffectiveMode`) so the judge demo script stays reliable
 
 ---
 
@@ -175,7 +206,22 @@ Local simulator catalog: `POST /api/nac/mock/gate` (demo routes only; Smart Guar
 
 **Why Theme 4:** FinTech anti-fraud on the files that *are* the business, not slide-only API integration.
 
-**Operator angle:** Every secured login, upload, and export consumes CAMARA API value (future B2B2X).
+**Operator angle (B2B2X):** Every secured login, upload, and export is a billable Open Gateway event — merchants get fraud protection; operators monetize CAMARA (SIM Swap, Number Verification, Location, Device Swap) without building the SaaS themselves.
+
+---
+
+## Future roadmap & scale (MENA operators)
+
+Path from hackathon sandbox → production Open Gateway with regional carriers.
+
+| Horizon | Focus | Operator / platform fit |
+|---------|--------|-------------------------|
+| **Now (hackathon)** | Nokia Network-as-Code sandbox + RapidAPI · Smart Guard Allow / Step-up / Freeze · live Railway demo | Nokia NaC · GSMA CAMARA |
+| **0–6 months** | Pilot with 1–2 MENA MNOs; production Number Verification + SIM Swap on merchant login/upload; Arabic ops playbook | **Zain** (KW/JO/IQ/SA footprint) · **Orange** (JO/EG/MA) · **Vodafone** (EG) |
+| **6–18 months** | Multi-tenant operator console (white-label admin); per-MNO billing of CAMARA calls; Device Swap + Location geofence for multi-branch retailers | **STC** / stc Pay ecosystem (SA) · additional **Zain** markets |
+| **18–36 months** | Cross-border SME corridors; embed Smart Guard as Open Gateway “security sidecar” for other FinTech ISVs (B2B2X) | Regional Open Gateway federations · bank/FinTech partners |
+
+**Why this scales for operators:** the hard product (Excel → profit decisions) drives daily merchant engagement; Smart Guard attaches **network-native trust** to those high-value actions — a clear ARPU / API consumption story without displacing the MNO brand.
 
 ---
 
@@ -215,7 +261,8 @@ Copy `.env.example` → `.env`. **Never commit real keys.**
 
 **Modes:**
 
-- `NAC_API_KEY` **set** → Smart Guard uses **live Nokia** (`nacMode=live`)
+- `NAC_API_KEY` **set** → Smart Guard uses **live Nokia** (`nacMode=live`) for real numbers
+- Official sandbox MSISDNs `+9999999100x` → **local profiles** even with key set (stable judge demo)
 - `NAC_API_KEY` **empty** → local **simulator** only
 
 ---
@@ -293,6 +340,7 @@ npm run build     # Production build check
 | Engineering | **Mir Kashif** — Bitsandbytesdude Software Agency |
 
 **Repository:** https://github.com/israahamed765/Smart-Profits  
+**Live demo:** https://smart-profits-production.up.railway.app/  
 **Studio:** https://bitsandbytesdude.vercel.app/
 
 ---
@@ -304,5 +352,5 @@ Private / hackathon submission — © Smart Profits Team · Bitsandbytesdude · 
 ---
 
 <p align="center">
-  <strong>Smart Profits</strong> — Real merchant SaaS · Real AI Agent · Real CAMARA APIs via Nokia Network-as-Code
+  <strong>Smart Profits</strong> — Real merchant SaaS · Deterministic Smart Guard agent · Real CAMARA APIs via Nokia Network-as-Code
 </p>
