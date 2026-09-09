@@ -213,7 +213,7 @@ export function buildAdminSnapshotFromFacts(
         guardReason: user.guardReason || "",
         guardFrozenAt: user.guardFrozenAt || "",
         latestGuardDecision: user.latestGuardDecision,
-        latestGuardReason: user.latestGuardReason || "",
+        latestGuardReason: user.latestGuardReason ?? "",
         latestGuardSummary: user.latestGuardSummary || "",
         latestGuardAt: user.latestGuardAt || "",
         real: true,

@@ -9,6 +9,7 @@ import {
   serializeParseResult,
   type PersistedAnalysis,
   type PersistedWorkspace,
+  type SerializedParseResult,
 } from "@/lib/serialize";
 import { normalizeOpexSettings } from "@/lib/opex";
 import type {
@@ -376,7 +377,7 @@ export function AnalysisProvider({ children }: { children: React.ReactNode }) {
         form.append("settings", JSON.stringify(settings));
         form.append("taxonomy", JSON.stringify(taxonomy ?? {}));
         const response = await apiFetch("/api/analyze", { method: "POST", body: form });
-        const payload = (await response.json()) as { parsed?: ParseResult; error?: string };
+        const payload = (await response.json()) as { parsed?: SerializedParseResult; error?: string };
         if (!response.ok || !payload.parsed) {
           throw new FileParseError(payload.error || "فشل تحليل الملف على الخادم.");
         }

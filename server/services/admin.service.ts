@@ -9,7 +9,7 @@ import { readEventsAll } from "@/server/repositories/event.repository";
 import { listGuardDecisions } from "@/server/repositories/guard-log.repository";
 import type { AdminFacts } from "@/lib/admin/types";
 import type { AccountStatus, PlanTier } from "@/lib/admin/config";
-import type { GuardDecision } from "@/lib/smart-guard/types";
+import type { GuardDecision, GuardReason } from "@/lib/smart-guard/types";
 
 function adminCredentials() {
   const email = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
@@ -48,7 +48,10 @@ export async function adminSnapshot(): Promise<AdminFacts> {
   const workspaces = await listWorkspaces();
 
   const guardResult = await listGuardDecisions({ limit: 5000 });
-  const latestGuardByEmail = new Map<string, { decision: GuardDecision; reason: string; summary: string; at: string }>();
+  const latestGuardByEmail = new Map<
+    string,
+    { decision: GuardDecision; reason: GuardReason; summary: string; at: string }
+  >();
   for (const row of guardResult.rows) {
     if (!latestGuardByEmail.has(row.email)) {
       latestGuardByEmail.set(row.email, {
@@ -91,7 +94,7 @@ export async function adminSnapshot(): Promise<AdminFacts> {
         guardReason: account.guardReason || latestGuard?.reason || "",
         guardFrozenAt: account.guardFrozenAt || (frozenNow ? latestGuard?.at || "" : ""),
         latestGuardDecision: latestGuard?.decision,
-        latestGuardReason: latestGuard?.reason || "",
+        latestGuardReason: latestGuard?.reason ?? "",
         latestGuardSummary: latestGuard?.summary || "",
         latestGuardAt: latestGuard?.at,
       };

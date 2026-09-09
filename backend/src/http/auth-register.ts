@@ -10,7 +10,9 @@ function registerFieldCode(issue: ZodIssue): string {
   const field = issue.path[0];
   if (field === "fullName") return "fullName";
   if (field === "storeName") return "storeName";
-  if (field === "email") return issue.code === "invalid_string" || issue.code === "invalid_type" ? "emailInvalid" : "email";
+  if (field === "email") {
+    return issue.code === "invalid_format" || issue.code === "invalid_type" ? "emailInvalid" : "email";
+  }
   if (field === "phone") return "phone";
   if (field === "password") return "password";
   return "server";

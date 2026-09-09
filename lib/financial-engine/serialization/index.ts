@@ -1,7 +1,7 @@
 import type { ActionLogEntry, AppSettings, ParseResult, TaxonomyMap, Transaction } from "../types";
 import { sanitizeParseResult } from "../core/financial-integrity";
 
-interface SerializedParseResult extends Omit<ParseResult, "transactions"> {
+export interface SerializedParseResult extends Omit<ParseResult, "transactions"> {
   transactions: Array<Omit<Transaction, "date"> & { date: string | null }>;
 }
 
