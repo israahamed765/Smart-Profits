@@ -6,7 +6,8 @@ import { Badge } from "@/frontend/components/ui/badge";
 import { Button } from "@/frontend/components/ui/button";
 import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
-import { formatDateAr } from "@/frontend/lib/format";
+import { formatDateLocale } from "@/frontend/lib/format";
+import { localizeFileName } from "@/frontend/lib/localize-catalog";
 import { cn } from "@/frontend/ui/cn";
 
 function sortFiles<T extends { isDemo: boolean; uploadedAt: string }>(files: T[]) {
@@ -24,7 +25,7 @@ export function FileArchiveList({
   openOnSelect?: boolean;
 }) {
   const { files, activeFileId, selectFile, removeFile } = useAnalysis();
-  const { t } = useAppearance();
+  const { t, locale } = useAppearance();
   const router = useRouter();
   const ordered = sortFiles(files);
 
@@ -60,10 +61,10 @@ export function FileArchiveList({
               >
                 <FileSpreadsheet className={cn("h-4 w-4 shrink-0", active ? "text-primary" : "text-slate-500")} />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate">{file.fileName}</span>
+                  <span className="block truncate">{localizeFileName(file.fileName, locale, file.isDemo)}</span>
                   {!compact && (
                     <span className="mt-0.5 block text-[11px] text-slate-500">
-                      {formatDateAr(new Date(file.uploadedAt))} • {file.rowCount} {t("file.rows")}
+                      {formatDateLocale(new Date(file.uploadedAt), locale)} • {file.rowCount} {t("file.rows")}
                     </span>
                   )}
                 </span>
@@ -78,7 +79,7 @@ export function FileArchiveList({
               {!file.isDemo && (
                 <button
                   type="button"
-                  aria-label={`حذف ${file.fileName}`}
+                  aria-label={t("file.deleteAria").replace("{name}", file.fileName)}
                   className="me-1 rounded-lg p-1.5 text-slate-500 opacity-0 hover:bg-red-500/15 hover:text-red-300 group-hover:opacity-100"
                   onClick={(event) => {
                     event.stopPropagation();
@@ -108,7 +109,7 @@ export function FileArchiveList({
 
 export function FileArchiveCards() {
   const { files, activeFileId, selectFile, removeFile } = useAnalysis();
-  const { t } = useAppearance();
+  const { t, locale } = useAppearance();
   const router = useRouter();
   const ordered = sortFiles(files);
   const uploaded = ordered.filter((file) => !file.isDemo);
@@ -140,9 +141,11 @@ export function FileArchiveCards() {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-foreground">{file.fileName}</p>
+                <p className="truncate text-sm font-semibold text-foreground">
+                  {localizeFileName(file.fileName, locale, file.isDemo)}
+                </p>
                 <p className="mt-1 text-xs text-muted">
-                  {formatDateAr(new Date(file.uploadedAt))} • {file.rowCount} {t("file.rows")}
+                  {formatDateLocale(new Date(file.uploadedAt), locale)} • {file.rowCount} {t("file.rows")}
                 </p>
               </div>
               {file.isDemo ? <Badge tone="warning">{t("file.demo")}</Badge> : active ? <Badge tone="success">{t("file.openNowLong")}</Badge> : null}

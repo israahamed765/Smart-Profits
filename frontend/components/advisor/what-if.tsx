@@ -11,12 +11,13 @@ import { useAppearance } from "@/frontend/context/appearance";
 import { useSmartGuard } from "@/frontend/context/smart-guard-context";
 import { dataSpanDays, simulateWhatIf } from "@/lib/advisor";
 import { formatMoney } from "@/frontend/lib/format";
+import { localizeCatalogLabel } from "@/frontend/lib/localize-catalog";
 import { GuardBlockedError } from "@/frontend/lib/smart-guard/client";
 import { toast } from "sonner";
 
 export function WhatIfSimulator() {
   const { result, parseResult, currency } = useAnalysis();
-  const { t } = useAppearance();
+  const { t, locale } = useAppearance();
   const { protect } = useSmartGuard();
   const catalog = result?.productHighlights.catalog ?? [];
   const [product, setProduct] = useState(catalog[0]?.name ?? "");
@@ -65,7 +66,7 @@ export function WhatIfSimulator() {
             >
               {catalog.map((item) => (
                 <option key={item.name} value={item.name}>
-                  {item.name}
+                  {localizeCatalogLabel(item.name, locale)}
                 </option>
               ))}
             </select>

@@ -6,11 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/
 import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { formatMoney } from "@/frontend/lib/format";
+import { localizeCatalogLabel } from "@/frontend/lib/localize-catalog";
 import { toast } from "sonner";
 
 export function ProductTables() {
   const { result, currency } = useAnalysis();
-  const { t } = useAppearance();
+  const { t, locale } = useAppearance();
   if (!result) return null;
   const statusLabel = {
     rising: t("dash.rising"),
@@ -29,7 +30,7 @@ export function ProductTables() {
             {result.topProducts.map((product) => (
               <div key={product.name} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/3 px-3 py-2.5">
                 <div>
-                  <p className="text-sm font-medium text-foreground">{product.name}</p>
+                  <p className="text-sm font-medium text-foreground">{localizeCatalogLabel(product.name, locale)}</p>
                   <p className="text-xs text-muted">{formatMoney(product.revenue, currency)}</p>
                 </div>
                 <Badge
@@ -55,7 +56,7 @@ export function ProductTables() {
               {result.stagnantInventory.map((item) => (
                 <div key={item.name} className="flex items-center justify-between gap-3 rounded-xl bg-white/3 px-3 py-2.5">
                   <div>
-                    <p className="text-sm font-medium text-foreground">{item.name}</p>
+                    <p className="text-sm font-medium text-foreground">{localizeCatalogLabel(item.name, locale)}</p>
                     <p className="text-xs text-muted">{t("dash.daysIdle").replace("{n}", String(item.daysStagnant))}</p>
                   </div>
                   <Button

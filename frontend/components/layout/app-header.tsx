@@ -8,6 +8,7 @@ import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { useAuth } from "@/frontend/context/auth-context";
 import { monthKey } from "@/frontend/lib/format";
+import { localizeCatalogLabel, localizeFileName } from "@/frontend/lib/localize-catalog";
 import { reviveTransactionDate } from "@/lib/serialize";
 import { filterTransactions, uniqueProducts } from "@/lib/scope";
 import type { CurrencyCode } from "@/lib/types";
@@ -23,7 +24,7 @@ export function AppHeader({
   subtitle?: string;
 }) {
   const { user } = useAuth();
-  const { t, months } = useAppearance();
+  const { t, months, locale } = useAppearance();
   const {
     currency,
     setCurrency,
@@ -40,10 +41,10 @@ export function AppHeader({
   } = useAnalysis();
   const router = useRouter();
   const latest = result?.monthlySeries.at(-1);
-  const store = settings.storeName || user?.storeName || "";
+  const store = localizeCatalogLabel(settings.storeName || user?.storeName || "", locale);
   const heading = title ?? `${t("header.welcome")} ${store}`.trim();
   const description = subtitle ?? t("header.overview");
-  const initial = (user?.fullName || settings.ownerName || "S").slice(0, 1);
+  const initial = (user?.fullName || localizeCatalogLabel(settings.ownerName || "S", locale)).slice(0, 1);
   const hasHighAlert = Boolean(result?.forecast.alerts.some((alert) => alert.severity === "high"));
   const monthOptions = Array.from(
     new Map(
@@ -71,7 +72,7 @@ export function AppHeader({
   if (scope.product && !productOptions.includes(scope.product)) productOptions.unshift(scope.product);
   const scopeParts = [
     selectedMonth ? `${months[selectedMonth.month]} ${selectedMonth.year}` : scope.sheet,
-    scope.product,
+    scope.product ? localizeCatalogLabel(scope.product, locale) : null,
   ].filter(Boolean);
 
   return (
@@ -81,7 +82,9 @@ export function AppHeader({
           <h1 className="text-lg font-semibold break-words text-foreground sm:text-xl">{heading}</h1>
           <p className="mt-1 text-sm text-muted">
             {description}
-            {parseResult ? ` • ${t("header.currentFile")}: ${parseResult.fileName}` : ""}
+            {parseResult
+              ? ` • ${t("header.currentFile")}: ${localizeFileName(parseResult.fileName, locale, Boolean(files.find((f) => f.id === activeFileId)?.isDemo))}`
+              : ""}
           </p>
           {scopeParts.length > 0 ? (
             <p className="mt-1 text-xs text-accent">
@@ -105,7 +108,9 @@ export function AppHeader({
             >
               {files.map((file) => (
                 <option key={file.id} value={file.id} className="bg-card text-foreground">
-                  {file.isDemo ? `${t("header.demo")} — ${file.fileName}` : file.fileName}
+                  {file.isDemo
+                    ? `${t("header.demo")} — ${localizeFileName(file.fileName, locale, true)}`
+                    : file.fileName}
                 </option>
               ))}
             </select>
@@ -160,7 +165,7 @@ export function AppHeader({
               </option>
               {productOptions.map((name) => (
                 <option key={name} value={name} className="bg-card text-foreground">
-                  {name}
+                  {localizeCatalogLabel(name, locale)}
                 </option>
               ))}
             </select>

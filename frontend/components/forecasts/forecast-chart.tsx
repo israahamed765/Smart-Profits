@@ -24,7 +24,7 @@ function formatAxis(value: number) {
 
 export function ForecastChart() {
   const { result, currency } = useAnalysis();
-  const { t, months } = useAppearance();
+  const { t, months, locale } = useAppearance();
   const palette = useChartTheme();
   if (!result) return null;
 
@@ -49,7 +49,7 @@ export function ForecastChart() {
     };
   });
 
-  const suffix = currencySuffix(currency);
+  const suffix = currencySuffix(currency, locale);
 
   return (
     <Card className="h-full">

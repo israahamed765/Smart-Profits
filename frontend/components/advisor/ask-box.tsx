@@ -8,6 +8,7 @@ import { Input } from "@/frontend/components/ui/input";
 import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { runFinancialAgent, type AgentToolCall } from "@/frontend/lib/financial-agent";
+import { localizeFileName } from "@/frontend/lib/localize-catalog";
 
 const HINTS = {
   ar: [
@@ -98,7 +99,7 @@ export function AdvisorAskBox({ chat = false }: { chat?: boolean }) {
         </CardTitle>
         {result?.fileName && (
           <p className="text-xs text-muted">
-            {t("advisor.chat.from")}: {result.fileName}
+            {t("advisor.chat.from")}: {localizeFileName(result.fileName, locale, false)}
           </p>
         )}
       </CardHeader>

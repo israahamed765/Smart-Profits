@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/
 import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { formatMoney } from "@/frontend/lib/format";
+import { localizeCatalogLabel } from "@/frontend/lib/localize-catalog";
 import { localizePricingCaution } from "@/frontend/lib/localize-advisor";
 
 export function SmartPricingList() {
   const { result, currency } = useAnalysis();
-  const { t } = useAppearance();
+  const { t, locale } = useAppearance();
   if (!result) return null;
 
   return (
@@ -23,7 +24,7 @@ export function SmartPricingList() {
       <CardContent className="space-y-3">
         {result.advisor.pricing.map((item) => (
           <div key={item.product} className="rounded-xl border border-border p-4">
-            <p className="text-sm font-semibold text-foreground">{item.product}</p>
+            <p className="text-sm font-semibold text-foreground">{localizeCatalogLabel(item.product, locale)}</p>
             <p className="mt-2 text-sm text-slate-300">
               {t("ui.currentPrice")} {formatMoney(item.currentPrice, currency)} • {t("ui.cost")}{" "}
               {formatMoney(item.cost, currency)} • {t("ui.margin")} {item.margin.toFixed(0)}%

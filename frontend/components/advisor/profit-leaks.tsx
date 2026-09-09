@@ -8,11 +8,12 @@ import { useAuth } from "@/frontend/context/auth-context";
 import { trackPlatform } from "@/frontend/lib/admin/track";
 import { useAppearance } from "@/frontend/context/appearance";
 import { formatMoney } from "@/frontend/lib/format";
+import { localizeCatalogLabel } from "@/frontend/lib/localize-catalog";
 import { localizeLeak } from "@/frontend/lib/localize-advisor";
 
 export function ProfitLeaks() {
   const { result, currency } = useAnalysis();
-  const { t } = useAppearance();
+  const { t, locale } = useAppearance();
   const { user } = useAuth();
   const leaks = result?.advisor.leaks ?? [];
 
@@ -36,7 +37,7 @@ export function ProfitLeaks() {
           const copy = localizeLeak(leak, t);
           return (
           <div key={leak.id} className="rounded-xl border border-border bg-white/3 p-4">
-            <p className="text-sm font-semibold text-foreground">{leak.product}</p>
+            <p className="text-sm font-semibold text-foreground">{localizeCatalogLabel(leak.product, locale)}</p>
             <p className="mt-1 text-xs text-muted">
               {t("ui.sales")} {formatMoney(leak.revenue, currency)} • {t("ui.profit")} {formatMoney(leak.profit, currency)}
             </p>

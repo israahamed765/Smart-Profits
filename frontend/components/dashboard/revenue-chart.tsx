@@ -25,7 +25,7 @@ function formatAxis(value: number) {
 
 export function RevenueExpenseChart() {
   const { result, currency } = useAnalysis();
-  const { t, months } = useAppearance();
+  const { t, months, locale } = useAppearance();
   const palette = useChartTheme();
   if (!result) return null;
 
@@ -34,7 +34,7 @@ export function RevenueExpenseChart() {
     revenue: Math.round(convertAmount(point.revenue, currency)),
     expenses: Math.round(convertAmount(point.expenses, currency)),
   }));
-  const suffix = currencySuffix(currency);
+  const suffix = currencySuffix(currency, locale);
   const useBars = data.length <= 2;
 
   return (

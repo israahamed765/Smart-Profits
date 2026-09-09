@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/
 import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { formatMoney } from "@/frontend/lib/format";
+import { localizeCatalogLabel, localizeFileName } from "@/frontend/lib/localize-catalog";
 import { localizeSheetReason, localizeWarning } from "@/frontend/lib/localize-warning";
 import { reviveTransactionDate } from "@/lib/serialize";
 import { dateFromSheetName } from "@/lib/sheets";
@@ -111,7 +112,7 @@ export function FileStudyReport() {
             <div>
               <h2 className="text-base font-semibold text-foreground">{t("study.ok")}</h2>
               <p className="mt-1 max-w-xl text-xs leading-5 text-muted">
-                {parseResult.fileName}
+                {localizeFileName(parseResult.fileName, locale, isDemo)}
                 {parseResult.sheets?.length ? ` · ${parseResult.sheets.length}` : ""} · {t("study.okHint")}
               </p>
               {isDemo && (
@@ -201,7 +202,7 @@ export function FileStudyReport() {
                       }}
                     >
                       <td className="px-5 py-3">
-                        <p className="font-medium text-foreground">{sheet.name}</p>
+                        <p className="font-medium text-foreground">{localizeCatalogLabel(sheet.name, locale)}</p>
                         {sheet.reason ? (
                           <p className="mt-0.5 text-[11px] text-muted">{localizeSheetReason(sheet.reason, locale)}</p>
                         ) : null}
@@ -290,7 +291,7 @@ export function FileStudyReport() {
                           : "—";
                       })()}
                     </td>
-                    <td className="px-2 py-2">{tx.product || "—"}</td>
+                    <td className="px-2 py-2">{tx.product ? localizeCatalogLabel(tx.product, locale) : "—"}</td>
                     <td className="px-2 py-2">{tx.quantity || "—"}</td>
                     <td className="px-2 py-2">{formatMoney(tx.sellingPrice, currency)}</td>
                     <td className="px-2 py-2">{formatMoney(tx.costPrice, currency)}</td>

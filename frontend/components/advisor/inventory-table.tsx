@@ -6,10 +6,11 @@ import { Badge } from "@/frontend/components/ui/badge";
 import { useAnalysis } from "@/frontend/context/analysis-context";
 import { useAppearance } from "@/frontend/context/appearance";
 import { formatMoney } from "@/frontend/lib/format";
+import { localizeCatalogLabel } from "@/frontend/lib/localize-catalog";
 
 export function InventoryAdviceTable() {
   const { result, currency } = useAnalysis();
-  const { t } = useAppearance();
+  const { t, locale } = useAppearance();
   if (!result) return null;
   const rows = result.advisor.inventory;
   const decisionLabel = {
@@ -47,7 +48,7 @@ export function InventoryAdviceTable() {
           <tbody>
             {rows.map((row) => (
               <tr key={row.product} className="border-b border-border/60 text-slate-200">
-                <td className="px-2 py-2">{row.product}</td>
+                <td className="px-2 py-2">{localizeCatalogLabel(row.product, locale)}</td>
                 <td className="px-2 py-2">{row.estimatedStock}</td>
                 <td className="px-2 py-2">{row.dailyVelocity.toFixed(1)}</td>
                 <td className="px-2 py-2">{row.daysUntilStockout ?? "—"}</td>
