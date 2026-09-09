@@ -22,7 +22,7 @@ Arabic-first (RTL) merchant SaaS that turns messy Excel/CSV into profit decision
 | Resource | Link |
 |----------|------|
 | **Live demo (deployed)** | **https://smart-profits-production.up.railway.app/** |
-| **Demo video (3 min)** | **[Paste YouTube / Loom URL here before final submission]** — see [script below](#demo-video--smart-guard-live-decisions) |
+| **Demo video (3 min)** | **[Paste YouTube / (https://youtu.be/8aOCQ4ALLiA)]** — see [script below](#demo-video--smart-guard-live-decisions) |
 | **Judge quick-start** | [`docs/hackathon/HACKATHON.md`](docs/hackathon/HACKATHON.md) |
 | **Pitch deck** | [`docs/hackathon/Smart-Profits-HACKATHON-PITCH-DECK.pptx`](docs/hackathon/Smart-Profits-HACKATHON-PITCH-DECK.pptx) · alt: [`Smart-Profits-PITCH-DECK.pptx`](docs/hackathon/Smart-Profits-PITCH-DECK.pptx) |
 | **Presentation guide** | [`docs/hackathon/PRESENTATION-GUIDE.md`](docs/hackathon/PRESENTATION-GUIDE.md) |
